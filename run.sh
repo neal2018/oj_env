@@ -1,0 +1,2 @@
+# g++.exe --std=c++17 -g roundc/A.cpp -o main.exe && ./main.exe < input.txt > output.txt
+g++ --std=c++17 -g roundc/A.cpp -o main.exe && python croupier.py -q ./main.exe "python local_testing_tool.py 1"

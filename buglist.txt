@@ -1,0 +1,11 @@
+be careful when copying codes
+be careful when transforming: what is changing?
+edge cases
+order of divide and multiply
+direction of greedy
+are the conditions enough?
+when iterating, previous affect follows?
+think about greedy carefully
+try other possibilities
+iterate different things
+ABABABAB => A BABABA B
