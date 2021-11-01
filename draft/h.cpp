@@ -1,73 +1,72 @@
 #include <bits/stdc++.h>
 using namespace std;
-
-struct SAM {
-  vector<unordered_map<int, int>> e = {{}};  // the labeled edges from node i
-  vector<int> parent = {-1};                 // the parent of i
-  vector<int> length = {0};                  // the length of the longest string
-  int last = 0;                              // the index of node representing the whole string
-
-  SAM(auto& s) {
-    for (auto&& c : s) extend(c);
-  }
-  void extend(int c) {
-    e.emplace_back();  // append to end
-    parent.push_back(0);
-    length.push_back(length[last] + 1);
-    int p = last;  // iterate the suffixes of old string
-    int r = last = e.size() - 1;
-    for (; p != -1 && !e[p].count(c); p = parent[p]) {
-      e[p][c] = r;
-    }
-    if (p != -1) {  // meet an already linked
-      int q = e[p][c];
-      if (length[q] == length[p] + 1) {  // only jump one step
-        parent[r] = q;
-      } else {              // jump too far, need an intermediate
-        e.push_back(e[q]);  // copy original q
-        parent.push_back(parent[q]);
-        length.push_back(length[p] + 1);
-        int qq = parent[q] = parent[r] = e.size() - 1;
-        for (; p != -1 && e[p][c] == q; p = parent[p]) {
-          e[p][c] = qq;
-        }
-      }
-    }
-  }
+#define ll long long
+constexpr int MOD = 998244353;
+ll norm(ll x) { return (x + MOD) % MOD; }
+template <class T>
+T power(T a, ll b) {
+  T res = 1;
+  for (; b; b /= 2, a *= a)
+    if (b & 1) res *= a;
+  return res;
+}
+struct Z {
+  ll x;
+  Z(ll _x = 0) : x(norm(_x)) {}
+  Z operator-() const { return Z(norm(MOD - x)); }
+  Z inv() const { return power(*this, MOD - 2); }
+  Z &operator*=(const Z &rhs) { return x = x * rhs.x % MOD, *this; }
+  Z &operator+=(const Z &rhs) { return x = norm(x + rhs.x), *this; }
+  Z &operator-=(const Z &rhs) { return x = norm(x - rhs.x), *this; }
+  Z &operator/=(const Z &rhs) { return *this *= rhs.inv(); }
+  Z &operator%=(const auto &_) { return *this; }
+  friend Z operator*(Z lhs, const Z &rhs) { return lhs *= rhs; }
+  friend Z operator+(Z lhs, const Z &rhs) { return lhs += rhs; }
+  friend Z operator-(Z lhs, const Z &rhs) { return lhs -= rhs; }
+  friend Z operator/(Z lhs, const Z &rhs) { return lhs /= rhs; }
+  friend Z operator%(Z lhs, const auto &_) { return lhs; }
+  friend istream &operator>>(istream &input, Z &z) { return input >> z.x, input; }
 };
 
-class Solution {
-public:
-  string longestDupSubstring(string s) {
-    SAM sam(s);
-    int sz = sam.e.size();
-    vector<int> cnt(sz, 1);
-    for (int i = sz - 1; i >= 1; i--) {
-      cnt[sam.parent[i]] += cnt[i];
-    }
-    int p = -1;
-    for (int i = 1; i < sz; i++) {
-      if (p == -1 || cnt[i] > 1 && sam.length[i] > sam.length[p]) {
-        p = i;
-      }
-    }
-    if (p == -1) return "";
-    string res;
-    cout << sam.length[p] << endl;
-    for (; p != 0; p = sam.parent[p]) {
-      cout << p << " " << sam.parent[p] << endl;
-      for (auto& [k, v] : sam.e[sam.parent[p]]) {
-        if (v == p) res.push_back(k);
-      }
-    }
-    reverse(res.begin(), res.end());
-    return res;
-  }
-};
+Z f[100001], g[100001];
 
-int main(int argc, char const* argv[]) {
-  Solution s;
-  string t = "abcd";
-  s.longestDupSubstring(t);
+void solve() {
+  int n;
+  cin >> n;
+  vector<int> a(n);
+  for (auto &x : a) cin >> x;
+
+  Z res = 0;
+  for (int i = n - 2; i >= 0; i--) {
+    f[a[i + 1]] += 1;
+    for (int l = 1, r; l <= a[i + 1]; l = r + 1) {
+      int v = a[i + 1] / l;
+      r = a[i + 1] / v;
+      int t = (a[i] + v - 1) / v;
+      res += f[v] * (t - 1) * (i + 1);
+      g[a[i] / t] += f[v];
+      f[v] = 0;
+    }
+    for (int l = 1, r; l <= a[i]; l = r + 1) {
+      int v = a[i] / l;
+      r = a[i] / v;
+      f[v] = g[v];
+      g[v] = 0;
+    }
+  }
+  for (int l = 1, r; l <= a[0]; l = r + 1) {
+    int v = a[0] / l;
+    r = a[0] / v;
+    f[v] = 0;
+  }
+
+  cout << res.x << "\n";
+}
+
+int main() {
+  cin.tie(nullptr)->sync_with_stdio(false);
+  int T;
+  cin >> T;
+  while (T--) solve();
   return 0;
 }
