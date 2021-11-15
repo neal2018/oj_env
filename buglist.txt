@@ -22,3 +22,5 @@ maximum range
 overflow
 init segment tree backward
 there are may be 2+ bugs
+break the group
+net cost makes any difference?
