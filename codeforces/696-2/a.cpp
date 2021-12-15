@@ -18,7 +18,6 @@ int main() {
         if (s[i] == '0') {
           if (sum[i - 1] == '1') {
             res[i] = '0';
-
           } else {
             res[i] = '1';
           }

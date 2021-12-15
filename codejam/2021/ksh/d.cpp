@@ -58,6 +58,7 @@ int main() {
     }
     // lca start
     int root = 0;
+    vector<int> parent(n), deep(n), hson(n), top(n), sz(n);
     function<int(int, int, int)> dfs = [&](int node, int fa, int dep) {
       deep[node] = dep, sz[node] = 1;
       for (auto &ne : g[node]) {

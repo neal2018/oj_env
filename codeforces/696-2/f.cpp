@@ -1,7 +1,7 @@
 #include <bits/stdc++.h>
 using namespace std;
 #define ll long long
-constexpr ll MOD = 998244353; // 9223372036737335297
+constexpr ll MOD = 998244353;
 
 ll norm(ll x) { return (x + MOD) % MOD; }
 template <class T>
