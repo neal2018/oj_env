@@ -1,19 +1,15 @@
 be careful when copying codes
 be careful when transforming: what is changing?
-edge cases
+edge cases (end or start)
 order of divide and multiply
-direction of greedy
 are the conditions enough?
 when iterating, previous affect follows?
-think about greedy carefully
+think about greedy carefully, like direction
 try other possibilities
 iterate different things
 ABABABAB => A BABABA B
-messing map and unordered_map
 messing row and column
 no handling input
-edge cases on the end of the array
-messing type
 perform order
 add mod before minus
 i-=2 and i=-2
@@ -24,3 +20,4 @@ init segment tree backward
 there are may be 2+ bugs
 break the group
 net cost makes any difference?
+read carefully (data range)
