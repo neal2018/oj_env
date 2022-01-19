@@ -1,15 +1,12 @@
 #include <bits/stdc++.h>
 using namespace std;
+using ll = long long;
 // https://space.bilibili.com/672328094
-#define ll long long
 
 int main() {
   cin.tie(nullptr)->sync_with_stdio(false);
-  ll T, n;
-  cin >> T;
-  while (T--) {
-    cin >> n;
-    vector<ll> a(n);
-    for (auto& x : a) cin >> x;
-  }
+  ll t;
+  cin >> t;
+  auto f = [](ll x) { return x * x + 2 * x + 3; };
+  cout << f(f(f(t) + t) + f(f(t))) << "\n";
 }

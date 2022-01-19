@@ -1,15 +1,12 @@
 #include <bits/stdc++.h>
 using namespace std;
+using ll = long long;
 // https://space.bilibili.com/672328094
-#define ll long long
 
 int main() {
   cin.tie(nullptr)->sync_with_stdio(false);
-  ll T, n;
-  cin >> T;
-  while (T--) {
-    cin >> n;
-    vector<ll> a(n);
-    for (auto& x : a) cin >> x;
-  }
+  int x;
+  cin >> x;
+  int a = x % 10, b = (x / 10) % 10, c = x / 100;
+  cout << 111 * (a + b + c) << "\n";
 }

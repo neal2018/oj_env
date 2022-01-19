@@ -1,15 +1,16 @@
 #include <bits/stdc++.h>
 using namespace std;
+using ll = long long;
 // https://space.bilibili.com/672328094
-#define ll long long
-
 int main() {
   cin.tie(nullptr)->sync_with_stdio(false);
-  ll T, n;
+  ll T;
   cin >> T;
-  while (T--) {
-    cin >> n;
-    vector<ll> a(n);
-    for (auto& x : a) cin >> x;
-  }
+  auto f = [&]() {
+    string s;
+    cin >> s;
+    sort(s.begin(), s.end());
+    cout << s << "\n";
+  };
+  for (; T--;) f();
 }

@@ -6,7 +6,7 @@ using namespace std;
 struct SegTree {
   ll n;
   vector<int> t;
-  SegTree(ll _n) : n(_n) { t.resize(2 * n); }
+  SegTree(ll _n) : n(_n), t(2 * n) {}
   void modify(ll p, int v) {
     t[p += n] += v;
     for (p /= 2; p; p /= 2) t[p] = t[2 * p] + t[2 * p + 1];

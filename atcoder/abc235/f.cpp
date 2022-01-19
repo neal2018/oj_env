@@ -1,8 +1,11 @@
 #include <bits/stdc++.h>
 using namespace std;
-#define ll long long
+using ll = long long;
+// https://space.bilibili.com/672328094
+
 constexpr ll MOD = 998244353;
-ll norm(ll x) { return (x % MOD + MOD) % MOD; }
+
+ll norm(ll x) { return (x + MOD) % MOD; }
 template <class T>
 T power(T a, ll b, T res = 1) {
   for (; b; b /= 2, (a *= a) %= MOD)
@@ -12,7 +15,7 @@ T power(T a, ll b, T res = 1) {
 struct Z {
   ll x;
   Z(ll _x = 0) : x(norm(_x)) {}
-  auto operator<=>(const Z &) const = default;
+  // auto operator<=>(const Z &) const = default;
   Z operator-() const { return Z(norm(MOD - x)); }
   Z inv() const { return power(*this, MOD - 2); }
   Z &operator*=(const Z &rhs) { return x = x * rhs.x % MOD, *this; }
@@ -28,15 +31,13 @@ struct Z {
   friend auto &operator>>(istream &i, Z &z) { return i >> z.x; }
   friend auto &operator<<(ostream &o, const Z &z) { return o << z.x; }
 };
+
 int main() {
   cin.tie(nullptr)->sync_with_stdio(false);
-  int T;
-  cin >> T;
-  while (T--) {
-    int n;
-    cin >> n;
-    vector<string> s(n);
-    for (auto &x : s) cin >> x;
-    
-  }
+  string n;
+  int m;
+  cin >> n >> m;
+  vector<int> c(m);
+  for (auto &x : c) cin >> x;
+  
 }

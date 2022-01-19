@@ -5,11 +5,11 @@ using namespace std;
 
 int main() {
   cin.tie(nullptr)->sync_with_stdio(false);
-  ll T, n;
-  cin >> T;
-  while (T--) {
-    cin >> n;
-    vector<ll> a(n);
-    for (auto& x : a) cin >> x;
+  ll n, res = 0;
+  cin >> n;
+  for (ll l = 1, r; l <= n; l = r + 1) {
+    r = min(n, n / (n / l));
+    res += n / l * (r - l + 1);
   }
+  cout << res << "\n";
 }
