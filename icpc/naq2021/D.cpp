@@ -19,7 +19,7 @@ struct Z {
   // auto operator<=>(const Z &) const = default;
   Z operator-() const { return Z(norm(MOD - x)); }
   Z inv() const { return power(*this, MOD - 2); }
-  bool operator < (const Z &rhs) const { return x < rhs.x; }
+  bool operator<(const Z &rhs) const { return x < rhs.x; }
   Z &operator*=(const Z &rhs) { return x = x * rhs.x % MOD, *this; }
   Z &operator+=(const Z &rhs) { return x = norm(x + rhs.x), *this; }
   Z &operator-=(const Z &rhs) { return x = norm(x - rhs.x), *this; }
@@ -33,6 +33,7 @@ struct Z {
   friend auto &operator>>(istream &i, Z &z) { return i >> z.x; }
   friend auto &operator<<(ostream &o, const Z &z) { return o << z.x; }
 };
+
 bool is_0(Z v) { return v.x == 0; }
 Z abs(Z v) { return v; }
 bool is_0(double v) { return abs(v) < 1e-9; }
@@ -79,9 +80,6 @@ int gaussian_elimination(vector<vector<T>> &a, int limit) {
       }
     }
   }
-  // for (int i = rank + 1; i < h; i++)
-  //   if (!is_0(a[i][limit])) return 0;
-  // return (rank == limit) ? 1 : -1;
   return 0;
 }
 
@@ -114,7 +112,6 @@ int main() {
   for (int i = 0; i < n; i++) {
     getline(cin, sin);
     stringstream ss(sin);
-    // cout << sin << "\n";
     int f = 0;
     while (ss >> s) {
       if (s == "=") {
@@ -148,37 +145,20 @@ int main() {
       xx[mp[s]] -= 1;
     }
   }
-  // for (int i = 0; i < n; i++) {
-  //   auto &r = a[i];
-  //   for (auto &x : r) cout << (x >= -eps ? "+" : "") << x << "\t";
-  //   cout << "\n";
-  // }
-  // cout << "\n";
-  // for (int i = 0; i < n; i++) {
-  //   cout << "left ";
-  //   for (auto &x : left[i]) cout << x << " ";
-  //   cout << "\n";
-  //   cout << "right ";
-  //   for (auto &x : right[i]) cout << x << " ";
-  //   cout << "\n";
-  // }
   gaussian_elimination(a, w);
   vector<int> count(n);
-  // for (int i = 0; i < n; i++) {
-  //   auto &r = a[i];
-  //   for (auto &x : r) cout << (x >= -eps ? "+" : "") << x << "\t";
-  //   cout << "\n";
-  // }
   for (int i = 0; i < n; i++) {
     auto &r = a[i];
     int cnt = 0;
-    for (auto &x : r)
-      if (x.x) cnt++;
+    for (int ii = 0; ii < w; ii++) {
+      if (all[ii] == "1") continue;
+      if (r[ii].x) cnt++;
+    }
     count[i] = cnt;
   }
   int good = 1;
   for (int i = 0; i < n; i++) {
-    if (abs(count[i]) == 1 && all[i] != "1") good = 0;
+    if (abs(count[i]) == 1) good = 0;
   }
   cout << (good ? "valid\n" : "invalid\n");
 }

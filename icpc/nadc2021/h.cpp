@@ -4,9 +4,9 @@ using namespace std;
 template <class T>
 struct SAM {
   vector<map<int, int>> e = {{}};  // the labeled edges from node i
-  vector<int> parent = {-1};                 // the parent of i
-  vector<int> length = {0};                  // the length of the longest string
-  int last = 0;  // the index of node representing the whole string
+  vector<int> parent = {-1};       // the parent of i
+  vector<int> length = {0};        // the length of the longest string
+  int last = 0;                    // the index of node representing the whole string
 
   SAM(T& s) {
     for (auto&& c : s) {
@@ -39,17 +39,16 @@ struct SAM {
   }
 };
 
-int main(){
+int main() {
   int n;
-  cin>>n;
+  cin >> n;
   vector<string> paths(n);
-  for(auto&x:paths)cin>>x;
-  if (n==1){
-    cout<<paths[0].size()<<endl;
+  for (auto& x : paths) cin >> x;
+  if (n == 1) {
+    cout << paths[0].size() << endl;
     return 0;
   }
-  sort(paths.begin(), paths.end(),
-        [](auto& a, auto& b) { return a.size() < b.size(); });
+  sort(paths.begin(), paths.end(), [](auto& a, auto& b) { return a.size() < b.size(); });
   auto sam = SAM(paths[0]);
   int total = sam.e.size();
   vector<int> mini(total, INT_MAX);
@@ -94,5 +93,5 @@ int main(){
   for (int j = 0; j < total; j++) {
     res = max(mini[j], res);
   }
-  cout<<res<<"\n";
+  cout << res << "\n";
 }

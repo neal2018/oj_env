@@ -1,107 +1,86 @@
 #include <bits/stdc++.h>
 using namespace std;
+using ll = long long;
 
-#define FOR(x, n) for (int x = 0; x < n; x++)
-#define PI 3.14159265358979323846264338327950288
-typedef long long ll;
-typedef long long ii;
-
-constexpr int MAXN = 2e5 + 20;
-constexpr int SQ = 400;
-constexpr ll MOD1 = 1000002193;
-constexpr int PSTR = 31;
-
-int STRPOW1[MAXN];
-unordered_map<int, vector<int>> positions;
-
-constexpr ll mod_exp(ll x, ll y, ll mod) {
-  ll res = 1;
-  while (y > 0) {
-    if (y & 1) res = res * x % mod;
-    y >>= 1;
-    x = x * x % mod;
-  }
-  return res;
-}
-
-constexpr int PINV1 = mod_exp(PSTR, MOD1 - 2, MOD1);
-
-void pre(const string& s) {
-  int n = s.length();
-
-  STRPOW1[0] = 1;
-  for (int i = 1; i < MAXN; i++) {
-    STRPOW1[i] = (1ll * PSTR * STRPOW1[i - 1]) % MOD1;
+constexpr int SZ = 26;
+constexpr int MAX = 2e5 + 10;
+int e[MAX][SZ];  // vector is faster than unordered_map
+int fail[MAX], ed[MAX];
+struct AC_automaton {
+  int cnt = 0;
+  void insert(string& s, int t) {
+    int p = 0;
+    for (auto cc : s) {
+      int c = cc - 'a';
+      if (!e[p][c]) {
+        e[p][c] = ++cnt;
+      }
+      p = e[p][c];
+    }
+    ed[p] = t + 1;
   }
 
-  for (int i = 1; i <= min((int)s.length(), SQ); i++) {
-    ii h = 0;
-    FOR(j, i) { h = (h + (ll)(s[j] - 'a') * STRPOW1[j]) % MOD1; }
-    positions[h].push_back(0);
-    for (int j = i; j < n; j++) {
-      h -= (s[j - i] - 'a');
-      if (h < 0) h += MOD1;
-      h = (h * PINV1) % MOD1;
-      h = (h + (ll)(s[j] - 'a') * STRPOW1[i - 1]) % MOD1;
-      positions[h].push_back(j - i + 1);
+  void build() {
+    queue<int> q;
+    for (int i = 0; i < SZ; i++)
+      if (e[0][i]) q.push(e[0][i]);
+    while (!q.empty()) {
+      int p = q.front();
+      q.pop();
+      for (int i = 0; i < SZ; i++) {
+        if (e[p][i]) {
+          fail[e[p][i]] = e[fail[p]][i];
+          q.push(e[p][i]);
+        } else {
+          e[p][i] = e[fail[p]][i];
+        }
+      }
     }
   }
-}
-
-ii hsh(const string& s) {
-  const int k = s.length();
-  ii h = 0;
-  FOR(j, k) { h = (h + (ll)(s[j] - 'a') * STRPOW1[j]) % MOD1; }
-  return h;
-}
-
-int find(const string& s, ii look, int i, int k) {
-  ii h = 0;
-  int n = s.length();
-  FOR(j, i) { h = (h + (ll)(s[j] - 'a') * STRPOW1[j]) % MOD1; }
-  int ct = 0;
-  if (h == look) {
-    if (ct == k) return 0;
-    ct++;
-  }
-  for (int j = i; j < n; j++) {
-    h -= (s[j - i] - 'a');
-    if (h < 0) h += MOD1;
-    h = (h * PINV1) % MOD1;
-    h = (h + (ll)(s[j] - 'a') * STRPOW1[i - 1]) % MOD1;
-    if (h == look) {
-      if (ct == k) return j - i + 1;
-      ct++;
-    }
-  }
-  return -2;
-}
+};
 
 int main() {
-  ios_base::sync_with_stdio(false);
-  cin.tie(NULL);
-  // mt19937 rng(chrono::steady_clock::now().time_since_epoch().count());
-
-  positions.reserve(4096);
+  cin.tie(nullptr)->sync_with_stdio(false);
   string s;
   cin >> s;
-
-  pre(s);
-  int q;
-  cin >> q;
-  string w;
-  int k;
-  while (q--) {
-    cin >> w >> k;
-    k--;
-    ii h = hsh(w);
-    if (w.length() <= SQ) {
-      if (k >= (int)positions[h].size())
-        cout << "-1\n";
-      else
-        cout << positions[h][k] + 1 << '\n';
+  int n;
+  cin >> n;
+  string t[n];
+  int g[n];
+  for (int i = 0; i < n; i++) {
+    cin >> t[i] >> g[i];
+  }
+  auto b = vector<string>(t, t + n);
+  sort(b.begin(), b.end());
+  b.erase(unique(b.begin(), b.end()), b.end());
+  int sz = (int)b.size();
+  vector<int> match[sz];
+  AC_automaton ac;
+  for (int i = 0; i < sz; i++) {
+    ac.insert(b[i], i);
+  }
+  ac.build();
+  int cur = 0;
+  for (int i = 0; i < s.size(); i++) {
+    cur = e[cur][s[i] - 'a'];
+    if (cur != 0) {
+      int p = cur, pre = cur;
+      while (p != 0) {
+        if (ed[p] > 0) {
+          match[ed[p] - 1].push_back(i);
+        } else {
+          fail[pre] = fail[p];
+        }
+        pre = p, p = fail[p];
+      }
+    }
+  }
+  for (int i = 0; i < n; i++) {
+    ll tt = lower_bound(b.begin(), b.end(), t[i]) - b.begin();
+    if (g[i] > match[tt].size()) {
+      cout << "-1\n";
     } else {
-      cout << find(s, h, w.length(), k) + 1 << '\n';
+      cout << match[tt][g[i] - 1] - (int)t[i].size() + 2 << "\n";
     }
   }
 }

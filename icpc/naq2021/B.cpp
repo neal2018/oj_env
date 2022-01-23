@@ -6,7 +6,7 @@ constexpr auto eps = 1e-8;
 
 struct ld {
   long double x;
-  ld(ll _x = 0) : x(_x) {}
+  ld(long double _x = 0) : x(_x) {}
   ld operator-() const { return ld(-x); }
   bool operator==(const ld r) const { return abs(x - r.x) < eps; }
   bool operator!=(const ld r) const { return !(abs(x - r.x) < eps); }
@@ -27,6 +27,7 @@ struct ld {
 };
 namespace std {
 ld fabs(ld x) { return ld(abs(x.x)); }
+ld abs(ld x) { return ld(abs(x.x)); }
 ld sqrt(ld x) { return ld(sqrt(x.x)); }
 }  // namespace std
 
@@ -632,152 +633,121 @@ using Ray3 = Ray<3, Real>;
 }  // namespace gte
 
 namespace gte {
-template <int32_t N, typename T>
-class DCPQuery<T, Ray<N, T>, Segment<N, T>> {
+template <int N, typename Real>
+class DCPQuery<Real, Ray<N, Real>, Segment<N, Real>> {
 public:
   struct Result {
-    Result()
-        : distance(static_cast<T>(0)),
-          sqrDistance(static_cast<T>(0)),
-          parameter{static_cast<T>(0), static_cast<T>(0)},
-          closest{Vector<N, T>::ldero(), Vector<N, T>::ldero()} {}
-
-    T distance, sqrDistance;
-    std::array<T, 2> parameter;
-    std::array<Vector<N, T>, 2> closest;
+    Real distance, sqrDistance;
+    Real parameter[2];
+    Vector<N, Real> closestPoint[2];
   };
 
-  Result operator()(Ray<N, T> const& ray, Segment<N, T> const& segment) {
-    Result result{};
+  // The centered form of the 'segment' is used.  Thus, parameter[1] of
+  // the result is in [-e,e], where e = |segment.p[1] - segment.p[0]|/2.
+  Result operator()(Ray<N, Real> const& ray, Segment<N, Real> const& segment);
+};
+template <int N, typename Real>
+typename DCPQuery<Real, Ray<N, Real>, Segment<N, Real>>::Result
+DCPQuery<Real, Ray<N, Real>, Segment<N, Real>>::operator()(Ray<N, Real> const& ray,
+                                                           Segment<N, Real> const& segment) {
+  Result result;
 
-    T const zero = static_cast<T>(0);
-    T const one = static_cast<T>(1);
-    Vector<N, T> segDirection = segment.p[1] - segment.p[0];
-    Vector<N, T> diff = ray.origin - segment.p[0];
-    T a00 = Dot(ray.direction, ray.direction);
-    T a01 = -Dot(ray.direction, segDirection);
-    T a11 = Dot(segDirection, segDirection);
-    T b0 = Dot(ray.direction, diff);
-    T det = std::max(a00 * a11 - a01 * a01, zero);
-    T s0{}, s1{};
+  Vector<N, Real> segCenter, segDirection;
+  Real segExtent;
+  segment.GetCenteredForm(segCenter, segDirection, segExtent);
 
-    if (det > zero) {
-      // The ray and segment are not parallel.
-      T b1 = -Dot(segDirection, diff);
-      s0 = a01 * b1 - a11 * b0;
-      s1 = a01 * b0 - a00 * b1;
+  Vector<N, Real> diff = ray.origin - segCenter;
+  Real a01 = -Dot(ray.direction, segDirection);
+  Real b0 = Dot(diff, ray.direction);
+  Real s0, s1;
 
-      if (s0 >= zero) {
-        if (s1 >= zero) {
-          if (s1 <= det)  // region 0
-          {
-            // The minimum occurs at interior points of the
-            // ray and the segment.
-            s0 /= det;
-            s1 /= det;
-          } else  // region 1
-          {
-            // The endpoint Q1 of the segment and an interior
-            // point of the line are closest.
-            s0 = -(a01 + b0) / a00;
-            s1 = one;
-          }
-        } else  // region 5
+  if (std::abs(a01) < (Real)1) {
+    // The ray and segment are not parallel.
+    Real det = (Real)1 - a01 * a01;
+    Real extDet = segExtent * det;
+    Real b1 = -Dot(diff, segDirection);
+    s0 = a01 * b1 - b0;
+    s1 = a01 * b0 - b1;
+
+    if (s0 >= (Real)0) {
+      if (s1 >= -extDet) {
+        if (s1 <= extDet)  // region 0
         {
-          // The endpoint Q0 of the segment and an interior
-          // point of the line are closest.
-          s0 = -b0 / a00;
-          s1 = zero;
+          // Minimum at interior points of ray and segment.
+          s0 /= det;
+          s1 /= det;
+        } else  // region 1
+        {
+          s1 = segExtent;
+          s0 = std::max(-(a01 * s1 + b0), (Real)0);
         }
-      } else  // s0 < 0
+      } else  // region 5
       {
-        if (s1 <= zero)  // region 4
-        {
-          s0 = -b0;
-          if (s0 > zero) {
-            s0 /= a00;
-            s1 = zero;
-          } else {
-            s0 = zero;
-            s1 = -b1;
-            if (s1 < zero) {
-              s1 = zero;
-            } else if (s1 > a11) {
-              s1 = one;
-            } else {
-              s1 /= a11;
-            }
-          }
-        } else if (s1 <= det)  // region 3
-        {
-          s0 = zero;
+        s1 = -segExtent;
+        s0 = std::max(-(a01 * s1 + b0), (Real)0);
+      }
+    } else {
+      if (s1 <= -extDet)  // region 4
+      {
+        s0 = -(-a01 * segExtent + b0);
+        if (s0 > (Real)0) {
+          s1 = -segExtent;
+        } else {
+          s0 = (Real)0;
           s1 = -b1;
-          if (s1 < zero) {
-            s1 = zero;
-          } else if (s1 > a11) {
-            s1 = one;
-          } else {
-            s1 /= a11;
-          }
-        } else  // region 2
-        {
-          s0 = -(a01 + b0);
-          if (s0 > zero) {
-            s0 /= a00;
-            s1 = one;
-          } else {
-            s0 = zero;
-            s1 = -b1;
-            if (s1 < zero) {
-              s1 = zero;
-            } else if (s1 > a11) {
-              s1 = one;
-            } else {
-              s1 /= a11;
-            }
+          if (s1 < -segExtent) {
+            s1 = -segExtent;
+          } else if (s1 > segExtent) {
+            s1 = segExtent;
           }
         }
-      }
-      result.parameter[0] = s0;
-      result.parameter[1] = s1;
-      result.closest[0] = ray.origin + s0 * ray.direction;
-      result.closest[1] = segment.p[0] + s1 * segDirection;
-      diff = result.closest[0] - result.closest[1];
-      result.sqrDistance = Dot(diff, diff);
-      result.distance = std::sqrt(result.sqrDistance);
-    } else {
-      // The ray and segment are parallel.
-      // if (a01 > zero) {
-      //   // Opposite direction vectors.
-      //   s0 = -b0 / a00;
-      //   s1 = zero;
-      // } else {
-      //   // Same direction vectors.
-      //   s0 = -(a01 + b0) / a00;
-      //   s1 = one;
-      // }
-      if (Dot(segment.p[0] - ray.origin, ray.direction) >= 0 ||
-          Dot(segment.p[1] - ray.origin, ray.direction) >= 0) {
-        result.distance = 0;
-      } else {
-        result.distance = sqrt(Dot(segment.p[0] - ray.origin, segment.p[0] - ray.origin));
-        auto tt = sqrt(Dot(segment.p[1] - ray.origin, segment.p[1] - ray.origin));
-        if (tt < result.distance) result.distance = tt;
+      } else if (s1 <= extDet)  // region 3
+      {
+        s0 = (Real)0;
+        s1 = -b1;
+        if (s1 < -segExtent) {
+          s1 = -segExtent;
+        } else if (s1 > segExtent) {
+          s1 = segExtent;
+        }
+      } else  // region 2
+      {
+        s0 = -(a01 * segExtent + b0);
+        if (s0 > (Real)0) {
+          s1 = segExtent;
+        } else {
+          s0 = (Real)0;
+          s1 = -b1;
+          if (s1 < -segExtent) {
+            s1 = -segExtent;
+          } else if (s1 > segExtent) {
+            s1 = segExtent;
+          }
+        }
       }
     }
+  } else {
+    // Ray and segment are parallel.
+    if (a01 > (Real)0) {
+      // Opposite direction vectors.
+      s1 = -segExtent;
+    } else {
+      // Same direction vectors.
+      s1 = segExtent;
+    }
 
-    // if (s0 < zero) s0 = zero;
-    // if (s1 < zero) s1 = zero;
-    // result.parameter[0] = s0;
-    // result.parameter[1] = s1;
-    // result.closest[0] = ray.origin + s0 * ray.direction;
-    // result.closest[1] = segment.p[0] + s1 * segDirection;
-    // diff = result.closest[0] - result.closest[1];
-    // result.sqrDistance = Dot(diff, diff);
-    // result.distance = std::sqrt(result.sqrDistance);
-    return result;
+    s0 = std::max(-(a01 * s1 + b0), (Real)0);
   }
-};
+
+  result.parameter[0] = s0;
+  result.parameter[1] = s1;
+  result.closestPoint[0] = ray.origin + s0 * ray.direction;
+  result.closestPoint[1] = segCenter + s1 * segDirection;
+  diff = result.closestPoint[0] - result.closestPoint[1];
+  result.sqrDistance = Dot(diff, diff);
+  result.distance = sqrt(result.sqrDistance);
+  return result;
+}
 
 // Template aliases for convenience.
 template <int32_t N, typename T>

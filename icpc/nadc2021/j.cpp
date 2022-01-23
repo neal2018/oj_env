@@ -3,7 +3,7 @@ using namespace std;
 using ll = long long;
 using ld = long double;
 
-constexpr auto eps = 1e-14;
+constexpr auto eps = 1e-8;
 const auto PI = acos(-1);
 int sgn(ld x) { return (abs(x) <= eps) ? 0 : (x < 0 ? -1 : 1); }
 
@@ -215,6 +215,16 @@ vector<Point> get_convex2(vector<Point> &points) {  // strict, no repeat, one pa
   return hull;
 }
 
+vector<Point> get_convex_safe(const vector<Point> &points) {
+  auto t = points;
+  return get_convex(t);
+}
+
+vector<Point> get_convex2_safe(const vector<Point> &points) {
+  auto t = points;
+  return get_convex2(t);
+}
+
 auto area(const vector<Point> &p) {
   int n = (int)p.size();
   long double area = 0;
@@ -297,82 +307,63 @@ auto rotating_calipers(const vector<Point> &hull) {
 int main() {
   int n;
   cin >> n;
-  vector<Line> lines(n);
-  for (auto &x : lines) cin >> x.s >> x.e;
-  vector<int> cur = {0}, seen(n);
-  vector<Point> ps;
-  set<Point> st;
-  vector<Segment> segments;
-  seen[0] = 1;
-  int res = 0;
-
-  function<void(int)> dfs = [&](int total) {
-    if (total == n + 1) {
-      if (!is_parallel(lines[0], lines[cur.back()])) {
-        Point p = intersect(lines[0], lines[cur.back()]);
-        int f = 1;
-        if (!st.count(p)) {
-          Segment s{p, ps.back()};
-          for (int ii = 0; ii < (int)segments.size() - 1; ii++) {
-            Point pp = intersect(lines[cur[ii + 1]], lines[cur.back()]);
-            if (on_segment2(segments[ii], pp) && on_segment2(s, pp)) {
-              f = 0;
-              break;
-            }
-          }
-          if (f) {
-            segments.push_back(s);
-            Segment ss{p, ps[0]};
-            for (int ii = 1; ii < (int)segments.size() - 1; ii++) {
-              Point pp = intersect(lines[cur[ii + 1]], lines[0]);
-              if (on_segment2(segments[ii], pp) && on_segment2(ss, pp)) {
-                f = 0;
-                break;
-              }
-            }
-            if (f) res++;
-            segments.pop_back();
-          }
-        }
+  vector<Point> ps(n);
+  for (auto &p : ps) cin >> p;
+  cout << fixed << setprecision(10);
+  if (n == 4) {
+    cout << area(ps) << "\n";
+  } else {
+    assert(n == 6);
+    auto t = get_convex2_safe(ps);
+    assert(t.size() == 5);
+    vector<int> seen(n);
+    for (auto &p : t) {
+      for (int i = 0; i < n; i++) {
+        if (p == ps[i]) seen[i] = 1;
       }
-      return;
     }
-    for (int i = 1; i < n; i++) {
+    int concave = -1;
+    for (int i = 0; i < n; i++) {
       if (!seen[i]) {
-        if (!is_parallel(lines[i], lines[cur.back()])) {
-          Point p = intersect(lines[i], lines[cur.back()]);
-          int f = 1;
-          if (ps.size()) {
-            if (st.count(p)) {
-              f = 0;
-            } else {
-              Segment s{p, ps.back()};
-              for (int ii = 0; ii < (int)segments.size() - 1; ii++) {
-                Point pp = intersect(lines[cur[ii + 1]], lines[cur.back()]);
-                if (on_segment2(segments[ii], pp) && on_segment2(s, pp)) {
-                  f = 0;
-                  break;
-                }
-              }
-              if (f) segments.push_back(s);
-            }
-          }
-          if (f) {
-            seen[i] = 1;
-            cur.push_back(i);
-            ps.push_back(p);
-            st.insert(p);
-            dfs(total + 1);
-            st.erase(p);
-            ps.pop_back();
-            cur.pop_back();
-            seen[i] = 0;
-            if (ps.size()) segments.pop_back();
-          }
-        }
+        concave = i;
+        break;
       }
     }
-  };
-  dfs(2);
-  cout << res / 2 << "\n";
+    assert(concave != -1);
+    rotate(ps.begin(), ps.begin() + concave, ps.end());
+    int dx = 0, dy = 0;
+    {
+      if (sgn(ps[1].x - ps[0].x)) dx = sgn(ps[1].x - ps[0].x);
+      if (sgn(ps[1].y - ps[0].y)) dy = sgn(ps[1].y - ps[0].y);
+    }
+    {
+      if (sgn(ps[5].x - ps[0].x)) dx = sgn(ps[5].x - ps[0].x);
+      if (sgn(ps[5].y - ps[0].y)) dy = sgn(ps[5].y - ps[0].y);
+    }
+    assert(dx && dy);
+    int need = 0;
+    if (dx > 0 && dy < 0) {
+      need = 1;
+    } else if (dx < 0 && dy < 0) {
+      need = 2;
+    } else if (dx < 0 && dy > 0) {
+      need = 3;
+    }
+    for (int _ = 0; _ < need; _++) {
+      for (int i = 0; i < n; i++) {
+        ps[i] = perp(ps[i]);
+      }
+    }
+    ld res = 0;
+    ld a = ps[0].x - ps[3].x;
+    ld c = ps[5].x - ps[0].x;
+    ld b = ps[0].y - ps[3].y;
+    ld d = ps[1].y - ps[0].y;
+    res += a * b;
+    auto f = [&](ld y) { return min(a * (b * b - y * y) / (b * d), c); };
+    res += adaptive_simpson(0, b, f);
+    swap(a, b), swap(c, d);
+    res += adaptive_simpson(0, b, f);
+    cout << res << '\n';
+  }
 }
