@@ -3,7 +3,7 @@ using namespace std;
 using ll = long long;
 // using ld = long double;
 constexpr auto eps = 1e-8;
-
+// https://docs.ros.org/en/kinetic/api/geometric_tools_engine/html/files.html
 struct ld {
   long double x;
   ld(long double _x = 0) : x(_x) {}
