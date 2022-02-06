@@ -1,7 +1,7 @@
 be careful when copying codes
 be careful when transforming: what is changing?
 edge cases (end or start)
-order of divide and multiply
+perform order, like divide and multiply
 are the conditions enough?
 when iterating, previous affect follows?
 think about greedy carefully, like direction
@@ -10,14 +10,14 @@ iterate different things
 ABABABAB => A BABABA B
 messing row and column
 no handling input
-perform order
 add mod before minus
 i-=2 and i=-2
 precalculation
-maximum range
 overflow
 init segment tree backward
 there are may be 2+ bugs
 break the group
 net cost makes any difference?
 read carefully (data range)
+reuse calculated results
+initial value?

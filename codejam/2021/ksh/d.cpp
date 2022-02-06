@@ -1,33 +1,37 @@
 #include <bits/stdc++.h>
 using namespace std;
-#define ll long long
-constexpr ll MOD = 1e9 + 7;
-
-ll norm(ll x) { return (x + MOD) % MOD; }
+using ll = long long;
+constexpr int MOD = 1e9 + 7;
+ 
+constexpr int norm(int x) {
+  if (x < 0) x += MOD;
+  if (x >= MOD) x -= MOD;
+  return x;
+}
 template <class T>
-T power(T a, ll b) {
-  T res = 1;
+constexpr T power(T a, int b, T res = 1) {
   for (; b; b /= 2, (a *= a) %= MOD)
     if (b & 1) (res *= a) %= MOD;
   return res;
 }
-// #define Z double
 struct Z {
-  ll x;
-  Z(ll _x = 0) : x(norm(_x)) {}
-  Z operator-() const { return Z(norm(MOD - x)); }
-  Z inv() const { return power(*this, MOD - 2); }
-  Z &operator*=(const Z &rhs) { return x = x * rhs.x % MOD, *this; }
-  Z &operator+=(const Z &rhs) { return x = norm(x + rhs.x), *this; }
-  Z &operator-=(const Z &rhs) { return x = norm(x - rhs.x), *this; }
-  Z &operator/=(const Z &rhs) { return *this *= rhs.inv(); }
-  Z &operator%=(const auto &_) { return *this; }
-  friend Z operator*(Z lhs, const Z &rhs) { return lhs *= rhs; }
-  friend Z operator+(Z lhs, const Z &rhs) { return lhs += rhs; }
-  friend Z operator-(Z lhs, const Z &rhs) { return lhs -= rhs; }
-  friend Z operator/(Z lhs, const Z &rhs) { return lhs /= rhs; }
-  friend Z operator%(Z lhs, const auto &_) { return lhs; }
-  friend istream &operator>>(istream &input, Z &z) { return input >> z.x, input; }
+  int x;
+  constexpr Z(int _x = 0) : x(norm(_x)) {}
+  // constexpr auto operator<=>(const Z &) const = default; // cpp20 only
+  constexpr Z operator-() const { return Z(norm(MOD - x)); }
+  constexpr Z inv() const { return power(*this, MOD - 2); }
+  constexpr Z &operator*=(const Z &rhs) { return x = ll(x) * rhs.x % MOD, *this; }
+  constexpr Z &operator+=(const Z &rhs) { return x = norm(x + rhs.x), *this; }
+  constexpr Z &operator-=(const Z &rhs) { return x = norm(x - rhs.x), *this; }
+  constexpr Z &operator/=(const Z &rhs) { return *this *= rhs.inv(); }
+  constexpr Z &operator%=(const ll &rhs) { return x %= rhs, *this; }
+  constexpr friend Z operator*(Z lhs, const Z &rhs) { return lhs *= rhs; }
+  constexpr friend Z operator+(Z lhs, const Z &rhs) { return lhs += rhs; }
+  constexpr friend Z operator-(Z lhs, const Z &rhs) { return lhs -= rhs; }
+  constexpr friend Z operator/(Z lhs, const Z &rhs) { return lhs /= rhs; }
+  constexpr friend Z operator%(Z lhs, const ll &rhs) { return lhs %= rhs; }
+  friend auto &operator>>(istream &i, Z &z) { return i >> z.x; }
+  friend auto &operator<<(ostream &o, const Z &z) { return o << z.x; }
 };
 
 int main() {
@@ -42,9 +46,9 @@ int main() {
     Z p1[n], p2[n];
     // vector<Z> p1(n), p2(n);
     // vector<int> parent(n, -1), deep(n), hson(n), top(n), sz(n);
-    int parent[n], deep[n], hson[n], top[n], sz[n];
-    memset(hson, 0, sizeof(hson));
-    parent[0] = -1;
+    // int parent[n], deep[n], hson[n], top[n], sz[n];
+    // memset(hson, 0, sizeof(hson));
+    // parent[0] = -1;
     vector<vector<int>> g(n);
     cin >> p1[0];
     p2[0] = 1 - p1[0];
@@ -53,14 +57,14 @@ int main() {
       cin >> p >> p1[i] >> p2[i];
       p1[i] /= a1e6, p2[i] /= a1e6;
       p--;
-      parent[i] = p;
+      // parent[i] = p;
       g[p].push_back(i);
     }
     // lca start
     int root = 0;
     vector<int> parent(n), deep(n), hson(n), top(n), sz(n);
     function<int(int, int, int)> dfs = [&](int node, int fa, int dep) {
-      deep[node] = dep, sz[node] = 1;
+      deep[node] = dep, sz[node] = 1, parent[node] = fa;
       for (auto &ne : g[node]) {
         if (ne == fa) continue;
         sz[node] += dfs(ne, node, dep + 1);
@@ -116,7 +120,7 @@ int main() {
           pp1 = p1[node] * pp1 + p2[node] * (1 - pp1);
           pp2 = p1[node] * pp2 + p2[node] * (1 - pp2);
         }
-        if (save)mp[hash] = pair{pp1, pp2};
+        if (save) mp[hash] = pair{pp1, pp2};
         return pair{pp1, pp2};
       }
     };
@@ -143,8 +147,7 @@ int main() {
       }
       // solve 1
       for (int node : pass) {
-        auto [m1, m2] = memo(node, cur, node!=pass[0]);
-      
+        auto [m1, m2] = memo(node, cur, node != pass[0]);
         pp1 = m1 * pp1 + m2 * (1 - pp1);
         pp2 = m1 * pp2 + m2 * (1 - pp2);
         cur = node;

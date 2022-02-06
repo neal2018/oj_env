@@ -118,13 +118,16 @@ int main() {
         f = 1;
       } else if ((s == "*" && !f) || (s == "/" && f)) {
         ss >> t;
+        if (t == "1") continue;
         all.push_back(t);
         left[i].push_back(t);
       } else if ((s == "*" && f) || (s == "/" && !f)) {
         ss >> t;
+        if (t == "1") continue;
         all.push_back(t);
         right[i].push_back(t);
       } else {
+        if (s == "1") continue;
         all.push_back(s);
         (f ? right : left)[i].push_back(s);
       }
@@ -151,7 +154,6 @@ int main() {
     auto &r = a[i];
     int cnt = 0;
     for (int ii = 0; ii < w; ii++) {
-      if (all[ii] == "1") continue;
       if (r[ii].x) cnt++;
     }
     count[i] = cnt;
