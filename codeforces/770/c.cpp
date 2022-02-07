@@ -12,28 +12,16 @@ int main() {
     cin >> n >> k;
     if (k == 1) {
       cout << "YES\n";
-      for (int i = 0; i < n; i++) {
-        cout << i + 1 << "\n";
-      }
-      continue;
-    }
-    if (n % 2) {
+      for (int i = 0; i < n * k; i++) cout << i + 1 << "\n";
+    } else if (n % 2) {
       cout << "NO\n";
-      continue;
-    }
-    cout << "YES\n";
-    vector a(n, vector<int>(k + 1));
-    int cur = 1;
-    for (int i = 0; i < k; i++) {
-      for (int j = 0; j < n; j++) {
-        a[j][i] = cur++;
+    } else {
+      cout << "YES\n";
+      for (int i = 0; i < n; i++) {
+        for (int j = 0; j < k; j++) {
+          cout << n * j + i + 1 << " \n"[j == k - 1];
+        }
       }
-    }
-    for (int i = 0; i < n; i++) {
-      for (int j = 0; j < k; j++) {
-        cout << a[i][j] << " ";
-      }
-      cout << "\n";
     }
   }
 }
