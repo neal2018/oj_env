@@ -3,13 +3,13 @@ using namespace std;
 using ll = long long;
 // https://space.bilibili.com/672328094
 
-constexpr ll MOD = 998244353;
+constexpr ll MOD = 1e9 + 7;
 
 ll norm(ll x) { return (x % MOD + MOD) % MOD; }
 template <class T>
-T power(T a, ll b, T res = 1) {
-  for (; b; b /= 2, (a *= a) %= MOD)
-    if (b & 1) (res *= a) %= MOD;
+T power(T a, ll b, ll m = MOD, T res = 1) {
+  for (; b; b /= 2, (a *= a) %= m)
+    if (b & 1) (res *= a) %= m;
   return res;
 }
 struct Z {
@@ -36,12 +36,16 @@ int main() {
   cin.tie(nullptr)->sync_with_stdio(false);
   ll n;
   cin >> n;
-  Z res = 0;
-  ll t = 1;
-  while (10 * t <= n) {
-    res += (Z(1) + t * 9) * (9 * t) / 2;
-    t *= 10;
+  vector<ll> a(n);
+  for (auto &x : a) cin >> x;
+  sort(a.begin(), a.end());
+  Z pre = a[0], res = a[0] * a[0], all = a[0];
+  for (int i = 1; i < n; i++) {
+    res *= a[i] * a[i];
+    ll pow2 = power(2ll, i, MOD - 1) - 1;
+    res *= pre * power(Z(a[i]), pow2 + MOD - 1);
+    pre = pre * all * a[i];
+    all = all * all * a[i];
   }
-  res += (Z(1) + n - t + 1) * (n - t + 1) / 2;
   cout << res << "\n";
 }

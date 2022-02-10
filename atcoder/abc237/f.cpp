@@ -34,14 +34,38 @@ struct Z {
 
 int main() {
   cin.tie(nullptr)->sync_with_stdio(false);
-  ll n;
-  cin >> n;
-  Z res = 0;
-  ll t = 1;
-  while (10 * t <= n) {
-    res += (Z(1) + t * 9) * (9 * t) / 2;
-    t *= 10;
-  }
-  res += (Z(1) + n - t + 1) * (n - t + 1) / 2;
+  int n, m;
+  cin >> n >> m;
+  vector<int> lis;
+  map<pair<vector<int>, int>, Z> memo;
+  function<Z(int)> dfs = [&](int i) -> Z {
+    if (memo.count({lis, i})) {
+      return memo[{lis, i}];
+    }
+    Z res = 0;
+    if (i == n) {
+      if (lis.size() == 3) res = 1;
+    } else {
+      for (int ii = 0; ii < m; ii++) {
+        auto maxi = lower_bound(lis.begin(), lis.end(), ii);
+        if (maxi == lis.end()) {
+          if (lis.size() < 3) {
+            lis.push_back(ii);
+            res += dfs(i + 1);
+            lis.pop_back();
+          }
+        } else {
+          auto p = maxi - lis.begin();
+          auto old = lis[p];
+          lis[p] = ii;
+          res += dfs(i + 1);
+          lis[p] = old;
+        }
+      }
+    }
+    return memo[{lis, i}] = res;
+  };
+  Z res = dfs(0);
+  // cout << memo.size() << endl;
   cout << res << "\n";
 }
