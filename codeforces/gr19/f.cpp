@@ -3,68 +3,103 @@ using namespace std;
 using ll = long long;
 // https://space.bilibili.com/672328094
 
-ll MOD = 998244353;
-
-ll norm(ll x) { return (x % MOD + MOD) % MOD; }
-template <class T>
-T power(T a, ll b, T res = 1) {
-  for (; b; b /= 2, (a *= a) %= MOD)
-    if (b & 1) (res *= a) %= MOD;
-  return res;
-}
-struct Z {
-  ll x;
-  Z(ll _x = 0) : x(norm(_x)) {}
-  auto operator<=>(const Z &) const = default;
-  Z operator-() const { return Z(norm(MOD - x)); }
-  Z inv() const { return power(*this, MOD - 2); }
-  Z &operator*=(const Z &rhs) { return x = x * rhs.x % MOD, *this; }
-  Z &operator+=(const Z &rhs) { return x = norm(x + rhs.x), *this; }
-  Z &operator-=(const Z &rhs) { return x = norm(x - rhs.x), *this; }
-  Z &operator/=(const Z &rhs) { return *this *= rhs.inv(); }
-  Z &operator%=(const ll &rhs) { return x %= rhs, *this; }
-  friend Z operator*(Z lhs, const Z &rhs) { return lhs *= rhs; }
-  friend Z operator+(Z lhs, const Z &rhs) { return lhs += rhs; }
-  friend Z operator-(Z lhs, const Z &rhs) { return lhs -= rhs; }
-  friend Z operator/(Z lhs, const Z &rhs) { return lhs /= rhs; }
-  friend Z operator%(Z lhs, const ll &rhs) { return lhs %= rhs; }
-  friend auto &operator>>(istream &i, Z &z) { return i >> z.x; }
-  friend auto &operator<<(ostream &o, const Z &z) { return o << z.x; }
-};
-
 int main() {
   cin.tie(nullptr)->sync_with_stdio(false);
-  int n, q, xx;
-  cin >> n >> q >> MOD;
-  // (x^l - x^r*fib[r-l] - x^(r+1)*fib[r-l-1])/(1-x-x^2)
-  // l              r
-  // 1, 1, 2, 3, 5, 8, 13, 21
-  //                1,  1,  2, 3, 5, 8, 11, 19 * 8
-  //                    1,  1, 2, 3, 5,  8, 11 * 5
-  vector<Z> a(n), b(n);
-  for (auto &x : a) cin >> x;
-  for (auto &x : a) cin >> xx, x -= xx;
-  for (int i = n - 1; i >= 0; i--) {
-    if (i > 0) a[i] -= a[i - 1];
-    if (i > 1) a[i] -= a[i - 2];
+  int n;
+  cin >> n;
+  vector<ll> a(n);
+  for (auto& x : a) cin >> x;
+  int root = int(max_element(a.begin(), a.end()) - a.begin());
+  vector<vector<int>> g(n);
+  for (int i = 0, u, v; i < n - 1; i++) {
+    cin >> u >> v, u--, v--;
+    g[u].push_back(v), g[v].push_back(u);
   }
-  int diff = 0;
-  for (int i = 0; i < n; i++) diff += (a[i] != 0);
-  vector<Z> fib(n + 1, 1);
-  for (int i = 2; i <= n; i++) fib[i] = fib[i - 1] + fib[i - 2];
-  auto add = [&](int i, Z v) {
-    diff -= (a[i] != 0);
-    a[i] += v;
-    diff += (a[i] != 0);
+  vector<ll> maxi(n);
+  function<void(int, int)> get_maxi = [&](int node, int fa) {
+    maxi[node] = a[node];
+    for (auto& ne : g[node]) {
+      if (ne == fa) continue;
+      get_maxi(ne, node);
+      maxi[node] = max(maxi[node], maxi[ne]);
+    }
   };
-  while (q--) {
-    char op;
-    int l, r;
-    cin >> op >> l >> r, l--;
-    int p = (op == 'A' ? 1 : -1);
-    add(l, p);
-    if (r < n) add(r, -p * fib[r - l]);
-    if (r + 1 < n) add(r + 1, -p * fib[r - l - 1]);
-    cout << (diff ? "NO\n" : "YES\n");
+  get_maxi(root, -1);
+  ll res = 0;
+  function<void(int, int)> solve_solo;
+  function<void(int, int, ll)> solve_max = [&](int node, int fa, ll up) {
+    int pos = -1;
+    for (auto& ne : g[node]) {
+      if (ne == fa) continue;
+      if (pos == -1 || maxi[ne] > maxi[pos]) {
+        pos = ne;
+      }
+    }
+    for (auto& ne : g[node]) {
+      if (ne == fa) continue;
+      if (pos == ne) {
+        solve_max(ne, node, up);
+      } else {
+        solve_solo(ne, node);
+      }
+    }
+    if (pos == -1) {
+      res += up;
+    }
+  };
+  solve_solo = [&](int node, int fa) {
+    int pos1 = -1, pos2 = -1;
+    for (auto& ne : g[node]) {
+      if (ne == fa) continue;
+      if (pos1 == -1 || maxi[ne] > maxi[pos1]) {
+        pos1 = ne;
+      } else if (pos2 == -1 || maxi[ne] > maxi[pos2]) {
+        pos2 = ne;
+      }
+    }
+    if (pos1 != -1) {
+      solve_max(pos1, node, max(maxi[node], maxi[pos1]));
+    } else {
+      res += maxi[root];
+      return;
+    }
+    if (pos2 != -1) {
+      solve_max(pos2, node, max(maxi[node], maxi[pos2]));
+    } else {
+      res += maxi[root];
+    }
+    for (auto& ne : g[node]) {
+      if (ne == pos1 || ne == pos2 || ne == fa) {
+        continue;
+      } else {
+        solve_solo(ne, node);
+      }
+    }
+  };
+  int pos1 = -1, pos2 = -1;
+  for (auto& ne : g[root]) {
+    if (pos1 == -1 || maxi[ne] > maxi[pos1]) {
+      pos1 = ne;
+    } else if (pos2 == -1 || maxi[ne] > maxi[pos2]) {
+      pos2 = ne;
+    }
   }
+  if (pos1 != -1) {
+    solve_max(pos1, root, maxi[root]);
+  } else {
+    res += maxi[root];
+  }
+  if (pos2 != -1) {
+    solve_max(pos2, root, maxi[root]);
+  } else {
+    res += maxi[root];
+  }
+  for (auto& ne : g[root]) {
+    if (ne == pos1 || ne == pos2) {
+      continue;
+    } else {
+      solve_solo(ne, root);
+    }
+  }
+  cout << res << "\n";
 }
