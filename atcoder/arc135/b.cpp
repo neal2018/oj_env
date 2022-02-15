@@ -8,17 +8,17 @@ int main() {
   cin >> n;
   vector<ll> s(n);
   for (auto& x : s) cin >> x;
-  vector<ll> mini(n+2);
+  vector<ll> mini(n + 2);
   for (ll i = n - 1; i > 0; i--) {
-    mini[i - 1] = max(mini[i - 1], mini[i + 2] - s[i] + s[i - 1]);
+    mini[i - 1] = mini[i + 2] - s[i] + s[i - 1];
   }
   if (s[0] - mini[0] - mini[1] < mini[2]) {
     cout << "No\n";
   } else {
     cout << "Yes\n";
-    cout << mini[0] << " " << mini[1] << " " << s[0] - mini[0] - mini[1] << " ";
+    cout << mini[0] << " " << mini[1] << " " << (mini[2] = s[0] - mini[0] - mini[1]) << " ";
     for (int i = 1; i < n; i++) {
-      cout << s[i] - s[i - 1] + mini[i - 1] << " \n"[i == n - 1];
+      cout << (mini[i + 2] = s[i] - s[i - 1] + mini[i - 1]) << " \n"[i == n - 1];
     }
   }
 }
