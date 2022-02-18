@@ -1,7 +1,8 @@
 #include <bits/stdc++.h>
 using namespace std;
+using ll = long long;
 // https://space.bilibili.com/672328094
-#define ll long long
+
 constexpr ll MOD = 998244353;
 
 ll norm(ll x) { return (x % MOD + MOD) % MOD; }
@@ -14,7 +15,7 @@ T power(T a, ll b, T res = 1) {
 struct Z {
   ll x;
   Z(ll _x = 0) : x(norm(_x)) {}
-  auto operator<=>(const Z &) const = default;
+  // auto operator<=>(const Z &) const = default;
   Z operator-() const { return Z(norm(MOD - x)); }
   Z inv() const { return power(*this, MOD - 2); }
   Z &operator*=(const Z &rhs) { return x = x * rhs.x % MOD, *this; }
@@ -33,20 +34,33 @@ struct Z {
 
 int main() {
   cin.tie(nullptr)->sync_with_stdio(false);
-  ll n;
-  cin >> n;
-  vector<ll> a(n), pre(n + 1);
-  vector<Z> dp(n);
-  for (auto &x : a) cin >> x;
-  for (int i = 0; i < n; i++) pre[i + 1] = pre[i] + a[i];
-  map<ll, ll> mp;
-  for (int i = 1; i < n; i++) {
-    if (!mp.count(pre[i])) {
-      dp[i] = dp[i - 1] * 2 + 1;
-    } else {
-      dp[i] = dp[i - 1] * 2 - dp[mp[pre[i]] - 1];
+  int T;
+  cin >> T;
+  while (T--) {
+    int n;
+    cin >> n;
+    vector<int> a(n);
+    for (auto &x : a) cin >> x;
+    Z res = 1;
+    for (int i = 0, j; i < n; i = j) {
+      j = i + 1;
+      if (i < n - 1) {
+        if (a[i + 1] == a[i]) {
+          while (j < n && a[i] == a[j]) j++;
+          j--;
+          res *= (power(Z(2), j - i + 1) - 1);
+        } else {
+          if (a[i + 1] > a[i]) {
+            while (j < n - 1 && a[j + 1] >= a[j]) j++;
+          } else {
+            while (j < n - 1 && a[j + 1] <= a[j]) j++;
+          }
+          int pre = j;
+          while (pre > 0 && a[pre - 1] == a[pre]) pre--;
+          res *= power(Z(2), j - i - (j - pre + 1)) * (power(Z(2), j - pre + 1) - 1);
+        }
+      }
     }
-    mp[pre[i]] = i;
+    cout << res << "\n";
   }
-  cout << dp[n - 1] + 1 << "\n";
 }

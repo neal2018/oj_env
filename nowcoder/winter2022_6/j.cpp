@@ -5,8 +5,7 @@ using ll = long long;
 
 int main() {
   cin.tie(nullptr)->sync_with_stdio(false);
-  int n, m;
-  cin >> n >> m;
-  vector<ll> a(n);
-  for (auto& x : a) cin >> x;
+  int n, m, k;
+  cin >> n >> m >> k;
+  cout << ((n + m > k) ? "YES\n" : "NO\n");
 }
