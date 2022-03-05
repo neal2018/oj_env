@@ -8,7 +8,7 @@ constexpr int BUFFER_SIZE = 1 << 16;
 char buffer[BUFFER_SIZE], *head, *tail;
 char get_char() {
   if (head == tail) {
-    int l = fread(buffer, 1, BUFFER_SIZE, stdin);
+    int l = (int)fread(buffer, 1, BUFFER_SIZE, stdin);
     tail = (head = buffer) + l;
   }
   return *head++;
@@ -25,6 +25,7 @@ void print(int x) {
   if (x > 9) print(x / 10);
   putchar(x % 10 | '0');
 }
+void println(int x) { print(x), putchar('\n'); }
 }  // namespace io
 
 int main() {

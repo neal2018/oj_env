@@ -5,19 +5,19 @@ using ll = long long;
 
 int main() {
   cin.tie(nullptr)->sync_with_stdio(false);
-  ll x1, y1, x2, y2;
-  cin >> x1 >> y1 >> x2 >> y2;
-  vector<pair<int, int>> d = {{-2, -1}, {-1, -2}, {1, 2},  {2, 1},
-                              {-1, 2},  {2, -1},  {1, -2}, {-1, 2}};
-  set<pair<ll, ll>> st;
-  for (auto& [dx, dy] : d) {
-    st.insert({x1 + dx, y1 + dy});
-  }
-  for (auto& [dx, dy] : d) {
-    if (st.count({x2 + dx, y2 + dy})) {
-      cout << "Yes\n";
-      return 0;
+  int n, t;
+  cin >> n >> t;
+  vector<pair<ll, ll>> a(n);
+  for (auto& [x, y] : a) cin >> x >> y;
+  vector<int> dp(t + 1);
+  dp[0] = 1;
+  for (auto& [x, y] : a) {
+    vector<int> ndp(t + 1);
+    for (int i = t; i >= 0; i--) {
+      if (i >= x) ndp[i] |= dp[i - x];
+      if (i >= y) ndp[i] |= dp[i - y];
     }
+    dp = ndp;
   }
-  cout << "No\n";
+  cout << (dp.back() ? "Yes\n" : "No\n");
 }

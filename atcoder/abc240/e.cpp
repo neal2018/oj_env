@@ -5,21 +5,28 @@ using ll = long long;
 
 int main() {
   cin.tie(nullptr)->sync_with_stdio(false);
-  int n, q;
-  cin >> n >> q;
-  vector<int> p(n + 1);
-  iota(p.begin(), p.end(), 0);
-  function<int(int)> find = [&](int x) { return p[x] == x ? x : (p[x] = find(p[x])); };
-  auto merge = [&](int x, int y) { p[find(x)] = find(y); };
-  while (q--) {
-    int l, r;
-    cin >> l >> r;
-    l--;
-    merge(l, r);
+  int n, inf = 1e9;
+  cin >> n;
+  vector<vector<int>> g(n);
+  for (int i = 0, u, v; i < n - 1; i++) {
+    cin >> u >> v, u--, v--;
+    g[u].push_back(v), g[v].push_back(u);
   }
-  if (find(0) == find(n)) {
-    cout << "Yes\n";
-  } else {
-    cout << "No\n";
+  int cur = 0;
+  vector<pair<int, int>> res(n);
+  function<void(int, int)> dfs = [&](int node, int fa) {
+    int mini = inf, maxi = -inf;
+    for (auto& ne : g[node]) {
+      if (ne == fa) continue;
+      dfs(ne, node);
+      mini = min(mini, res[ne].first);
+      maxi = max(maxi, res[ne].second);
+    }
+    if (mini == inf) mini = maxi = ++cur;
+    res[node] = {mini, maxi};
+  };
+  dfs(0, -1);
+  for (auto& [l, r] : res) {
+    cout << l << " " << r << "\n";
   }
 }

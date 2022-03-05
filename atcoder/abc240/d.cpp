@@ -5,16 +5,25 @@ using ll = long long;
 
 int main() {
   cin.tie(nullptr)->sync_with_stdio(false);
-  ll T;
-  cin >> T;
-  while (T--) {
-    ll a, s;
-    cin >> a >> s;
-    ll need = s - 2 * a;
-    if (need < 0 || (need & (~a)) != need) {
-      cout << "No\n";
+  int n;
+  cin >> n;
+  vector<int> a(n);
+  for (auto& x : a) cin >> x;
+  int cnt = 0;
+  vector<pair<int, int>> stk;
+  for (auto& x : a) {
+    if (stk.empty() || stk.back().first != x) {
+      cnt = 1;
     } else {
-      cout << "Yes\n";
+      cnt++;
     }
+    stk.push_back({x, cnt});
+    if (cnt == x) {
+      while (cnt--) stk.pop_back();
+      cnt = stk.size() ? stk.back().second : 0;
+    }
+    cout << stk.size() << "\n";
   }
 }
+
+
