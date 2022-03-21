@@ -255,7 +255,7 @@
 			"};",
 			"",
 			"struct SegTree {",
-			"\tvector<Node> t = {{}};\t// init all",
+			"\tvector<Node> t = {{}};  // init all",
 			"\tSegTree() = default;",
 			"\tSegTree(int n) { t.reserve(n * 20); }",
 			"\tint modify(int p, int l, int r, int x, int v) {",
