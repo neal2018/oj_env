@@ -2,10 +2,10 @@
 using namespace std;
 using ll = long long;
 
-constexpr ll MAX_N = 1e6 + 10;
 int main() {
   cin.tie(nullptr)->sync_with_stdio(false);
   mt19937_64 rng(chrono::steady_clock::now().time_since_epoch().count());
+  constexpr ll MAX_N = 1e6 + 10;
   vector<int> min_primes(MAX_N + 1), primes;
   primes.reserve(1e5);
   for (int i = 2; i <= MAX_N; i++) {

@@ -51,12 +51,21 @@
 		],
 		"description": "read_n"
 	},
+	"read_n_m": {
+		"scope": "cpp",
+		"prefix": "nm",
+		"body": [
+			"ll n, m;",
+			"cin >> n >> m;\n"
+		],
+		"description": "read_n_m"
+	},
 	"read_array": {
 		"scope": "cpp",
 		"prefix": "a",
 		"body": [
 			"vector<${0:ll}> a(n);",
-			"for (auto& x : a) cin >> x;"
+			"for (auto& x : a) cin >> x;\n"
 		],
 		"description": "read_array"
 	},
@@ -80,7 +89,7 @@
 			"for (int i = 0, u, v; i < ${0:n - 1}; i++) {",
 			"\tcin >> u >> v, u--, v--;",
 			"\tg[u].push_back(v), g[v].push_back(u);",
-			"}"
+			"}\n"
 		],
 		"description": "read_graph"
 	},

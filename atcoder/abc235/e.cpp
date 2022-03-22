@@ -4,11 +4,11 @@ using ll = long long;
 // https://space.bilibili.com/672328094
 
 struct Node {
-  int lc, rc, p;
+  int lc = 0, rc = 0, p = 0;
 };
 
 struct SegTree {
-  vector<Node> t = {{0, 0, -1}};  // init all
+  vector<Node> t = {{}};  // init all
   SegTree() = default;
   SegTree(int n) { t.reserve(n * 20); }
   int modify(int p, int l, int r, int x, int v) {

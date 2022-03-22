@@ -1,9 +1,11 @@
 #include <bits/stdc++.h>
 using namespace std;
 using ll = long long;
-constexpr ll MOD = 998244353;
+// https://space.bilibili.com/672328094
 
-ll norm(ll x) { return (x + MOD) % MOD; }
+constexpr ll MOD = 1e9 + 7;
+
+ll norm(ll x) { return (x % MOD + MOD) % MOD; }
 template <class T>
 T power(T a, ll b, T res = 1) {
   for (; b; b /= 2, (a *= a) %= MOD)
@@ -13,7 +15,7 @@ T power(T a, ll b, T res = 1) {
 struct Z {
   ll x;
   Z(ll _x = 0) : x(norm(_x)) {}
-  // auto operator<=>(const Z &) const = default;
+  auto operator<=>(const Z &) const = default;
   Z operator-() const { return Z(norm(MOD - x)); }
   Z inv() const { return power(*this, MOD - 2); }
   Z &operator*=(const Z &rhs) { return x = x * rhs.x % MOD, *this; }
@@ -29,25 +31,34 @@ struct Z {
   friend auto &operator>>(istream &i, Z &z) { return i >> z.x; }
   friend auto &operator<<(ostream &o, const Z &z) { return o << z.x; }
 };
-constexpr ll MAX_N = 5e6 + 10;
+
 int main() {
   cin.tie(nullptr)->sync_with_stdio(false);
-  vector<Z> f(MAX_N, 1), rf(MAX_N, 1);
-  for (int i = 2; i < MAX_N; i++) f[i] = f[i - 1] * i;
-  rf[MAX_N - 1] = power(f[MAX_N - 1], MOD - 2);
-  for (int i = MAX_N - 2; i > 1; i--) rf[i] = rf[i + 1] * (i + 1);
-  auto binom = [&](int n, int r) {
-    if (n < 0 || r < 0 || n < r) return decltype(f)::value_type(0);
-    return f[n] * rf[n - r] * rf[r];
-  };
-  int n, A, B, C;
-  cin >> n >> A >> B >> C;
-  Z a = 1, b = 1, c = 1, res = 0;
-  for (int i = 0, sgn = (n % 2 ? -1 : 1); i <= n; i++, sgn = -sgn) {
-    res += sgn * binom(n, i) * a * b * c;
-    a = 2 * a - binom(i, A);
-    b = 2 * b - binom(i, B);
-    c = 2 * c - binom(i, C);
+  ll n, k, q;
+  cin >> n >> k >> q, k++;
+  vector<ll> a(n);
+  for (auto &x : a) cin >> x;
+  vector<vector<Z>> p(k, vector<Z>(n));
+  p[0] = vector<Z>(n, 1);
+  for (int i = 1; i < k; i++) {
+    for (int j = 1; j < n - 1; j++) p[i][j] = p[i - 1][j - 1] + p[i - 1][j + 1];
+    p[i][0] = p[i - 1][1];
+    p[i][n - 1] = p[i - 1][n - 2];
   }
-  cout << res << "\n";
+  vector<Z> sum(n);
+  for (int i = 0; i < k; i++) {
+    for (int j = 0; j < n; j++) {
+      sum[j] += p[i][j] * p[k - 1 - i][j];
+    }
+  }
+  Z res = 0;
+  for (int i = 0; i < n; i++) res += sum[i] * a[i];
+  while (q--) {
+    ll i, x;
+    cin >> i >> x, i--;
+    res -= sum[i] * a[i];
+    a[i] = x;
+    res += sum[i] * a[i];
+    cout << res << "\n";
+  }
 }

@@ -34,6 +34,8 @@ struct Z {
 
 int main() {
   cin.tie(nullptr)->sync_with_stdio(false);
-  ll n, m, b, w;
-  cin >> n >> m >> b >> w;
+  ll n, m, k;
+  cin >> n >> m >> k;
+  vector<Z> w(n);
+  for (auto &x : w) cin >> x;
 }
