@@ -359,4 +359,17 @@
 		],
 		"description": "rng mt19937_64"
 	},
+	"compress": {
+		"scope": "cpp",
+		"prefix": [
+			"compress",
+		],
+		"body": [
+			"auto compress = ${0:a};",
+			"sort(compress.begin(), compress.end());",
+			"compress.erase(unique(compress.begin(), compress.end()), compress.end());",
+			"for (auto& x : ${0:a}) x = lower_bound(compress.begin(), compress.end(), x) - compress.begin();",
+		],
+		"description": "compress"
+	},
 }
