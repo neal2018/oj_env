@@ -372,4 +372,36 @@
 		],
 		"description": "compress"
 	},
+	"quick io": {
+		"scope": "cpp",
+		"prefix": [
+			"io",
+		],
+		"body": [
+			"namespace io {",
+			"constexpr int SIZE = 1 << 16;",
+			"char buf[SIZE], *head, *tail;",
+			"char get_char() {",
+			"\tif (head == tail) tail = (head = buf) + fread(buf, 1, SIZE, stdin);",
+			"\treturn *head++;",
+			"}",
+			"int read() {",
+			"\tint x = 0, f = 1;",
+			"\tchar c = get_char();",
+			"\tfor (; !isdigit(c); c = get_char()) (c == '-') && (f = -1);",
+			"\tfor (; isdigit(c); c = get_char()) x = x * 10 + c - '0';",
+			"\treturn x * f;",
+			"}",
+			"void print(int x) {",
+			"\tif (x > 9) print(x / 10);",
+			"\tputchar(x % 10 | '0');",
+			"}",
+			"void println(int x) { print(x), putchar('\n'); }",
+			"struct Read {",
+			"\tRead& operator>>(auto& x) { return x = read(), *this; }",
+			"} in;",
+			"}  // namespace io",
+		],
+		"description": "quick io"
+	}
 }

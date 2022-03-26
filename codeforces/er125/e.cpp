@@ -31,7 +31,9 @@ struct Z {
   friend auto &operator>>(istream &i, Z &z) { return i >> z.x; }
   friend auto &operator<<(ostream &o, const Z &z) { return o << z.x; }
 };
+
 constexpr ll MAX_N = 1e5;
+
 int main() {
   cin.tie(nullptr)->sync_with_stdio(false);
   vector<Z> f(MAX_N, 1), rf(MAX_N, 1);
@@ -44,17 +46,14 @@ int main() {
   };
   ll n, k;
   cin >> n >> k;
-  vector<vector<Z>> dp(n + 1, vector<Z>(k + 1));
-  for (int i = 0; i <= n; i++) {
-    for (int j = 1; j <= k; j++) {
-      if (i == 0) {
-        dp[i][j] = 1;
-      } else {
-        for (int ii = 1; ii <= j; ii++) {
-          dp[i][j] += dp[i - 1][ii];
-        }
+  vector<vector<Z>> dp(n, vector<Z>(k));
+  for (int j = 0; j < k; j++) dp[0][j] = j + 1;
+  for (int i = 0; i < n - 1; i++) {
+    for (int j = 0; j < k; j++) {
+      for (int jj = 0; jj < k; jj++) {
+        dp[i+1][max(jj, j)] += power(Z(jj+1), i);
       }
     }
   }
-  cout << dp[n][k] << "\n";
+  cout << dp[n - 1][k - 1] << "\n";
 }
