@@ -84,7 +84,14 @@
         "numbers": "cpp",
         "ranges": "cpp",
         "span": "cpp",
-        "stop_token": "cpp"
+        "stop_token": "cpp",
+        "rope": "cpp",
+        "slist": "cpp",
+        "barrier": "cpp",
+        "source_location": "cpp",
+        "latch": "cpp",
+        "semaphore": "cpp",
+        "syncstream": "cpp"
     },
     "C_Cpp.clang_format_fallbackStyle": "{ BasedOnStyle: Google, IndentWidth: 2, AccessModifierOffset: -2, ColumnLimit: 100}",
     "editor.tabSize": 2,
@@ -95,6 +102,69 @@
     ],
     "cSpell.words": [
         "hson",
-        "qpow"
+        "qpow",
+        "spfa"
     ],
+    "files.autoSave": "afterDelay",
+    "terminal.integrated.profiles.windows": {
+        "PowerShell": {
+            "source": "PowerShell",
+            "icon": "terminal-powershell"
+        },
+        "Command Prompt": {
+            "path": [
+                "${env:windir}\\Sysnative\\cmd.exe",
+                "${env:windir}\\System32\\cmd.exe"
+            ],
+            "args": [],
+            "icon": "terminal-cmd"
+        },
+        "GitBash": {
+            "path": [
+                "C:/Users/neal/scoop/apps/git/current/bin/bash.exe"
+            ],
+            "args": [
+                "-l"
+            ],
+            "icon": "terminal-bash"
+        }
+    },
+    "editor.tokenColorCustomizations": {
+        "[City Lights]": {
+            "textMateRules": [
+                {
+                    "name": "override",
+                    "scope": [
+                        // [JAVASCRIPT] - Async/Await
+                        "storage.modifier.async.tsx",
+                        "storage.modifier.async.ts",
+                        "storage.modifier.async.js",
+                        "storage.modifier.async.jsx",
+                        "keyword.operator.new.js",
+                        "keyword.control.flow.js",
+                        "keyword.control.flow.jsx",
+                        "keyword.control.flow.ts",
+                        "keyword.control.flow.tsx",
+                        // [JAVA/TYPESCRIPT] - storage types
+                        "storage.type.java",
+                        "support.type.primitive.ts",
+                        "support.type.primitive.tsx",
+                        "entity.name.type.ts",
+                        "entity.name.type.tsx",
+                        // [JAVA] - annotations
+                        "storage.type.annotation.java",
+                        "storage.type.annotation.ts",
+                        // [TYPESCRIPT] - storage types nested
+                        "support.type.primitive.ts",
+                        "entity.name.type.ts"
+                    ],
+                    "settings": {
+                        "fontStyle": ""
+                    }
+                },
+            ]
+        }
+    },
+    "workbench.colorTheme": "City Lights",
+    "editor.bracketPairColorization.enabled": true,
 }
