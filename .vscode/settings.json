@@ -103,7 +103,8 @@
     "cSpell.words": [
         "hson",
         "qpow",
-        "spfa"
+        "spfa",
+        "stold"
     ],
     "files.autoSave": "afterDelay",
     "terminal.integrated.profiles.windows": {

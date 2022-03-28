@@ -406,6 +406,7 @@
 			"void println(int x) { print(x), putchar('\\n'); }",
 			"struct Read {",
 			"\tRead& operator>>(auto& x) { return x = read(), *this; }",
+			"\tRead& operator>>(long double& x) { return x = stold(read_s()), *this; }",
 			"} in;",
 			"}  // namespace io",
 		],
