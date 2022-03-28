@@ -396,7 +396,7 @@
 			"\tif (x > 9) print(x / 10);",
 			"\tputchar(x % 10 | '0');",
 			"}",
-			"void println(int x) { print(x), putchar('\n'); }",
+			"void println(int x) { print(x), putchar('\\n'); }",
 			"struct Read {",
 			"\tRead& operator>>(auto& x) { return x = read(), *this; }",
 			"} in;",
