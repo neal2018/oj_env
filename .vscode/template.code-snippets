@@ -8,15 +8,21 @@
 	// Example:
 	"multicase main": {
 		"scope": "cpp",
-		"prefix": "#incldue, main",
+		"prefix": [
+			"#include",
+			"main",
+			"multi"
+		],
 		"body": [
 			"#include <bits/stdc++.h>",
 			"using namespace std;",
 			"using ll = long long;",
+			"using ld = long double;",
 			"// https://space.bilibili.com/672328094",
 			"",
 			"int main() {",
 			"\tcin.tie(nullptr)->sync_with_stdio(false);",
+			"\tcout << fixed << setprecision(20);",
 			"\tint T;",
 			"\tcin >> T;",
 			"\twhile (T--) {",
@@ -28,15 +34,21 @@
 	},
 	"singlecase main": {
 		"scope": "cpp",
-		"prefix": "#incldue, main",
+		"prefix": [
+			"#include",
+			"main",
+			"single"
+		],
 		"body": [
 			"#include <bits/stdc++.h>",
 			"using namespace std;",
 			"using ll = long long;",
+			"using ld = long double;",
 			"// https://space.bilibili.com/672328094",
 			"",
 			"int main() {",
 			"\tcin.tie(nullptr)->sync_with_stdio(false);",
+			"\tcout << fixed << setprecision(20);",
 			"\t$0",
 			"}",
 		],
