@@ -164,6 +164,15 @@ struct Poly {
     reverse(b.a.begin(), b.a.end());
     return ((*this) * b).divxk(n - 1);
   }
+  Poly divmod(Poly b) const {
+    auto n = size(), m = b.size();
+    auto t = *this;
+    reverse(t.a.begin(), t.a.end());
+    reverse(b.a.begin(), b.a.end());
+    Poly res = (t * b.inv(n)).modxk(n - m + 1);
+    reverse(res.a.begin(), res.a.end());
+    return res;
+  }
   vector<Z> eval(vector<Z> x) const {
     if (size() == 0) return vector<Z>(x.size(), 0);
     const int n = max(int(x.size()), size());
@@ -193,7 +202,6 @@ struct Poly {
     return ans;
   }
 };
-
 int main() {
   cin.tie(nullptr)->sync_with_stdio(false);
   int n, m;
@@ -201,9 +209,12 @@ int main() {
   vector<Z> a(n + 1), b(m), c(n + m + 1);
   for (auto &x : a) cin >> x;
   for (auto &x : c) cin >> x;
-  Poly A(a), C(c);
-  Poly B = C * A.inv(1);
+  Poly B = Poly(c).divmod(Poly(a));
   for (auto &x : B.a) {
-    cout << x << " ";
+    if (x.x > 100) {
+      cout << x.x - MOD << " ";
+    } else {
+      cout << x << " ";
+    }
   }
 }
