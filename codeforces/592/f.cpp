@@ -32,29 +32,8 @@ struct Z {
   friend auto &operator<<(ostream &o, const Z &z) { return o << z.x; }
 };
 
-constexpr ll MAX_N = 1e5;
-
 int main() {
   cin.tie(nullptr)->sync_with_stdio(false);
-  vector<Z> f(MAX_N, 1), rf(MAX_N, 1);
-  for (int i = 2; i < MAX_N; i++) f[i] = f[i - 1] * i % MOD;
-  rf[MAX_N - 1] = power(f[MAX_N - 1], MOD - 2);
-  for (int i = MAX_N - 2; i > 1; i--) rf[i] = rf[i + 1] * (i + 1) % MOD;
-  auto binom = [&](ll n, ll r) -> Z {
-    if (n < 0 || r < 0 || n < r) return 0;
-    return f[n] * rf[n - r] * rf[r];
-  };
   ll n, k;
   cin >> n >> k;
-  vector<vector<Z>> dp(n, vector<Z>(k + 1));
-  dp[0][0] = 1;
-  for (int i = 0; i < n; i++) {
-    for (int j = 0; j < k; j++) {
-      for (int t = 0; t < n - i; t++) {
-        auto coeff = binom(n - i - 1, t) * power(k - j, t * (i + (i + t - 1)) / 2);
-        dp[i + t][j + 1] += coeff * dp[i][j];
-      }
-    }
-  }
-  cout << dp[n - 1][k] << "\n";
 }

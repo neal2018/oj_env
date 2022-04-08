@@ -4,50 +4,43 @@ using ll = long long;
 using ld = long double;
 // https://space.bilibili.com/672328094
 
+pair<ll, ll> teleport(ll node) {
+  ll ne, cnt;
+  cout << "T " << node + 1 << endl;
+  cin >> ne >> cnt;
+  return {ne - 1, cnt};
+}
+
+pair<ll, ll> walk() {
+  ll ne, cnt;
+  cout << "W" << endl;
+  cin >> ne >> cnt;
+  return {ne - 1, cnt};
+}
+
+void answer(ll cnt) { cout << "E " << cnt << endl; }
+
 int main() {
   cin.tie(nullptr)->sync_with_stdio(false);
   cout << fixed << setprecision(20);
+  mt19937_64 rng(chrono::steady_clock::now().time_since_epoch().count());
   int T;
   cin >> T;
   for (int case_num = 1; case_num <= T; case_num++) {
-    cout << "Case #" << case_num << ": ";
-    ll n;
-    cin >> n, n++;
-    vector<ll> a(n);
-    for (int i = 1; i < n; i++) cin >> a[i];
-    vector<vector<ll>> g(n);
-    for (int i = 1, u; i < n; i++) {
-      cin >> u, g[u].push_back(i);
+    ll n, k, node, cnt;
+    cin >> n >> k >> node >> cnt;
+    ll random_cnt = 0;
+    ld sum = 0;
+    while (k) {
+      auto [ne, a] = teleport(rng() % n);
+      random_cnt ++;
+      k--;
+      if (k) {
+        k--;
+        auto [_, b] = walk();
+        sum += ((ld)a * b) / (a + b);
+      }
     }
-    vector<ll> mini(n, 1e18);
-    function<void(int)> dfs = [&](int node) {
-      for (auto& ne : g[node]) {
-        dfs(ne);
-        mini[node] = min(mini[node], max(mini[ne], a[node]));
-      }
-      if (mini[node] == 1e18) mini[node] = a[node];
-    };
-    dfs(0);
-    ll res = 0;
-    function<void(int, ll)> solve = [&](int node, ll up) {
-      up = max(a[node], up);
-      int pos = -1;
-      for (auto& ne : g[node]) {
-        if (pos == -1 || mini[ne] < mini[pos]) pos = ne;
-      }
-      if (pos == -1) {
-        res += up;
-      } else {
-        for (auto& ne : g[node]) {
-          if (ne == pos) {
-            solve(ne, up);
-          } else {
-            solve(ne, a[ne]);
-          }
-        }
-      }
-    };
-    solve(0, 0);
-    cout << res << "\n";
+    answer(ll(sum * n / random_cnt));
   }
 }

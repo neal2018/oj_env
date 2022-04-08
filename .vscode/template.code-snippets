@@ -86,7 +86,7 @@
 		"prefix": "s",
 		"body": [
 			"string ${0:s};",
-			"cin >> ${0:s};"
+			"cin >> ${0:s};\n"
 		],
 		"description": "read_string"
 	},
@@ -353,7 +353,7 @@
 			"for (int i = 2; i < MAX_N; i++) f[i] = f[i - 1] * i % MOD;",
 			"rf[MAX_N - 1] = power(f[MAX_N - 1], MOD - 2);",
 			"for (int i = MAX_N - 2; i > 1; i--) rf[i] = rf[i + 1] * (i + 1) % MOD;",
-			"auto binom = [&](int n, int r) -> Z {",
+			"auto binom = [&](ll n, ll r) -> Z {",
 			"\tif (n < 0 || r < 0 || n < r) return 0;",
 			"\treturn f[n] * rf[n - r] * rf[r];",
 			"};",
@@ -417,7 +417,7 @@
 			"}",
 			"void println(int x) { print(x), putchar('\\n'); }",
 			"struct Read {",
-			"\tRead& operator>>(auto& x) { return x = read(), *this; }",
+			"\tRead& operator>>(ll& x) { return x = read(), *this; }",
 			"\tRead& operator>>(long double& x) { return x = stold(read_s()), *this; }",
 			"} in;",
 			"}  // namespace io",
