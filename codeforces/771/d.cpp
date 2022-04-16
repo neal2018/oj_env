@@ -7,18 +7,15 @@ int main() {
   cin.tie(nullptr)->sync_with_stdio(false);
   ll n, m;
   cin >> n >> m;
-  vector<vector<int>> g(n, vector<int>(m));
+  vector<vector<int>> g(n, vector<int>(m, -1));
   for (auto& r : g) {
     for (auto& x : r) cin >> x;
   }
   auto check = [&](int i, int j) {
     set<int> st = {g[i][j], g[i][j + 1], g[i + 1][j], g[i + 1][j + 1]};
     st.erase(-1);
-    if (st.size() == 1) {
-      return *st.begin();
-    } else {
-      return 0;
-    }
+    if (st.size() == 1) return *st.begin();
+    return 0;
   };
   vector<array<int, 3>> res;
   res.reserve(n * m);

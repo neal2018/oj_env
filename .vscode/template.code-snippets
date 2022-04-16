@@ -321,7 +321,7 @@
 			"vector<ll> p(n);",
 			"iota(p.begin(), p.end(), 0);",
 			"function<ll(ll)> find = [&](ll x) { return x == p[x] ? x : (p[x] = find(p[x])); };",
-			"auto merge = [&](ll x, ll y) { return p[find(x)] = p[find(y)]; };",
+			"auto merge = [&](ll x, ll y) { p[find(x)] = find(y); };",
 		],
 		"description": "union find"
 	},
