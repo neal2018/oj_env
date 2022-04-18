@@ -4,7 +4,7 @@ using ll = long long;
 using ld = long double;
 // https://space.bilibili.com/672328094
 
-constexpr ll MOD = 1e9+7;
+constexpr ll MOD = 1e9 + 7;
 
 ll norm(ll x) { return (x % MOD + MOD) % MOD; }
 template <class T>
@@ -29,14 +29,22 @@ struct Z {
   friend Z operator-(Z lhs, const Z &rhs) { return lhs -= rhs; }
   friend Z operator/(Z lhs, const Z &rhs) { return lhs /= rhs; }
   friend Z operator%(Z lhs, const ll &rhs) { return lhs %= rhs; }
-  friend auto &operator>>(istream &i, Z &z) { return i >> z.x; }
-  friend auto &operator<<(ostream &o, const Z &z) { return o << z.x; }
 };
 
 class SkyscraperCounting {
 public:
   int count(string visibility) {
-    ll n = visibility.size();
-    
+    ll n = visibility.size(), maxi = n, cnt = 0;
+    Z res = 1;
+    for (int i = n - 1; i >= 0; i--) {
+      if (visibility[i] == 'X') {
+        cnt++;
+      } else {
+        maxi--;
+        while (cnt--) res *= maxi, maxi--;
+        cnt = 0;
+      }
+    }
+    return cnt != 0 ? 0 : res.x;
   }
 };
