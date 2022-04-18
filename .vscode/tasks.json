@@ -4,9 +4,9 @@
 		{
 			"type": "cppbuild",
 			"label": "C/C++: g++.exe build active file",
-			"command": "C:/msys64/mingw64/bin/g++.exe",
+			"command": "C:/Strawberry/c/bin/g++.exe",
 			"args": [
-				"-std=c++20",
+				"-std=c++17",
 				"-g",
 				"-Wall",
 				"-Wextra",
@@ -33,7 +33,7 @@
 				"kind": "build",
 				"isDefault": true
 			},
-			"detail": "compiler: C:/msys64/mingw64/bin/g++.exe"
+			"detail": "compiler: C:/Strawberry/c/bin/g++.exe"
 		}
 	]
 }

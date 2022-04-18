@@ -122,7 +122,7 @@
         },
         "GitBash": {
             "path": [
-                "C:/Users/neal/scoop/apps/git/current/bin/bash.exe"
+                "C:/Users/jl5722/AppData/Local/Programs/Git/usr/bin/bash.exe"
             ],
             "args": [
                 "-l"
