@@ -10,9 +10,10 @@ int main() {
   int T;
   cin >> T;
   while (T--) {
-    ll n, m;
-    cin >> n >> m;
-    string s;
-    cin >> s;
+    ll n;
+    cin >> n;
+    vector<ll> a(n);
+    for (auto& x : a) cin >> x;
+    
   }
 }
