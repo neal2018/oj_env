@@ -4,6 +4,8 @@ using ll = long long;
 using ld = long double;
 // https://space.bilibili.com/672328094
 
+constexpr ll inf = 1e18;
+
 int main() {
   cin.tie(nullptr)->sync_with_stdio(false);
   cout << fixed << setprecision(20);
@@ -17,11 +19,16 @@ int main() {
     for (auto& v : a) {
       for (auto& x : v) cin >> x;
     }
-    ll MAX = 4 * 4 * 4 * 4 * 4 * 4 * 4 * 4 * 4 + 1;
-    ll inf = 1e18;
-    vector<ll> dp(MAX);
-    for (int i = 0; i < n; i++) {
-      vector<ll> ndp(MAX, inf);
+    vector dp(n, vector<ll>(n, inf));
+    for (int len = 1; len <= n; len++) {
+      for (int l = 0; l + len <= n; l++) {
+        int r = l + len - 1;
+        if (len == 1) {
+          dp[l][r] = accumulate(a[l].begin(), a[l].end(), 0ll);
+        } else {
+          
+        }
+      }
     }
   }
 }
