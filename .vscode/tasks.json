@@ -15,6 +15,7 @@
 				"-Wno-sign-compare",
 				"-D_GLIBCXX_ASSERTIONS",
 				"-D_GLIBCXX_DEBUG",
+				"-D_DEBUG",
 				"-ggdb3",
 				"-fmax-errors=2",
 				"-Wl,--stack,33554432",
