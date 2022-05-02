@@ -11,8 +11,6 @@ ll power(ll a, ll b, ll res = 1) {
   return res;
 }
 
-const ll inv_2 = power(2, MOD - 2);
-
 struct Node {
   ll sum = 0, sum2 = 0, sum_sq = 0, len = 0;
 };

@@ -56,3 +56,25 @@ struct SegTree {
     return pull(left, right);
   }
 };
+
+struct Fenwick2D {
+  ll n;
+  std::vector<vector<ll>> a;
+  Fenwick2D(ll n) : n(n), a(n, vector<ll>(n)) {}
+  void add(ll x, ll y, ll v) {
+    for (int i = x + 1; i <= n; i += i & -i) {
+      for (int j = y + 1; j <= n; j += j & -j) {
+        a[i - 1][j - 1] += v;
+      }
+    }
+  }
+  ll sum(ll x, ll y) {
+    ll ans = 0;
+    for (int i = x; i > 0; i -= i & -i) {
+      for (int j = y; j > 0; j -= j & -j) {
+        ans += a[i - 1][j - 1];
+      }
+    }
+    return ans;
+  }
+};
