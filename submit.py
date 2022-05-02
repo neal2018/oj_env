@@ -90,7 +90,7 @@ if __name__ == "__main__":
       print(cf_cmd := f"{abs_cf} test {origin_file}")
       p = sp.run(cf_cmd, shell=True, capture_output=True, text=True)
       print(p.stdout)
-      if "Failed" in p.stdout:
+      if "Failed" in p.stdout or "Error" in p.stdout:
         print_red("Failed Sample, aborting...")
         exit()
       else:
