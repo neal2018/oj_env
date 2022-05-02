@@ -35,6 +35,76 @@
 				"isDefault": true
 			},
 			"detail": "compiler: C:/msys64/mingw64/bin/g++.exe"
-		}
+		},
+		{
+			"type": "process",
+			"label": "Codeforces: Test and Submit",
+			"command": "py",
+			"args": [
+				"submit.py",
+				"-f",
+				"${file}"
+			],
+			"detail": "test and submit to codeforces",
+			"problemMatcher": []
+		},
+		{
+			"type": "process",
+			"label": "Codeforces: Test and Submit (Exact Name)",
+			"command": "py",
+			"args": [
+				"submit.py",
+				"-f",
+				"${file}",
+				"-e",
+				"True"
+			],
+			"detail": "test and submit to codeforces with exact file name",
+			"problemMatcher": []
+		},
+		{
+			"type": "process",
+			"label": "Codeforces: Test",
+			"command": "py",
+			"args": [
+				"submit.py",
+				"-f",
+				"${file}",
+				"-s",
+				"False"
+			],
+			"detail": "test on codeforces",
+			"problemMatcher": []
+		},
+		{
+			"type": "process",
+			"label": "Codeforces: Submit",
+			"command": "py",
+			"args": [
+				"submit.py",
+				"-f",
+				"${file}",
+				"-r",
+				"False"
+			],
+			"detail": "submit to codeforces",
+			"problemMatcher": []
+		},
+		{
+			"type": "process",
+			"label": "Codeforces: Submit (Exact Name)",
+			"command": "py",
+			"args": [
+				"submit.py",
+				"-f",
+				"${file}",
+				"-r",
+				"False",
+				"-e",
+				"True"
+			],
+			"detail": "submit to codeforces with exact file name",
+			"problemMatcher": []
+		},
 	]
 }
