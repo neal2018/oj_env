@@ -41,6 +41,7 @@ if __name__ == "__main__":
   origin_file = os.path.normpath(args.file)
   filename = os.path.normpath(os.path.relpath(args.file))
   contest = args.contest
+  abs_cf = os.path.abspath("cf.exe")
 
   # special check div2
   if os.path.basename(filename)[0].isdigit():
@@ -72,11 +73,11 @@ if __name__ == "__main__":
       with open(PATH_TO_CONTEST_FILE, "w+") as f:
         json.dump(path_to_contest, f)
 
+  # parse problem id
   if not args.exact:
     problem_id = os.path.basename(filename)[0]
   else:
     problem_id = os.path.splitext(os.path.basename(filename))[0]
-  abs_cf = os.path.abspath("cf.exe")
 
   # test sample
   if args.run == True:
@@ -85,7 +86,7 @@ if __name__ == "__main__":
     if not os.path.exists(test_path):
       print(cf_cmd := f"{abs_cf} parse {contest}")
       sp.run(cf_cmd, shell=True)
-    with cd(f".config/data/cf/contest/{contest}/{problem_id}"):
+    with cd(test_path):
       print(cf_cmd := f"{abs_cf} test {origin_file}")
       p = sp.run(cf_cmd, shell=True, capture_output=True, text=True)
       print(p.stdout)
