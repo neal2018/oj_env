@@ -21,3 +21,4 @@ net cost makes any difference?
 read carefully (data range)
 reuse calculated results
 initial value?
+multiple vs gcd

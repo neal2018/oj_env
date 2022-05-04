@@ -107,6 +107,7 @@
         "stold"
     ],
     "files.autoSave": "afterDelay",
+    "terminal.integrated.defaultProfile.windows": "GitBash",
     "terminal.integrated.profiles.windows": {
         "PowerShell": {
             "source": "PowerShell",
