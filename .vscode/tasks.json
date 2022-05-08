@@ -37,6 +37,29 @@
 			"detail": "compiler: C:/msys64/mingw64/bin/g++.exe"
 		},
 		{
+			"type": "cppbuild",
+			"label": "C/C++: O2: g++.exe build",
+			"command": "C:/msys64/mingw64/bin/g++.exe",
+			"args": [
+				"-std=c++20",
+				"-O2",
+				"${file}",
+				"-o",
+				"${workspaceRoot}/main.exe",
+			],
+			"options": {
+				"cwd": "${workspaceFolder}"
+			},
+			"problemMatcher": [
+				"$gcc"
+			],
+			"group": {
+				"kind": "build",
+				"isDefault": true
+			},
+			"detail": "compiler: C:/msys64/mingw64/bin/g++.exe with O2"
+		},
+		{
 			"type": "process",
 			"label": "Codeforces: Test and Submit",
 			"command": "py",

@@ -36,10 +36,24 @@ struct Z {
 int main() {
   cin.tie(nullptr)->sync_with_stdio(false);
   cout << fixed << setprecision(20);
-  int T;
-  cin >> T;
-  while (T--) {
-    ll n, k, x;
-    cin >> n >> k >> x;
+  ll n;
+  cin >> n;
+  map<ll, Z> pro;
+  map<ll, ll> cnt;
+  Z inv_n = 1 / Z(n);
+  for (int i = 0; i < n; i++) {
+    ll k;
+    cin >> k;
+    Z inv = (1 / Z(k)) * inv_n;
+    for (ll j = 0, x; j < k; j++) {
+      cin >> x, x--;
+      pro[x] += inv;
+      cnt[x]++;
+    }
   }
+  Z res = 0;
+  for (auto [k, v] : pro) {
+    res += v * cnt[k] * inv_n;
+  }
+  cout << res << "\n";
 }

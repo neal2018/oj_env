@@ -112,7 +112,7 @@
 			"Z"
 		],
 		"body": [
-			"constexpr ll MOD = ${1|998244353,1e9+7|};",
+			"constexpr ll MOD = ${1|998244353,1e9 + 7|};",
 			"",
 			"ll norm(ll x) { return (x % MOD + MOD) % MOD; }",
 			"template <class T>",

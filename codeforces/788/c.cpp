@@ -4,7 +4,7 @@ using ll = long long;
 using ld = long double;
 // https://space.bilibili.com/672328094
 
-constexpr ll MOD = 998244353;
+constexpr ll MOD = 1e9 + 7;
 
 ll norm(ll x) { return (x % MOD + MOD) % MOD; }
 template <class T>
@@ -39,7 +39,29 @@ int main() {
   int T;
   cin >> T;
   while (T--) {
-    ll n, k, x;
-    cin >> n >> k >> x;
+    ll n;
+    cin >> n;
+    vector<ll> a(n), b(n), d(n);
+    for (auto &x : a) cin >> x, x--;
+    for (auto &x : b) cin >> x, x--;
+    for (auto &x : d) cin >> x, x--;
+    map<ll, ll> mp;
+    for (int i = 0; i < n; i++) {
+      mp[a[i]] = i;
+    }
+    vector<ll> seen(n);
+    ll cnt = 0;
+    for (int i = 0; i < n; i++) {
+      if (!seen[i] && d[i] == -1 && a[i] != b[i]) {
+        ll cur = i;
+        while (!seen[cur] && d[cur] == -1) {
+          seen[cur] = i + 1;
+          cur = b[cur];
+          cur = mp[cur];
+        }
+        if (seen[cur] == i + 1) cnt++;
+      }
+    }
+    cout << power(Z(2), cnt) << "\n";
   }
 }

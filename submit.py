@@ -71,7 +71,7 @@ if __name__ == "__main__":
       path_to_contest[path] = contest
       os.makedirs(os.path.dirname(PATH_TO_CONTEST_FILE), exist_ok=True)
       with open(PATH_TO_CONTEST_FILE, "w+") as f:
-        json.dump(path_to_contest, f)
+        f.write(json.dumps(path_to_contest, sort_keys=True, indent=2))
 
   # parse problem id
   if not args.exact:

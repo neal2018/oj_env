@@ -4,7 +4,7 @@ using ll = long long;
 using ld = long double;
 // https://space.bilibili.com/672328094
 
-constexpr ll MOD = 998244353;
+constexpr ll MOD = 1e9 + 7;
 
 ll norm(ll x) { return (x % MOD + MOD) % MOD; }
 template <class T>
@@ -33,13 +33,37 @@ struct Z {
   friend auto &operator<<(ostream &o, const Z &z) { return o << z.x; }
 };
 
+constexpr ll MAX_N = 1005, DIGIT = 60;
+
 int main() {
   cin.tie(nullptr)->sync_with_stdio(false);
   cout << fixed << setprecision(20);
-  int T;
-  cin >> T;
-  while (T--) {
-    ll n, k, x;
-    cin >> n >> k >> x;
-  }
+  vector<Z> f(MAX_N, 1), rf(MAX_N, 1);
+  for (int i = 2; i < MAX_N; i++) f[i] = f[i - 1] * i % MOD;
+  rf[MAX_N - 1] = power(f[MAX_N - 1], MOD - 2);
+  for (int i = MAX_N - 2; i > 1; i--) rf[i] = rf[i + 1] * (i + 1) % MOD;
+  auto binom = [&](ll n, ll r) -> Z {
+    if (n < 0 || r < 0 || n < r) return 0;
+    return f[n] * rf[n - r] * rf[r];
+  };
+  ll n, l, r, z;
+  cin >> n >> l >> r >> z;
+  auto solve = [&](ll total) {
+    map<array<ll, 2>, Z> memo;
+    function<Z(ll, ll)> dfs = [&](ll cur, ll remain) {
+      ll maxi = min(remain >> cur, 2 * n);
+      if (memo.count({cur, maxi})) return memo[{cur, maxi}];
+      Z res = 0;
+      if (cur == -1) {
+        res = 1;
+      } else {
+        for (int i = ((z >> cur) & 1); i <= min(n, maxi); i += 2) {
+          res += dfs(cur - 1, remain - i * (1ll << cur)) * binom(n, i);
+        }
+      }
+      return memo[{cur, maxi}] = res;
+    };
+    return dfs(DIGIT, total);
+  };
+  cout << solve(r) - solve(l - 1) << '\n';
 }
