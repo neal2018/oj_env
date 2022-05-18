@@ -23,11 +23,14 @@ class cd:
 def print_red(string):
   print(f"\033[1;30;41m {string} \033[0;0m")
 
+
 def print_green(string):
   print(f"\033[1;30;42m {string} \033[0;0m")
 
+
 def print_yellow(string):
   print(f"\033[1;30;44m {string} \033[0;0m")
+
 
 if __name__ == "__main__":
   PATH_TO_CONTEST_FILE = "./.config/path_to_contest.json"
@@ -90,7 +93,7 @@ if __name__ == "__main__":
       print(cf_cmd := f"{abs_cf} test {origin_file}")
       p = sp.run(cf_cmd, shell=True, capture_output=True, text=True)
       print(p.stdout)
-      if "Failed" in p.stdout or "Error" in p.stdout:
+      if "Failed" in p.stdout or "Error" in p.stdout or "exit" in p.stdout:
         print_red("Failed Sample, aborting...")
         exit()
       else:
