@@ -17,14 +17,15 @@ int main() {
   vector<int> color(n, -1), parent(n, -1);
   vector<vector<int>> res;
   int another = -1, target = -1;
+  int found = 0;
   for (auto& start : g[s]) {
     vector<int> stk{s, start};
-    int found = 0;
     function<void(int, int)> dfs = [&](int node, int fa) {
       if (found) return;
       if (node == s || color[node] == start) return;
       if (color[node] != -1) {
         // res.push_back(stk);
+        // cout << found<< "got\n";
         found = 1;
         target = node;
         another = color[node];
@@ -37,23 +38,6 @@ int main() {
         }
         reverse(path.begin(), path.end());
         res.push_back(path);
-        {
-          vector<int> path{target};
-          int cur = target;
-          while (cur != s) {
-            cur = parent[cur];
-            path.push_back(cur);
-          }
-          reverse(path.begin(), path.end());
-          res.push_back(path);
-          cout << "Possible\n";
-          for (auto& v : res) {
-            cout << v.size() << " ";
-            for (auto& x : v) cout << x + 1 << " ";
-            cout << "\n";
-          }
-        }
-        exit(0);
         return;
       }
       color[node] = start;
@@ -67,5 +51,22 @@ int main() {
     };
     dfs(start, s);
   }
-  cout << "Impossible\n";
+  if (another == -1) {
+    cout << "Impossible\n";
+    return 0;
+  }
+  vector<int> path{target};
+  int cur = target;
+  while (cur != s) {
+    cur = parent[cur];
+    path.push_back(cur);
+  }
+  reverse(path.begin(), path.end());
+  res.push_back(path);
+  cout << "Possible\n";
+  for (auto& v : res) {
+    cout << v.size() << " ";
+    for (auto& x : v) cout << x + 1 << " ";
+    cout << "\n";
+  }
 }
