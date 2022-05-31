@@ -1,45 +1,58 @@
 #include <bits/stdc++.h>
 using namespace std;
-#define ll long long
-constexpr int M = 2e6 + 10, MOD = 1e9 + 7;
-struct C {
-  int f[M] = {1}, rf[M] = {1}, inv[M] = {};
-  constexpr C() {
-    f[1] = 1, rf[1] = 1, inv[1] = 1;
-    for (int i = 2; i < M; i++) {
-      inv[i] = 1ll * (MOD - MOD / i) * inv[MOD % i] % MOD;
-      f[i] = 1ll * f[i - 1] * i % MOD;
-      rf[i] = 1ll * rf[i - 1] * inv[i] % MOD;
+using ll = long long;
+
+constexpr ll inf = 1e18;
+
+struct Node {
+  ll v = -inf, sum = -inf, pre_sum = -inf, suf_sum = -inf;
+};
+
+Node pull(const Node &a, const Node &b) {
+  return {max({a.v, b.v, a.suf_sum + b.pre_sum}), a.sum + b.sum, max(a.sum + b.pre_sum, a.pre_sum),
+          max(b.sum + a.suf_sum, b.suf_sum)};
+}
+
+struct SegTree {
+  ll n;
+  vector<Node> t;
+  SegTree(ll _n) : n(_n), t(2 * n) {}
+  void modify(ll p, const Node &v) {
+    t[p += n] = v;
+    for (p /= 2; p; p /= 2) t[p] = pull(t[p * 2], t[p * 2 + 1]);
+  }
+  Node query(ll l, ll r) {
+    Node left, right;
+    for (l += n, r += n; l < r; l /= 2, r /= 2) {
+      if (l & 1) left = pull(left, t[l++]);
+      if (r & 1) right = pull(t[--r], right);
     }
+    return pull(left, right);
   }
 };
 
 int main() {
-  const C c = C();
-  int h, w, n;
-  cin >> h >> n;
-  w = h;
-  int x[n + 1], y[n + 1];
-  for (int i = 0; i < n; i++) {
-    cin >> x[i] >> y[i];
-    x[i]--, y[i]--;
+  cin.tie(nullptr)->sync_with_stdio(false);
+  int T;
+  cin >> T;
+  while (T--) {
+    ll n;
+    cin >> n;
+    vector<ll> a(n);
+    for (auto &x : a) cin >> x;
+    vector<ll> order(n);
+    iota(order.begin(), order.end(), 0);
+    sort(order.begin(), order.end(), [&](ll x, ll y) { return a[x] < a[y]; });
+    SegTree seg(n);
+    cout << ([&] {
+      for (auto &i : order) {
+        seg.modify(i, {a[i], a[i], a[i], a[i]});
+        // cout << seg.query(0, n).v << " " << a[i] << endl;
+        if (seg.query(0, n).v > a[i]) return false;
+      }
+      return true;
+    }()
+                 ? "YES\n"
+                 : "NO\n");
   }
-  x[n] = h - 1, y[n] = w - 1;
-  int order[n + 1];
-  iota(order, order + n + 1, 0);
-  sort(order, order + n + 1,
-       [&](int a, int b) { return x[a] == x[b] ? y[a] < y[b] : x[a] < x[b]; });
-  int dp[n + 1];  // dp[i]: number of path from [0,0] to [xi, yi]
-  for (int i = 0; i <= n; i++) {
-    int k = order[i];
-    dp[i] = 1ll * c.f[x[k] + y[k]] * c.rf[x[k]] % MOD * c.rf[y[k]] % MOD;
-    // (xi+yi chose xi) = (xi+yi)!/(xi!yi!)
-    for (int j = 0; j < i; j++) {
-      int dx = x[k] - x[order[j]], dy = y[k] - y[order[j]];
-      if (dx < 0 || dy < 0) continue;
-      dp[i] =
-          (MOD + dp[i] - 1ll * dp[j] * c.f[dx + dy] % MOD * c.rf[dx] % MOD * c.rf[dy] % MOD) % MOD;
-    }
-  }
-  cout << dp[n] << endl;
 }
