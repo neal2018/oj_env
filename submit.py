@@ -40,47 +40,58 @@ if __name__ == "__main__":
   parser.add_argument("-r" "--run", dest="run", default=True)
   parser.add_argument("-s" "--submit", dest="submit", default=True)
   parser.add_argument("-e" "--exact", dest="exact", default=False)
+  parser.add_argument("-o" "--only", dest="only", default=False)
   args = parser.parse_args()
   origin_file = os.path.normpath(args.file)
   filename = os.path.normpath(os.path.relpath(args.file))
   contest = args.contest
   abs_cf = os.path.abspath("cf.exe")
 
-  # special check div2
-  if os.path.basename(filename)[0].isdigit():
-    directory = os.path.dirname(filename)
-    basename = os.path.basename(filename)
-    filename = os.path.join(directory, basename[0], basename[1:])
-  path = os.path.dirname(filename)
-
-  # get contest id
-  if not contest:
-    if os.path.exists(PATH_TO_CONTEST_FILE):
-      with open(PATH_TO_CONTEST_FILE) as f:
-        path_to_contest = json.load(f)
-    else:
-      path_to_contest = {}
-
-    if path in path_to_contest:
-      contest = path_to_contest[path]
-    else:
-      while True:
-        try:
-          contest = int(input("enter the contest id: "))
-        except BaseException:
-          pass
-        else:
-          break
-      path_to_contest[path] = contest
-      os.makedirs(os.path.dirname(PATH_TO_CONTEST_FILE), exist_ok=True)
-      with open(PATH_TO_CONTEST_FILE, "w+") as f:
-        f.write(json.dumps(path_to_contest, sort_keys=True, indent=2))
-
-  # parse problem id
-  if not args.exact:
-    problem_id = os.path.basename(filename)[0]
+  if args.only:
+    while True:
+      try:
+        contest = int(input("enter the contest id: "))
+      except BaseException:
+        pass
+      else:
+        break
+    problem_id = input("enter the problem id: ")
   else:
-    problem_id = os.path.splitext(os.path.basename(filename))[0]
+    # special check div2
+    if os.path.basename(filename)[0].isdigit():
+      directory = os.path.dirname(filename)
+      basename = os.path.basename(filename)
+      filename = os.path.join(directory, basename[0], basename[1:])
+    path = os.path.dirname(filename)
+
+    # get contest id
+    if not contest:
+      if os.path.exists(PATH_TO_CONTEST_FILE):
+        with open(PATH_TO_CONTEST_FILE) as f:
+          path_to_contest = json.load(f)
+      else:
+        path_to_contest = {}
+
+      if path in path_to_contest:
+        contest = path_to_contest[path]
+      else:
+        while True:
+          try:
+            contest = int(input("enter the contest id: "))
+          except BaseException:
+            pass
+          else:
+            break
+        path_to_contest[path] = contest
+        os.makedirs(os.path.dirname(PATH_TO_CONTEST_FILE), exist_ok=True)
+        with open(PATH_TO_CONTEST_FILE, "w+") as f:
+          f.write(json.dumps(path_to_contest, sort_keys=True, indent=2))
+
+    # parse problem id
+    if not args.exact:
+      problem_id = os.path.basename(filename)[0]
+    else:
+      problem_id = os.path.splitext(os.path.basename(filename))[0]
 
   # test sample
   if args.run == True:

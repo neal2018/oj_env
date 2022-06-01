@@ -129,5 +129,35 @@
 			"detail": "submit to codeforces with exact file name",
 			"problemMatcher": []
 		},
+		{
+			"type": "process",
+			"label": "Codeforces: Single: Test and Submit",
+			"command": "py",
+			"args": [
+				"submit.py",
+				"-f",
+				"${file}",
+				"-o",
+				"True"
+			],
+			"detail": "test and submit to codeforces",
+			"problemMatcher": []
+		},
+		{
+			"type": "process",
+			"label": "Codeforces: Single: Submit",
+			"command": "py",
+			"args": [
+				"submit.py",
+				"-f",
+				"${file}",
+				"-r",
+				"False",
+				"-o",
+				"True"
+			],
+			"detail": "submit to codeforces",
+			"problemMatcher": []
+		},
 	]
 }
