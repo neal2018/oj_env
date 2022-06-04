@@ -43,7 +43,6 @@ int main() {
     if (n < 0 || r < 0 || n < r) return 0;
     return f[n] * rf[n - r] * rf[r];
   };
-
   int n, k;
   cin >> n >> k;
   vector<vector<int>> g(n);
@@ -51,24 +50,43 @@ int main() {
     cin >> u >> v, u--, v--;
     g[u].push_back(v), g[v].push_back(u);
   }
-  Z res = 0;
-  function<int(int, int)> dfs = [&](int node, int fa) {
-    vector<int> sub;
-    Z sum = 0;
-    int sz = 1;
+  vector<int> sz(n, 1);
+  vector<Z> subtree(n);
+  function<void(int, int)> dfs = [&](int node, int fa) {
     for (auto &ne : g[node]) {
       if (ne == fa) continue;
-      int sub_sz = dfs(ne, node);
-      sub.push_back(sub_sz);
-      sz += sub_sz, sum += binom(sub_sz, k);
+      dfs(ne, node);
+      sz[node] += sz[ne];
     }
-    if (node != 0) sub.push_back(n - sz), sum += binom(n - sz, k);
-    for (auto &sub_sz : sub) {
-      res += (binom(n - sub_sz, k) - sum + binom(sub_sz, k)) * (n - sub_sz) * sub_sz;
+    subtree[node] = binom(sz[node], k);
+    for (auto &ne : g[node]) {
+      if (ne == fa) continue;
+      subtree[node] -= subtree[ne];
     }
-    res += (binom(n, k) - sum) * n;
-    return sz;
   };
   dfs(0, -1);
-  cout << res << "\n";
+  for (auto &x : subtree) cout << x << " ";
+  cout << "\n";
+  vector<Z> res(n);
+  function<void(int, int, Z)> get_all = [&](int node, int fa, Z prev) {
+    vector<tuple<Z, int, int>> sub;
+    Z sum = 0;
+    for (auto &ne : g[node]) {
+      if (ne == fa) continue;
+      sub.push_back({subtree[ne], sz[ne], ne});
+      sum += subtree[ne];
+    }
+    sub.push_back({prev, n - sz[node], fa});
+    for (auto &[sub_res, sub_sz, ne] : sub) {
+      res[node] += binom(sz[node] - sub_sz, k) * (sz[node] - sub_sz + 1) - sum + sub_res;
+    }
+    for (auto &[sub_res, sub_sz, ne] : sub) {
+      if (ne == fa) continue;
+      get_all(ne, node, binom(sz[node] - sub_sz, k) - sum + sub_res);
+    }
+  };
+  get_all(0, -1, 0);
+  for (auto &x : res) cout << x << " ";
+  cout << "\n";
+  cout << accumulate(res.begin(), res.end(), Z(0)) << "\n";
 }

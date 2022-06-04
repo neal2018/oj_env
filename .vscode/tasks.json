@@ -69,7 +69,13 @@
 				"${file}"
 			],
 			"detail": "test and submit to codeforces",
-			"problemMatcher": []
+			"problemMatcher": [],
+			"runOptions": {
+				"instanceLimit": 5
+			},
+			"dependsOn": [
+				"C/C++: g++.exe build active file"
+			]
 		},
 		{
 			"type": "process",
@@ -83,7 +89,10 @@
 				"True"
 			],
 			"detail": "test and submit to codeforces with exact file name",
-			"problemMatcher": []
+			"problemMatcher": [],
+			"dependsOn": [
+				"C/C++: g++.exe build active file"
+			]
 		},
 		{
 			"type": "process",
@@ -97,7 +106,13 @@
 				"False"
 			],
 			"detail": "test on codeforces",
-			"problemMatcher": []
+			"problemMatcher": [],
+			"runOptions": {
+				"instanceLimit": 5
+			},
+			"dependsOn": [
+				"C/C++: g++.exe build active file"
+			]
 		},
 		{
 			"type": "process",
@@ -111,7 +126,10 @@
 				"False"
 			],
 			"detail": "submit to codeforces",
-			"problemMatcher": []
+			"problemMatcher": [],
+			"dependsOn": [
+				"C/C++: g++.exe build active file"
+			]
 		},
 		{
 			"type": "process",
@@ -127,7 +145,10 @@
 				"True"
 			],
 			"detail": "submit to codeforces with exact file name",
-			"problemMatcher": []
+			"problemMatcher": [],
+			"dependsOn": [
+				"C/C++: g++.exe build active file"
+			]
 		},
 		{
 			"type": "process",
@@ -141,7 +162,10 @@
 				"True"
 			],
 			"detail": "test and submit to codeforces",
-			"problemMatcher": []
+			"problemMatcher": [],
+			"dependsOn": [
+				"C/C++: g++.exe build active file"
+			]
 		},
 		{
 			"type": "process",
@@ -157,7 +181,10 @@
 				"True"
 			],
 			"detail": "submit to codeforces",
-			"problemMatcher": []
+			"problemMatcher": [],
+			"dependsOn": [
+				"C/C++: g++.exe build active file"
+			]
 		},
 	]
 }
