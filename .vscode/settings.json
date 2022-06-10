@@ -1,5 +1,6 @@
 {
     "files.associations": {
+        ".prettierrc": "yaml",
         "*.rmd": "markdown",
         "*.css": "postcss",
         "iostream": "cpp",
@@ -91,7 +92,10 @@
         "source_location": "cpp",
         "latch": "cpp",
         "semaphore": "cpp",
-        "syncstream": "cpp"
+        "syncstream": "cpp",
+        "expected": "cpp",
+        "spanstream": "cpp",
+        "stacktrace": "cpp"
     },
     "C_Cpp.clang_format_fallbackStyle": "{ BasedOnStyle: Google, IndentWidth: 2, AccessModifierOffset: -2, ColumnLimit: 100}",
     "editor.tabSize": 2,

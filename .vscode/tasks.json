@@ -8,6 +8,7 @@
 			"args": [
 				"-std=c++20",
 				"-g",
+				"-Werror",
 				"-Wall",
 				"-Wextra",
 				"-Wshadow",
@@ -16,8 +17,6 @@
 				"-D_GLIBCXX_ASSERTIONS",
 				"-D_GLIBCXX_DEBUG",
 				"-D_DEBUG",
-				"-ggdb3",
-				"-fmax-errors=2",
 				"-Wl,--stack,33554432",
 				// "-O2",
 				"${file}",

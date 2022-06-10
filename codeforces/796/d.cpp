@@ -2,56 +2,39 @@
 using namespace std;
 using ll = long long;
 
-constexpr ll inf = 1e14;
-
-struct Node {
-  ll v = -inf, sum = -inf, pre_sum = -inf, suf_sum = -inf;
-};
-
-Node pull(const Node &a, const Node &b) {
-  return {max({a.v, b.v, a.suf_sum + b.pre_sum}), a.sum + b.sum, max(a.sum + b.pre_sum, a.pre_sum),
-          max(b.sum + a.suf_sum, b.suf_sum)};
-}
-
-struct SegTree {
-  ll n;
-  vector<Node> t;
-  SegTree(ll _n) : n(_n), t(2 * n) {}
-  void modify(ll p, const Node &v) {
-    t[p += n] = v;
-    for (p /= 2; p; p /= 2) t[p] = pull(t[p * 2], t[p * 2 + 1]);
-  }
-  Node query(ll l, ll r) {
-    Node left, right;
-    for (l += n, r += n; l < r; l /= 2, r /= 2) {
-      if (l & 1) left = pull(left, t[l++]);
-      if (r & 1) right = pull(t[--r], right);
-    }
-    return pull(left, right);
-  }
-};
+constexpr ll MAX = 2e6 + 10;
 
 int main() {
   cin.tie(nullptr)->sync_with_stdio(false);
-  int T;
-  cin >> T;
-  while (T--) {
-    ll n;
-    cin >> n;
-    vector<ll> a(n);
-    for (auto &x : a) cin >> x;
-    vector<ll> order(n);
-    iota(order.begin(), order.end(), 0);
-    sort(order.begin(), order.end(), [&](ll x, ll y) { return a[x] < a[y]; });
-    SegTree seg(n);
-    cout << ([&] {
-      for (auto &i : order) {
-        seg.modify(i, {a[i], a[i], a[i], a[i]});
-        if (seg.query(0, n).v > a[i]) return false;
-      }
-      return true;
-    }()
-                 ? "YES\n"
-                 : "NO\n");
+  ll n;
+  cin >> n;
+  vector<ll> a(n), has(MAX), left(MAX, -1), right(MAX, MAX);
+  for (auto& x : a) cin >> x, has[x] = 1;
+  for (int i : views::iota(1, MAX)) left[i] = (has[i] ? i : left[i - 1]);
+  for (int i : views::iota(0, MAX - 1) | views::reverse) right[i] = (has[i] ? i : right[i + 1]);
+  auto get_first = [&](ll l, ll r) {
+    if (l > a.back() || r < a[0]) return -1ll;
+    l = max(l, a[0]);
+    return right[l] <= r ? right[l] : -1;
+  };
+  auto get_last = [&](ll l, ll r) {
+    if (l > a.back() || r < a[0]) return -1ll;
+    r = min(r, a.back());
+    return left[r] >= l ? left[r] : -1;
+  };
+  for (ll x = 1;; x++) {
+    ll lo = max(x * x - a[0], 0ll), hi = x * x + x - a[0];
+    if (hi < 0) continue;
+    for (ll y = x, offset = lo; a.back() + offset < y * y; y++) {
+      ll start = y * y, mid = y * y + y, stop = (y + 1) * (y + 1);
+      auto last = get_last(start - offset, mid - offset);
+      if (last != -1) hi = min(hi, mid - last);
+      auto first = get_first(mid + 1 - offset, stop - 1 - offset);
+      if (first != -1) lo = max(lo, stop - first);
+    }
+    if (lo <= hi) {
+      cout << lo << "\n";
+      return 0;
+    }
   }
 }
