@@ -90,12 +90,14 @@ Node *get_next(Node *&t, int v) {
 
 int main() {
   cin.tie(nullptr)->sync_with_stdio(false);
-  int n, qq;
-  cin >> n >> qq;
+  int n;
+  cin >> n;
   vector<Node *> tree(101);
   for (int i = 0, x; i < n; i++) {
-    cin >> x, merge(tree[x], new Node(i));
+    cin >> x, tree[x] = merge(tree[x], new Node(i));
   }
+  int qq;
+  cin >> qq;
   while (qq--) {
     int l, r, x, y;
     cin >> l >> r >> x >> y, l--;

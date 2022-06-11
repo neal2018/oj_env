@@ -2,6 +2,7 @@
   "recommendations": [
     "ms-vscode.cpptools",
     "ms-vscode.cpptools-themes",
-    "yummygum.city-lights-theme"
+    "yummygum.city-lights-theme",
+    "s-nlf-fh.glassit"
   ]
 }

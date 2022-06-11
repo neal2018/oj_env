@@ -32,11 +32,11 @@ int main() {
               auto x = stk.back();
               stk.pop_back();
               e1[n + cnt].push_back(x);
-              // e1[x].push_back(n + cnt); // undirected
+              e1[x].push_back(n + cnt);
               if (x == ne) break;
             }
             e1[node].push_back(n + cnt);
-            // e1[n + cnt].push_back(node); // undirected
+            e1[n + cnt].push_back(node);
             cnt++;
           }
         } else {
@@ -61,9 +61,6 @@ int main() {
             leaf.push_back(ne);
           }
         }
-      }
-      if (case_num ==24){
-        cout<<"aa\n";
       }
       ll res = leaf.size(), total = 1;
       for (auto& node : leaf) {

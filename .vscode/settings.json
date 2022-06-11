@@ -135,6 +135,12 @@
             "icon": "terminal-bash"
         }
     },
+    "workbench.colorCustomizations": {
+        "terminal.foreground": "#b7c5d3",
+        "titleBar.activeForeground": "#b7c5d3",
+        "editor.background": "#171e24",
+        "editorGutter.background": "#171e24",
+    },
     "editor.tokenColorCustomizations": {
         "[City Lights]": {
             "textMateRules": [
@@ -173,4 +179,5 @@
     },
     "workbench.colorTheme": "City Lights",
     "editor.bracketPairColorization.enabled": true,
+    "glassit.alpha": 240,
 }
