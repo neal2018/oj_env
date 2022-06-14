@@ -3,6 +3,39 @@ using namespace std;
 using ll = long long;
 // https://space.bilibili.com/672328094
 
+namespace io {
+constexpr int SIZE = 1 << 16;
+char buf[SIZE], *head, *tail;
+char get_char() {
+  if (head == tail) tail = (head = buf) + fread(buf, 1, SIZE, stdin);
+  return *head++;
+}
+int read() {
+  int x = 0, f = 1;
+  char c = get_char();
+  for (; !isdigit(c); c = get_char()) (c == '-') && (f = -1);
+  for (; isdigit(c); c = get_char()) x = x * 10 + c - '0';
+  return x * f;
+}
+string read_s() {
+  string str;
+  char c = get_char();
+  while (c == ' ' || c == '\n' || c == '\r') c = get_char();
+  while (c != ' ' && c != '\n' && c != '\r') str += c, c = get_char();
+  return str;
+}
+void print(int x) {
+  if (x > 9) print(x / 10);
+  putchar(x % 10 | '0');
+}
+void println(int x) { print(x), putchar('\n'); }
+struct Read {
+  Read& operator>>(int& x) { return x = read(), *this; }
+  Read& operator>>(long double& x) { return x = stold(read_s()), *this; }
+  Read& operator>>(string& x) { return x = read_s(), *this; }
+} in;
+}  // namespace io
+
 struct TwoSat {
   int n;
   vector<vector<int>> g;
@@ -46,15 +79,13 @@ struct TwoSat {
   }
 };
 
-constexpr int SZ = 26;
-
 int main() {
   cin.tie(nullptr)->sync_with_stdio(false);
   int n, q;
-  cin >> n >> q;
+  io::in >> n >> q;
   vector<vector<int>> g(n);
   for (int i = 0, u, v; i < n - 1; i++) {
-    cin >> u >> v, u--, v--;
+    io::in >> u >> v, u--, v--;
     g[u].push_back(v), g[v].push_back(u);
   }
   vector<int> depth(n), parent(n, -1);
@@ -77,58 +108,39 @@ int main() {
       }
     }
     left.push_back(x);
-    reverse(right.begin(), right.end());
-    left.insert(left.end(), right.begin(), right.end());
+    left.insert(left.end(), right.rbegin(), right.rend());
     return left;
   };
-  TwoSat ts(n * SZ);
-  while (q--) {
-    int x, y;
-    string s;
-    cin >> x >> y >> s, x--, y--;
-    auto path = get_path(x, y);
+  TwoSat ts(n + q);
+  string positive(n, 'a'), negative(n, 'b');
+  vector<tuple<int, int, string>> queries(q);
+  for (auto& [x, y, s] : queries) {
+    io::in >> x >> y >> s, x--, y--;
     int sz = int(s.size());
+    auto path = get_path(x, y);
     for (int i = 0; i < sz; i++) {
-      int a = s[i] - 'a', b = s[sz - 1 - i] - 'a', node = path[i];
-      for (auto j : views::iota(0, SZ)) {
-        if (j != a && j != b) {
-          ts.add_clause(SZ * node + j, 0, SZ * node + j, 0);
-        }
-      }
-      ts.add_clause(SZ * node + a, 1, SZ * node + b, 1);
-      if (a != b) ts.add_clause(SZ * node + a, 0, SZ * node + b, 0);
-    }
-    auto t = string(s.rbegin(), s.rend());
-    if (t != s) {
-      int id = 0;
-      while (t[id] == s[id]) id++;
-      for (int i = 0; i < sz; i++) {
-        if (i == id || s[sz - 1 - i] == s[i]) continue;
-        ts.add_clause(SZ * path[i] + s[i] - 'a', 1, SZ * path[id] + s[id] - 'a', 0);
-        ts.add_clause(SZ * path[i] + s[i] - 'a', 0, SZ * path[id] + s[id] - 'a', 1);
-        ts.add_clause(SZ * path[i] + s[sz - 1 - i] - 'a', 1, SZ * path[id] + s[sz - 1 - id] - 'a',
-                      0);
-        ts.add_clause(SZ * path[i] + s[sz - 1 - i] - 'a', 0, SZ * path[id] + s[sz - 1 - id] - 'a',
-                      1);
-      }
+      positive[path[i]] = s[i];
+      negative[path[i]] = s[sz - 1 - i];
     }
   }
-
-  auto nice = ts.solve();
+  for (auto id : views::iota(0, q)) {
+    auto& [x, y, s] = queries[id];
+    int sz = int(s.size());
+    auto path = get_path(x, y);
+    for (int i = 0; i < sz; i++) {
+      if (positive[path[i]] != s[i]) ts.add_clause(path[i], 0, n + id, 1);
+      if (negative[path[i]] != s[i]) ts.add_clause(path[i], 1, n + id, 1);
+      if (positive[path[i]] != s[sz - 1 - i]) ts.add_clause(path[i], 0, n + id, 0);
+      if (negative[path[i]] != s[sz - 1 - i]) ts.add_clause(path[i], 1, n + id, 0);
+    }
+  }
+  auto&& nice = ts.solve();
   if (!nice) {
     cout << "NO\n";
   } else {
     cout << "YES\n";
     for (int i = 0; i < n; i++) {
-      int f = 0;
-      for (int j = 0; j < SZ; j++) {
-        if (ts.res[SZ * i + j]) {
-          cout << char('a' + j);
-          f = 1;
-          break;
-        }
-      }
-      if (!f) cout << 'a';
+      cout << (ts.res[i] ? positive[i] : negative[i]);
     }
     cout << "\n";
   }

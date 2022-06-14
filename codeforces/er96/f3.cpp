@@ -2,10 +2,7 @@
 using namespace std;
 using ll = long long;
 
-constexpr ll inf = 1e18;
-constexpr int inf_int = 1e9;
-
-main() {
+int main() {
   cin.tie(nullptr)->sync_with_stdio(false);
   int n, k;
   cin >> n >> k;

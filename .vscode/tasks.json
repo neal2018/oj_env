@@ -18,6 +18,7 @@
 				"-D_GLIBCXX_DEBUG",
 				"-D_DEBUG",
 				"-Wl,--stack,33554432",
+				"-fdiagnostics-color=always",
 				// "-O2",
 				"${file}",
 				"-o",
