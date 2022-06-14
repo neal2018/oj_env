@@ -62,7 +62,7 @@
 		{
 			"type": "process",
 			"label": "Codeforces: Test and Submit",
-			"command": "py",
+			"command": "python",
 			"args": [
 				"submit.py",
 				"-f",
@@ -80,7 +80,7 @@
 		{
 			"type": "process",
 			"label": "Codeforces: Test and Submit (Exact Name)",
-			"command": "py",
+			"command": "python",
 			"args": [
 				"submit.py",
 				"-f",
@@ -97,7 +97,7 @@
 		{
 			"type": "process",
 			"label": "Codeforces: Test",
-			"command": "py",
+			"command": "python",
 			"args": [
 				"submit.py",
 				"-f",
@@ -117,7 +117,7 @@
 		{
 			"type": "process",
 			"label": "Codeforces: Submit",
-			"command": "py",
+			"command": "python",
 			"args": [
 				"submit.py",
 				"-f",
@@ -134,7 +134,7 @@
 		{
 			"type": "process",
 			"label": "Codeforces: Submit (Exact Name)",
-			"command": "py",
+			"command": "python",
 			"args": [
 				"submit.py",
 				"-f",
@@ -153,7 +153,7 @@
 		{
 			"type": "process",
 			"label": "Codeforces: Single: Test and Submit",
-			"command": "py",
+			"command": "python",
 			"args": [
 				"submit.py",
 				"-f",
@@ -170,7 +170,7 @@
 		{
 			"type": "process",
 			"label": "Codeforces: Single: Submit",
-			"command": "py",
+			"command": "python",
 			"args": [
 				"submit.py",
 				"-f",
