@@ -6,3 +6,4 @@ output2.txt
 .config/data
 tmp**
 *.exe
+/draft/**
