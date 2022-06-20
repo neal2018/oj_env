@@ -20,27 +20,46 @@ class cd:
     os.chdir(self.savedPath)
 
 
-def print_red(string):
-  print(f"\033[1;30;41m {string} \033[0;0m")
+def make_red(string):
+  return f"\033[1;30;41m {string} \033[0;0m"
 
 
-def print_green(string):
-  print(f"\033[1;30;42m {string} \033[0;0m")
+def make_green(string):
+  return f"\033[1;30;42m {string} \033[0;0m"
 
 
-def print_yellow(string):
-  print(f"\033[1;30;44m {string} \033[0;0m")
+def make_yellow(string):
+  return f"\033[1;30;43m {string} \033[0;0m"
+
+
+def make_blue(string):
+  return f"\033[1;30;44m {string} \033[0;0m"
+
+
+def print_with_empty_line(string):
+  print(string, end="\n\n")
+
+
+def get_int(string):
+  while True:
+    try:
+      res = int(input(string))
+    except ValueError:
+      pass
+    else:
+      break
+  return res
 
 
 if __name__ == "__main__":
   PATH_TO_CONTEST_FILE = "./.config/path_to_contest.json"
-  parser = argparse.ArgumentParser()
+  parser = argparse.ArgumentParser(allow_abbrev=False)
   parser.add_argument("-f", "--file", required=True)
   parser.add_argument("-c", "--contest")
-  parser.add_argument("-r" "--run", dest="run", default=True)
-  parser.add_argument("-s" "--submit", dest="submit", default=True)
-  parser.add_argument("-e" "--exact", dest="exact", default=False)
-  parser.add_argument("-o" "--only", dest="only", default=False)
+  parser.add_argument("-r", "--run", dest="run", action="store_true")
+  parser.add_argument("-s", "--submit", dest="submit", action="store_true")
+  parser.add_argument("-e", "--exact", dest="exact", action="store_true")
+  parser.add_argument("-o", "--only", dest="only", action="store_true")
   args = parser.parse_args()
   origin_file = os.path.normpath(args.file)
   filename = os.path.normpath(os.path.relpath(args.file))
@@ -48,14 +67,8 @@ if __name__ == "__main__":
   abs_cf = os.path.abspath("cf.exe")
 
   if args.only:
-    while True:
-      try:
-        contest = int(input("enter the contest id: "))
-      except BaseException:
-        pass
-      else:
-        break
-    problem_id = input("enter the problem id: ")
+    contest = get_int(make_yellow("enter the contest id:") + " ")
+    problem_id = input(make_yellow("enter the problem id:") + " ")
   else:
     # special check div2
     if os.path.basename(filename)[0].isdigit():
@@ -75,13 +88,7 @@ if __name__ == "__main__":
       if path in path_to_contest:
         contest = path_to_contest[path]
       else:
-        while True:
-          try:
-            contest = int(input("enter the contest id: "))
-          except BaseException:
-            pass
-          else:
-            break
+        contest = get_int(make_yellow("enter the contest id:") + " ")
         path_to_contest[path] = contest
         os.makedirs(os.path.dirname(PATH_TO_CONTEST_FILE), exist_ok=True)
         with open(PATH_TO_CONTEST_FILE, "w+") as f:
@@ -94,25 +101,44 @@ if __name__ == "__main__":
       problem_id = os.path.splitext(os.path.basename(filename))[0]
 
   # test sample
-  if args.run == True:
-    print_yellow("Testing Sample...")
+  if args.run:
+    print_with_empty_line(make_blue("Testing Sample..."))
     test_path = f".config/data/cf/contest/{contest}/{problem_id}"
-    if not os.path.exists(test_path):
+    if not os.path.exists(os.path.dirname(test_path)):
       print(cf_cmd := f"{abs_cf} parse {contest}")
       sp.run(cf_cmd, shell=True)
+    if not os.path.exists(test_path):
+      problem_id = input(make_yellow("enter the problem id:") + " ")
+      test_path = f".config/data/cf/contest/{contest}/{problem_id}"
     with cd(test_path):
-      print(cf_cmd := f"{abs_cf} test {origin_file}")
+      print_with_empty_line(cf_cmd := f"{abs_cf} test {origin_file}")
       p = sp.run(cf_cmd, shell=True, capture_output=True, text=True)
-      print(p.stdout)
-      if "Failed" in p.stdout or "Error" in p.stdout or "exit" in p.stdout:
-        print_red("Failed Sample, aborting...")
-        exit()
+      AC, WA, RE = "AC", "WA", "RE"
+      test_result_str = (p.stdout.replace("Passed", make_green(AC))
+                         .replace("Runtime Error", make_red(RE))
+                         .replace("Failed", make_red(WA)))
+      test_result = [x for x in test_result_str.split("\n") if " ... " in x]
+      if any(WA in x for x in test_result):
+        print(test_result_str)
+        if test_result_str[-2:] != "\n\n":
+          print()
+      cases_cnt = len(test_result)
+      failed_cases = [i for i, v in enumerate(test_result) if AC not in v]
+      if failed_cases:
+        numbers = " ".join([f"#{x + 1}" for x in failed_cases])
+        print_with_empty_line(
+            make_red(f"FAIL {len(failed_cases)} of {cases_cnt}") + f" {numbers}"
+        )
       else:
-        print_green("Passed Sample")
-        print()
+        print_with_empty_line(make_green(f"PASS {cases_cnt} of {cases_cnt}"))
+      # print summary
+      print_with_empty_line("\n".join(test_result))
+      if args.submit and failed_cases:
+        args.submit = False
+        print_with_empty_line(make_red("Aborting..."))
 
   # submit
-  if args.submit == True:
-    print_yellow("Submitting...")
+  if args.submit:
+    print_with_empty_line(make_blue("Submitting..."))
     print(cf_cmd := f"{abs_cf} submit -f {origin_file} {contest} {problem_id}")
     sp.run(cf_cmd, shell=True)

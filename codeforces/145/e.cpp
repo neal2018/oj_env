@@ -55,8 +55,10 @@ auto edmond(int n, int root, vector<array<int, 3>> edges) {
 
 int main() {
   cin.tie(nullptr)->sync_with_stdio(false);
+#ifndef _DEBUG
   freopen("input.txt", "r", stdin);
   freopen("output.txt", "w", stdout);
+#endif
   int n, m;
   cin >> n >> m;
   vector<array<int, 3>> edges(m);

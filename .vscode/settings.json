@@ -136,10 +136,12 @@
         }
     },
     "workbench.colorCustomizations": {
-        "terminal.foreground": "#b7c5d3",
-        "titleBar.activeForeground": "#b7c5d3",
-        "editor.background": "#171e24",
-        "editorGutter.background": "#171e24",
+        "[City Lights]": {
+            "terminal.foreground": "#b7c5d3",
+            "titleBar.activeForeground": "#b7c5d3",
+            "editor.background": "#171e24",
+            "editorGutter.background": "#171e24",
+        }
     },
     "editor.tokenColorCustomizations": {
         "[City Lights]": {

@@ -66,7 +66,8 @@
 			"args": [
 				"submit.py",
 				"-f",
-				"${file}"
+				"${file}",
+				"-rs",
 			],
 			"detail": "test and submit to codeforces",
 			"problemMatcher": [],
@@ -79,31 +80,13 @@
 		},
 		{
 			"type": "process",
-			"label": "Codeforces: Test and Submit (Exact Name)",
-			"command": "python",
-			"args": [
-				"submit.py",
-				"-f",
-				"${file}",
-				"-e",
-				"True"
-			],
-			"detail": "test and submit to codeforces with exact file name",
-			"problemMatcher": [],
-			"dependsOn": [
-				"C/C++: g++.exe build active file"
-			]
-		},
-		{
-			"type": "process",
 			"label": "Codeforces: Test",
 			"command": "python",
 			"args": [
 				"submit.py",
 				"-f",
 				"${file}",
-				"-s",
-				"False"
+				"-r",
 			],
 			"detail": "test on codeforces",
 			"problemMatcher": [],
@@ -122,29 +105,9 @@
 				"submit.py",
 				"-f",
 				"${file}",
-				"-r",
-				"False"
+				"-s"
 			],
 			"detail": "submit to codeforces",
-			"problemMatcher": [],
-			"dependsOn": [
-				"C/C++: g++.exe build active file"
-			]
-		},
-		{
-			"type": "process",
-			"label": "Codeforces: Submit (Exact Name)",
-			"command": "python",
-			"args": [
-				"submit.py",
-				"-f",
-				"${file}",
-				"-r",
-				"False",
-				"-e",
-				"True"
-			],
-			"detail": "submit to codeforces with exact file name",
 			"problemMatcher": [],
 			"dependsOn": [
 				"C/C++: g++.exe build active file"
@@ -158,8 +121,7 @@
 				"submit.py",
 				"-f",
 				"${file}",
-				"-o",
-				"True"
+				"-ors",
 			],
 			"detail": "test and submit to codeforces",
 			"problemMatcher": [],
@@ -175,10 +137,7 @@
 				"submit.py",
 				"-f",
 				"${file}",
-				"-r",
-				"False",
-				"-o",
-				"True"
+				"-os"
 			],
 			"detail": "submit to codeforces",
 			"problemMatcher": [],
