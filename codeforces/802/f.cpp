@@ -6,8 +6,7 @@ int main() {
   cin.tie(nullptr)->sync_with_stdio(false);
   int n;
   cin >> n;
-  vector a(2, vector<int>(n));
-  vector b(2, vector<int>(n));
+  vector a(2, vector<int>(n)), b(2, vector<int>(n));
   int sum_a = 0, sum_b = 0;
   for (auto& r : a) {
     for (auto& x : r) cin >> x, sum_a += x;
@@ -17,17 +16,24 @@ int main() {
   }
   if (sum_a != sum_b) {
     cout << "-1\n";
+    return 0;
   }
   ll res = 0;
+  int p[2] = {}, q[2] = {};
+  auto dec = [](int& x, int& y) {
+    int mini = min(x, y);
+    x -= mini, y -= mini;
+    return mini;
+  };
   for (int i = 0; i < n; i++) {
-    if (pair{a[0][i], a[1][i]} == pair{b[0][i], b[1][i]}) {
-      continue;
+    for (auto t : {0, 1}) {
+      p[t] += a[t][i], q[t] += b[t][i];
+      dec(p[t], q[t]);
     }
-    if (a[0][i] + a[1][i] == b[0][i] + b[1][i]) {
-      res++;
-    } else {
-      res += 2;
+    for (auto t : {0, 1}) {
+      if (p[t] && q[!t]) res += dec(p[t], q[!t]);
     }
+    res += p[0] + p[1] + q[0] + q[1];
   }
   cout << res << "\n";
 }

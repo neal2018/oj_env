@@ -10,89 +10,71 @@ int main() {
   for (auto& r : a) {
     for (auto& x : r) cin >> x, x--;
   }
-  vector<pair<int, int>> directions = {{1, 0}, {-1, 0}, {0, 1}, {0, -1}};
-  auto check = [&]() {
-    vector<pair<int, int>> pos(n * m);
-    for (auto i : views::iota(0, n)) {
-      for (auto j : views::iota(0, m)) {
-        pos[a[i][j]] = {i, j};
+  vector<pair<int, int>> bad, d4 = {{1, 0}, {0, 1}, {-1, 0}, {0, -1}};
+  auto check = [&](int i, int j) {
+    if (a[i][j] == 0) return true;
+    for (auto& [di, dj] : d4) {
+      int ii = i + di, jj = j + dj;
+      if (0 <= ii && ii < n && 0 <= jj && jj < m) {
+        if (a[ii][jj] < a[i][j]) return true;
       }
     }
-    vector<ll> p(n * m);  // number
-    iota(p.begin(), p.end(), 0);
-    function<ll(ll)> find = [&](ll x) { return x == p[x] ? x : (p[x] = find(p[x])); };
-    auto merge = [&](ll x, ll y) { p[find(x)] = find(y); };
-    for (auto i : views::iota(1, n * m)) {
-      auto [x, y] = pos[i];
-      if ([&] {
-            for (auto& [dx, dy] : directions) {
-              int xx = x + dx, yy = y + dy;
-              if (0 <= xx && xx < n && 0 <= yy && yy < m) {
-                if (find(a[xx][yy]) == find(i - 1)) {
-                  merge(i, i - 1);
-                  return true;
-                }
-              }
-            }
-            return false;
-          }()) {
-        continue;
-      } else {
-        return false;
-      }
-    }
+    return false;
   };
-  // if (check()) {
-  //   cout << "0\n";
-  //   return 0;
-  // }
-  ll res = 0, good = 1, can_1 = 0;
-  vector<ll> p(n * m, -1);  // number
-  function<ll(ll)> find = [&](ll x) { return p[x] < 0 ? x : (p[x] = find(p[x])); };
-  auto merge = [&](ll x, ll y) {
-    ll rx = find(x), ry = find(y);
-    if (rx == ry) return false;
-    p[ry] += p[rx];
-    p[rx] = ry;
-    return true;
-  };
-  vector<pair<int, int>> pos(n * m);
   for (auto i : views::iota(0, n)) {
     for (auto j : views::iota(0, m)) {
-      pos[a[i][j]] = {i, j};
+      if (!check(i, j)) bad.push_back({i, j});
     }
   }
-  for (auto i : views::iota(1, n * m)) {
-    auto [x, y] = pos[i];
-    if ([&] {
-          for (auto& [dx, dy] : directions) {
-            int xx = x + dx, yy = y + dy;
-            if (0 <= xx && xx < n && 0 <= yy && yy < m) {
-              if (find(a[xx][yy]) == find(i - 1)) {
-                merge(i, i - 1);
-                return true;
-              }
-            }
-          }
-          return false;
-        }()) {
-      continue;
-    } else {
-      good = 0;
-      ll sz = -p[find(i - 1)];
-      for (auto& [dx, dy] : directions) {
-        int xx = x + dx, yy = y + dy;
-        if (0 <= xx && xx < n && 0 <= yy && yy < m) {
-          if (find(a[xx][yy]) == find(i - 1)) {
-            merge(i, i - 1);
-            return true;
-          }
+  if (!bad.size()) {
+    cout << "0\n";
+    return 0;
+  }
+  if (bad.size() > 5) {
+    cout << "2\n";
+    return 0;
+  }
+  auto possible = [&] {
+    set st(bad.begin(), bad.end());
+    for (auto& [i, j] : bad) {
+      for (auto& [di, dj] : d4) {
+        int ii = i + di, jj = j + dj;
+        if (0 <= ii && ii < n && 0 <= jj && jj < m) {
+          st.insert({ii, jj});
         }
       }
     }
+    return vector(st.begin(), st.end());
+  }();
+  set<pair<pair<int, int>, pair<int, int>>> st;
+  for (auto x1 : views::iota(0, n)) {
+    for (auto y1 : views::iota(0, m)) {
+      for (auto& [x2, y2] : possible) {
+        swap(a[x1][y1], a[x2][y2]);
+        if ([&] {
+              if (!check(x1, y1) || !check(x2, y2)) return false;
+              for (auto& [i, j] : bad) {
+                if (!check(i, j)) return false;
+              }
+              for (auto& [i, j] : {pair{x1, y1}, pair{x2, y2}}) {
+                for (auto& [di, dj] : d4) {
+                  int ii = i + di, jj = j + dj;
+                  if (0 <= ii && ii < n && 0 <= jj && jj < m) {
+                    if (!check(ii, jj)) return false;
+                  }
+                }
+              }
+              return true;
+            }()) {
+          st.insert(minmax(pair{x1, y1}, pair{x2, y2}));
+        }
+        swap(a[x1][y1], a[x2][y2]);
+      }
+    }
   }
-  if (good) {
-    cout << "0\n";
-    return 0;
+  if (st.size() == 0) {
+    cout << "2\n";
+  } else {
+    cout << "1 " << st.size() << "\n";
   }
 }
