@@ -67,8 +67,8 @@ if __name__ == "__main__":
   abs_cf = os.path.abspath("cf.exe")
 
   if args.only:
-    contest = get_int(make_yellow("enter the contest id:") + " ")
-    problem_id = input(make_yellow("enter the problem id:") + " ")
+    contest = get_int(make_yellow("enter the CONTEST id:") + " ")
+    problem_id = input(make_yellow("enter the PROBLEM id:") + " ")
   else:
     # special check div2
     if os.path.basename(filename)[0].isdigit():
@@ -88,7 +88,7 @@ if __name__ == "__main__":
       if path in path_to_contest:
         contest = path_to_contest[path]
       else:
-        contest = get_int(make_yellow("enter the contest id:") + " ")
+        contest = get_int(make_yellow("enter the CONTEST id:") + " ")
         path_to_contest[path] = contest
         os.makedirs(os.path.dirname(PATH_TO_CONTEST_FILE), exist_ok=True)
         with open(PATH_TO_CONTEST_FILE, "w+") as f:
@@ -108,7 +108,7 @@ if __name__ == "__main__":
       print(cf_cmd := f"{abs_cf} parse {contest}")
       sp.run(cf_cmd, shell=True)
     if not os.path.exists(test_path):
-      problem_id = input(make_yellow("enter the problem id:") + " ")
+      problem_id = input(make_yellow("enter the PROBLEM id:") + " ")
       test_path = f".config/data/cf/contest/{contest}/{problem_id}"
     with cd(test_path):
       print_with_empty_line(cf_cmd := f"{abs_cf} test {origin_file}")

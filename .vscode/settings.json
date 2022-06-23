@@ -105,6 +105,7 @@
         "--indent-size=2"
     ],
     "cSpell.words": [
+        "Fenwick",
         "hson",
         "qpow",
         "spfa",
