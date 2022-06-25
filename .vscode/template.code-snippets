@@ -166,7 +166,6 @@
 			"    if (b & 1) (res *= a) %= _MOD;",
 			"  return res;",
 			"}",
-			"template <ll MOD = MOD>",
 			"struct Z {",
 			"  ll x;",
 			"  Z(ll _x = 0) : x(norm(_x)) {}",
