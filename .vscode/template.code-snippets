@@ -99,7 +99,6 @@
 		"scope": "cpp",
 		"prefix": [
 			"g",
-			"vector<vector<ll>> g(n);"
 		],
 		"body": [
 			"vector<vector<int>> g(n);",
