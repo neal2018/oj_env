@@ -1,5 +1,6 @@
 {
   "codeforces\\145": 240,
+  "codeforces\\406": 786,
   "codeforces\\589": 1228,
   "codeforces\\593": 1236,
   "codeforces\\602": 1261,
@@ -33,8 +34,11 @@
   "codeforces\\800\\2": 1694,
   "codeforces\\801": 1695,
   "codeforces\\802": 1700,
+  "codeforces\\803": 1698,
   "codeforces\\er105": 1494,
   "codeforces\\er117": 1612,
+  "codeforces\\er118": 1613,
+  "codeforces\\er120": 1622,
   "codeforces\\er125": 1657,
   "codeforces\\er127": 1671,
   "codeforces\\er128": 1680,
@@ -46,5 +50,7 @@
   "codeforces\\er95": 1418,
   "codeforces\\er96": 1430,
   "codeforces\\er97": 1437,
-  "codeforces\\gr20": 1672
+  "codeforces\\er99": 1455,
+  "codeforces\\gr20": 1672,
+  "codeforces\\gr21": 1696
 }

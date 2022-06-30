@@ -1,31 +1,33 @@
 #include <bits/stdc++.h>
 using namespace std;
 #define ll long long
-constexpr ll MOD = 998244353; // 9223372036737335297
 
-ll norm(ll x) { return (x + MOD) % MOD; }
-template <class T>
-T power(T a, ll b, T res = 1) {
-  for (; b; b /= 2, (a *= a) %= MOD)
-    if (b & 1) (res *= a) %= MOD;
+constexpr ll MOD = 998244353;
+template <typename T>
+T power(T a, ll b, ll _MOD = MOD, T res = 1) {
+  for (; b; b /= 2, (a *= a) %= _MOD)
+    if (b & 1) (res *= a) %= _MOD;
   return res;
 }
 struct Z {
   ll x;
   Z(ll _x = 0) : x(norm(_x)) {}
+  static ll norm(ll x) { return (x % MOD + MOD) % MOD; }
+  auto operator<=>(const Z &) const = default;  // need c++ 20
   Z operator-() const { return Z(norm(MOD - x)); }
-  Z inv() const { return power(*this, MOD - 2); }
+  Z inv() const { return power(*this, MOD - 2, MOD); }
   Z &operator*=(const Z &rhs) { return x = x * rhs.x % MOD, *this; }
   Z &operator+=(const Z &rhs) { return x = norm(x + rhs.x), *this; }
   Z &operator-=(const Z &rhs) { return x = norm(x - rhs.x), *this; }
   Z &operator/=(const Z &rhs) { return *this *= rhs.inv(); }
-  Z &operator%=(const auto &_) { return *this; }
+  Z &operator%=(const ll &rhs) { return x %= rhs, *this; }
   friend Z operator*(Z lhs, const Z &rhs) { return lhs *= rhs; }
   friend Z operator+(Z lhs, const Z &rhs) { return lhs += rhs; }
   friend Z operator-(Z lhs, const Z &rhs) { return lhs -= rhs; }
   friend Z operator/(Z lhs, const Z &rhs) { return lhs /= rhs; }
-  friend Z operator%(Z lhs, const auto &_) { return lhs; }
-  friend istream &operator>>(istream &input, Z &z) { return input >> z.x, input; }
+  friend Z operator%(Z lhs, const ll &rhs) { return lhs %= rhs; }
+  friend auto &operator>>(istream &i, Z &z) { return i >> z.x; }
+  friend auto &operator<<(ostream &o, const Z &z) { return o << z.x; }
 };
 
 void ntt(vector<Z> &a, int f) {
@@ -33,17 +35,17 @@ void ntt(vector<Z> &a, int f) {
   vector<Z> w(n);
   vector<int> rev(n);
   for (int i = 0; i < n; i++) rev[i] = (rev[i / 2] / 2) | ((i & 1) * (n / 2));
-  for (int i = 0; i < n; i++)
-    if (i < rev[i]) swap(a[i], a[rev[i]]);
   Z wn = power(f ? (MOD + 1) / 3 : 3, (MOD - 1) / n);
   w[0] = 1;
   for (int i = 1; i < n; i++) w[i] = w[i - 1] * wn;
+  for (int i = 0; i < n; i++) {
+    if (i < rev[i]) swap(a[i], a[rev[i]]);
+  }
   for (int mid = 1; mid < n; mid *= 2) {
     for (int i = 0; i < n; i += 2 * mid) {
       for (int j = 0; j < mid; j++) {
         Z x = a[i + j], y = a[i + j + mid] * w[n / (2 * mid) * j];
-        a[i + j] = x + y;
-        a[i + j + mid] = x - y;
+        a[i + j] = x + y, a[i + j + mid] = x - y;
       }
     }
   }

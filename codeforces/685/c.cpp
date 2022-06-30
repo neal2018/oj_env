@@ -7,25 +7,28 @@ int main() {
   int T;
   cin >> T;
   while (T--) {
-    int n, m;
-    cin >> n >> m;
-    vector a(n, vector<ll>(m));
-    set<ll> st;
-    for (auto& r : a) {
-      for (auto& x : r) cin >> x, st.insert(x);
-    }
-    int f = 0;
-    for (auto& v : st) {
-      for (auto i : views::iota(0, n)) {
-        for (auto j : views::iota(0, m)) {
-          if (a[i][j] == v && (i + j) % 2 == f) a[i][j] += 1;
+    int n, k;
+    string a, b;
+    cin >> n >> k >> a >> b;
+    int mp_a[26]{}, mp_b[26]{};
+    for (auto& c : a) mp_a[c - 'a']++;
+    for (auto& c : b) mp_b[c - 'a']++;
+    cout << ([&] {
+      for (int i = 0; i < 26; i++) {
+        if (mp_a[i] < mp_b[i]) {
+          return false;
+        } else if (mp_a[i] > mp_b[i]) {
+          if ((mp_a[i] - mp_b[i]) % k != 0) {
+            return false;
+          } else {
+            int move = mp_a[i] - mp_b[i];
+            mp_a[i + 1] += move;
+          }
         }
       }
-      f = !f;
-    }
-    for (auto& r : a) {
-      for (auto& x : r) cout << x << " ";
-      cout << "\n";
-    }
+      return true;
+    }()
+                 ? "Yes\n"
+                 : "No\n");
   }
 }
