@@ -112,30 +112,6 @@
         "stold"
     ],
     "files.autoSave": "afterDelay",
-    "terminal.integrated.defaultProfile.windows": "GitBash",
-    "terminal.integrated.profiles.windows": {
-        "PowerShell": {
-            "source": "PowerShell",
-            "icon": "terminal-powershell"
-        },
-        "Command Prompt": {
-            "path": [
-                "${env:windir}\\Sysnative\\cmd.exe",
-                "${env:windir}\\System32\\cmd.exe"
-            ],
-            "args": [],
-            "icon": "terminal-cmd"
-        },
-        "GitBash": {
-            "path": [
-                "C:/Users/neal/scoop/apps/git/current/bin/bash.exe"
-            ],
-            "args": [
-                "-l"
-            ],
-            "icon": "terminal-bash"
-        }
-    },
     "workbench.colorCustomizations": {
         "[City Lights]": {
             "terminal.foreground": "#b7c5d3",

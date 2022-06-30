@@ -13,7 +13,7 @@ python .croupier.py -q ./main.exe "python a.py"
 
 ## two files stress test
 # while true; do
-#   py gen.py > input.txt
+#   python gen.py > input.txt
 #   ./bf < input.txt > tmp.out
 #   ./main < input.txt > tmp2.out 
 #   if diff tmp.out tmp2.out; then

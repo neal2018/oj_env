@@ -5,19 +5,20 @@
             "name": "g++.exe - Build and debug active file",
             "type": "cppdbg",
             "request": "launch",
-            "program": "${workspaceRoot}/main.exe",
+            "program": "${workspaceRoot}/main",
             "args": [
                 "<",
                 "${workspaceRoot}/input.txt",
                 ">",
                 "${workspaceRoot}/output.txt"
             ],
+            
             "stopAtEntry": false,
             "cwd": "${workspaceFolder}",
-            "environment": [],
+            "environment": [{ "name": "ASAN_OPTIONS", "value": "detect_leaks=0" }],
             "externalConsole": false,
             "MIMode": "gdb",
-            "miDebuggerPath": "C:/msys64/mingw64/bin/gdb.exe",
+            "miDebuggerPath": "/usr/bin/gdb",
             "setupCommands": [
                 {
                     "description": "Enable pretty-printing for gdb",

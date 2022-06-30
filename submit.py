@@ -64,7 +64,7 @@ if __name__ == "__main__":
   origin_file = os.path.normpath(args.file)
   filename = os.path.normpath(os.path.relpath(args.file))
   contest = args.contest
-  abs_cf = os.path.abspath("cf.exe")
+  abs_cf = os.path.abspath("/usr/bin/cf")
 
   if args.only:
     contest = get_int(make_yellow("enter the CONTEST id:") + " ")

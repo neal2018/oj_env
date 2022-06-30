@@ -12,11 +12,5 @@ int main() {
     vector<int> a(n);
     for (auto& x : a) cin >> x;
     cout << a[0] << "\n";
-    cout << "aa";
-    [&] {
-      cout << "aa";
-      cout << a[10] << "\n";
-    }();
-    throw;
   }
 }

@@ -4,7 +4,7 @@
 		{
 			"type": "cppbuild",
 			"label": "C/C++: g++.exe build active file",
-			"command": "C:/msys64/mingw64/bin/g++.exe",
+			"command": "/usr/bin/g++-12",
 			"args": [
 				"-std=c++20",
 				"-g",
@@ -22,12 +22,19 @@
 				"-D_GLIBCXX_ASSERTIONS",
 				"-D_GLIBCXX_DEBUG",
 				"-D_DEBUG",
-				"-Wl,--stack,33554432",
+				"-Wl,-z,stack-size=33554432",
 				"-fdiagnostics-color=always",
+				"-fsanitize=address",
+				"-fsanitize=undefined",
+				"-fsanitize=float-divide-by-zero",
+				"-fsanitize=float-cast-overflow",
+				"-fno-sanitize-recover=all",
+				"-fstack-protector-all",
+				// "-H",
 				// "-O2",
 				"${file}",
 				"-o",
-				"${workspaceRoot}/main.exe",
+				"${workspaceRoot}/main",
 			],
 			"options": {
 				"cwd": "${workspaceFolder}"
@@ -44,7 +51,7 @@
 		{
 			"type": "cppbuild",
 			"label": "C/C++: O2: g++.exe build",
-			"command": "C:/msys64/mingw64/bin/g++.exe",
+			"command": "/usr/bin/g++-12",
 			"args": [
 				"-std=c++20",
 				"-O2",
@@ -62,7 +69,7 @@
 				"kind": "build",
 				"isDefault": true
 			},
-			"detail": "compiler: C:/msys64/mingw64/bin/g++.exe with O2"
+			"detail": "compiler: /usr/bin/g++ with O2"
 		},
 		{
 			"type": "process",
