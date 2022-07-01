@@ -12,10 +12,14 @@
                 ">",
                 "${workspaceRoot}/output.txt"
             ],
-            
             "stopAtEntry": false,
             "cwd": "${workspaceFolder}",
-            "environment": [{ "name": "ASAN_OPTIONS", "value": "detect_leaks=0" }],
+            "environment": [
+                {
+                    "name": "ASAN_OPTIONS",
+                    "value": "detect_leaks=0"
+                }
+            ],
             "externalConsole": false,
             "MIMode": "gdb",
             "miDebuggerPath": "/usr/bin/gdb",
@@ -27,6 +31,11 @@
                 },
                 {
                     "text": "set charset UTF-8"
+                },
+                {
+                    "description": "Enable break on all exceptions",
+                    "text": "catch throw",
+                    "ignoreFailures": true
                 }
             ],
             "preLaunchTask": "C/C++: g++.exe build active file"
