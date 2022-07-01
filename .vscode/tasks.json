@@ -57,7 +57,7 @@
 				"-O2",
 				"${file}",
 				"-o",
-				"${workspaceRoot}/main.exe",
+				"${workspaceRoot}/main",
 			],
 			"options": {
 				"cwd": "${workspaceFolder}"
