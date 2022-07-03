@@ -159,4 +159,5 @@
     "workbench.colorTheme": "City Lights",
     "editor.bracketPairColorization.enabled": true,
     "glassit.alpha": 240,
+    "C_Cpp.default.browse.limitSymbolsToIncludedHeaders": false
 }
