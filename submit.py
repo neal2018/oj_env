@@ -2,7 +2,6 @@
 import argparse
 import subprocess as sp
 import json
-import pathlib
 import os
 
 
@@ -36,19 +35,25 @@ def make_blue(string):
   return f"\033[1;30;44m {string} \033[0;0m"
 
 
+def make_sky_blue(string):
+  return f"\033[1;30;46m {string} \033[0;0m"
+
+
 def print_with_empty_line(string):
   print(string, end="\n\n")
 
 
 def get_int(string):
-  while True:
-    try:
-      res = int(input(string))
-    except ValueError:
-      pass
-    else:
-      break
-  return res
+  res = "invalid string"
+  while not res.isdigit():
+    res = input(string)
+  return int(res)
+
+
+def get_test_path(contest, problem_id):
+  CODEFORCES_GYM_THRESHOLD = 100000
+  place = "gym" if int(contest) >= CODEFORCES_GYM_THRESHOLD else "contest"
+  return f".config/data/cf/{place}/{contest}/{problem_id}"
 
 
 if __name__ == "__main__":
@@ -66,9 +71,11 @@ if __name__ == "__main__":
   contest = args.contest
   abs_cf = os.path.abspath("/usr/bin/cf")
 
+  # fetch contest id, problem id
   if args.only:
-    contest = get_int(make_yellow("enter the CONTEST id:") + " ")
-    problem_id = input(make_yellow("enter the PROBLEM id:") + " ")
+    contest = get_int(make_yellow("enter the contest id:") + " ")
+    problem_id = input(make_sky_blue("enter the problem id:") + " ")
+    print()
   else:
     # special check div2
     if os.path.basename(filename)[0].isdigit():
@@ -77,39 +84,53 @@ if __name__ == "__main__":
       filename = os.path.join(directory, basename[0], basename[1:])
     path = os.path.dirname(filename)
 
+    # parse problem id
+    if not args.exact:
+      problem_id: str = os.path.basename(filename)[0]
+    else:
+      problem_id = os.path.splitext(os.path.basename(filename))[0]
+
     # get contest id
     if not contest:
       if os.path.exists(PATH_TO_CONTEST_FILE):
         with open(PATH_TO_CONTEST_FILE) as f:
-          path_to_contest = json.load(f)
+          path_to_contest: dict = json.load(f)
       else:
         path_to_contest = {}
 
       if path in path_to_contest:
         contest = path_to_contest[path]
       else:
-        contest = get_int(make_yellow("enter the CONTEST id:") + " ")
+        contest = get_int(make_yellow("enter the contest id:") + " ")
+        # if next promt is not a query, add an empty line
+        test_path = get_test_path(contest, problem_id)
+        if not os.path.exists(os.path.dirname(test_path)) or os.path.exists(test_path):
+          print()
+        # save
         path_to_contest[path] = contest
         os.makedirs(os.path.dirname(PATH_TO_CONTEST_FILE), exist_ok=True)
         with open(PATH_TO_CONTEST_FILE, "w+") as f:
           f.write(json.dumps(path_to_contest, sort_keys=True, indent=2))
 
-    # parse problem id
-    if not args.exact:
-      problem_id = os.path.basename(filename)[0]
-    else:
-      problem_id = os.path.splitext(os.path.basename(filename))[0]
+  test_path = get_test_path(contest, problem_id)
+
+  # parse samples
+  if not os.path.exists(os.path.dirname(test_path)):
+    print(cf_cmd := f"{abs_cf} parse {contest}")
+    sp.run(cf_cmd, shell=True)
+    print()
+
+  # verify probelm id
+  if not os.path.exists(test_path):
+    problem_id = problem_id[0].upper() + problem_id[1:]
+    while not os.path.exists(test_path):
+      problem_id = input(make_sky_blue("enter the problem id:") + " ")
+      test_path = get_test_path(contest, problem_id)
+    print()
 
   # test sample
   if args.run:
     print_with_empty_line(make_blue("Testing Sample..."))
-    test_path = f".config/data/cf/contest/{contest}/{problem_id}"
-    if not os.path.exists(os.path.dirname(test_path)):
-      print(cf_cmd := f"{abs_cf} parse {contest}")
-      sp.run(cf_cmd, shell=True)
-    if not os.path.exists(test_path):
-      problem_id = input(make_yellow("enter the PROBLEM id:") + " ")
-      test_path = f".config/data/cf/contest/{contest}/{problem_id}"
     with cd(test_path):
       print_with_empty_line(cf_cmd := f"{abs_cf} test {origin_file}")
       p = sp.run(cf_cmd, shell=True, capture_output=True, text=True)

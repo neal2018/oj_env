@@ -49,37 +49,11 @@ ll greedy(vector<array<ll, 2>>& mouse, vector<array<ll, 3>>& hole) {
 
 int main() {
   cin.tie(nullptr)->sync_with_stdio(false);
-  int T;
-  cin >> T;
-  while (T--) {
-    int n, m;
-    string s;
-    cin >> n >> m >> s;
-    vector<array<ll, 2>> mouse(10);
-    for (int i = 0; i < 10; i++) mouse[i] = {i, 0};
-    for (auto& c : s) mouse[c - '0'][1]++;
-    vector<array<ll, 3>> hole(10);
-    for (int i = 0; i < 10; i++) hole[i] = {i, 0, m};
-    auto cost = greedy(mouse, hole);
-    ll already = 0;
-    string res(n, '?');
-    for (int i = 0; i < n; i++) {
-      for (int j = 0; j < 10; j++) {
-        ll cur_cost = already + abs(s[i] - '0' - j);
-        if (hole[j][2] == 0) continue;
-        mouse[s[i] - '0'][1]--;
-        hole[j][2]--;
-        auto flow = greedy(mouse, hole);
-        if (flow + cur_cost == cost) {
-          res[i] = char(j + '0');
-          already += abs(s[i] - '0' - j);
-          break;
-        }
-        mouse[s[i] - '0'][1]++;
-        hole[j][2]++;
-      }
-    }
-    cout << cost << "\n";
-    cout << res << "\n";
-  }
+  int n, m;
+  cin >> n >> m;
+  vector<array<ll, 2>> a(n);
+  for (auto& [x, y] : a) cin >> x, y = 1;
+  vector<array<ll, 3>> b(m);
+  for (auto& [x, y, z] : b) cin >> x >> y >> z;
+  cout << greedy(a, b) << "\n";
 }
