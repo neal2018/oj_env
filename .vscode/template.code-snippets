@@ -1,482 +1,529 @@
 {
-	// Place your oj_env workspace snippets here. Each snippet is defined under a snippet name and has a scope, prefix, body and 
-	// description. Add comma separated ids of the languages where the snippet is applicable in the scope field. If scope 
-	// is left empty or omitted, the snippet gets applied to all languages. The prefix is what is 
-	// used to trigger the snippet and the body will be expanded and inserted. Possible variables are: 
-	// $1, $2 for tab stops, $0 for the final cursor position, and ${1:label}, ${2:another} for placeholders. 
-	// Placeholders with the same ids are connected.
-	// Example:
-	"multicase main": {
-		"scope": "cpp",
-		"prefix": [
-			"#include",
-			"main",
-			"multi"
-		],
-		"body": [
-			"#include <bits/stdc++.h>",
-			"using namespace std;",
-			"using ll = long long;",
-			"",
-			"int main() {",
-			"  cin.tie(nullptr)->sync_with_stdio(false);",
-			"  int T;",
-			"  cin >> T;",
-			"  while (T--) {",
-			"    $0",
-			"  }",
-			"}",
-		],
-		"description": "multicase main"
-	},
-	"singlecase main": {
-		"scope": "cpp",
-		"prefix": [
-			"#include",
-			"main",
-			"single"
-		],
-		"body": [
-			"#include <bits/stdc++.h>",
-			"using namespace std;",
-			"using ll = long long;",
-			"",
-			"int main() {",
-			"  cin.tie(nullptr)->sync_with_stdio(false);",
-			"  $0",
-			"}",
-		],
-		"description": "singlecase main"
-	},
-	"read_n": {
-		"scope": "cpp",
-		"prefix": "n",
-		"body": [
-			"int n;",
-			"cin >> n;\n"
-		],
-		"description": "read_n"
-	},
-	"read_n_m": {
-		"scope": "cpp",
-		"prefix": "nm",
-		"body": [
-			"int n, m;",
-			"cin >> n >> m;\n"
-		],
-		"description": "read_n_m"
-	},
-	"read_array": {
-		"scope": "cpp",
-		"prefix": "a",
-		"body": [
-			"vector<${0:int}> a(n);",
-			"for (auto& x : a) cin >> x;\n"
-		],
-		"description": "read_array"
-	},
-	"read_2d_array": {
-		"scope": "cpp",
-		"prefix": "anm",
-		"body": [
-			"vector a(n, vector<${0:int}>(m));",
-			"for (auto& r : a) {",
-			"  for (auto& x : r) cin >> x;",
-			"}\n",
-		],
-		"description": "read_2d_array"
-	},
-	"read_string": {
-		"scope": "cpp",
-		"prefix": "s",
-		"body": [
-			"string ${0:s};",
-			"cin >> ${0:s};\n"
-		],
-		"description": "read_string"
-	},
-	"read_graph": {
-		"scope": "cpp",
-		"prefix": [
-			"g",
-		],
-		"body": [
-			"vector<vector<int>> g(n);",
-			"for (int i = 0, u, v; i < ${0:n - 1}; i++) {",
-			"  cin >> u >> v, u--, v--;",
-			"  g[u].push_back(v), g[v].push_back(u);",
-			"}\n"
-		],
-		"description": "read_graph"
-	},
-	"for_view": {
-		"scope": "cpp",
-		"prefix": [
-			"for",
-			"fori"
-		],
-		"body": [
-			"for (auto ${1:i} : views::iota(0, ${2:n})) {",
-			"  ${0}",
-			"}"
-		],
-		"description": "for_view_i"
-	},
-	"for_view_ij": {
-		"scope": "cpp",
-		"prefix": [
-			"forij",
-		],
-		"body": [
-			"for (auto i : views::iota(0, n)) {",
-			"  for (auto j : views::iota(0, m)) {",
-			"    ${0}",
-			"  }",
-			"}",
-		],
-		"description": "for_view_ij"
-	},
-	"dfs_graph": {
-		"scope": "cpp",
-		"prefix": [
-			"dfs",
-		],
-		"body": [
-			"function<void(int, int)> dfs = [&](int node, int fa) {",
-			"  for (auto& ne : g[node]) {",
-			"    if (ne == fa) continue;",
-			"    dfs(ne, node);",
-			"    ${0}",
-			"  }",
-			"};",
-		],
-		"description": "dfs_graph"
-	},
-	"mod": {
-		"scope": "cpp",
-		"prefix": [
-			"MOD",
-			"Z"
-		],
-		"body": [
-			"constexpr ll MOD = ${1|998244353,1e9 + 7,9223372036737335297|};",
-			"template <typename T>",
-			"T power(T a, ll b, ll _MOD = MOD, T res = 1) {",
-			"  for (; b; b /= 2, (a *= a) %= _MOD)",
-			"    if (b & 1) (res *= a) %= _MOD;",
-			"  return res;",
-			"}",
-			"struct Z {",
-			"  ll x;",
-			"  Z(ll _x = 0) : x(norm(_x)) {}",
-			"  static ll norm(ll x) { return (x % MOD + MOD) % MOD; }",
-			"  auto operator<=>(const Z &) const = default;  // need c++ 20",
-			"  Z operator-() const { return Z(norm(MOD - x)); }",
-			"  Z inv() const { return power(*this, MOD - 2, MOD); }",
-			"  Z &operator*=(const Z &rhs) { return x = x * rhs.x % MOD, *this; }",
-			"  Z &operator+=(const Z &rhs) { return x = norm(x + rhs.x), *this; }",
-			"  Z &operator-=(const Z &rhs) { return x = norm(x - rhs.x), *this; }",
-			"  Z &operator/=(const Z &rhs) { return *this *= rhs.inv(); }",
-			"  Z &operator%=(const ll &rhs) { return x %= rhs, *this; }",
-			"  friend Z operator*(Z lhs, const Z &rhs) { return lhs *= rhs; }",
-			"  friend Z operator+(Z lhs, const Z &rhs) { return lhs += rhs; }",
-			"  friend Z operator-(Z lhs, const Z &rhs) { return lhs -= rhs; }",
-			"  friend Z operator/(Z lhs, const Z &rhs) { return lhs /= rhs; }",
-			"  friend Z operator%(Z lhs, const ll &rhs) { return lhs %= rhs; }",
-			"  friend auto &operator>>(istream &i, Z &z) { return i >> z.x; }",
-			"  friend auto &operator<<(ostream &o, const Z &z) { return o << z.x; }",
-			"};"
-		],
-		"description": "mod"
-	},
-	"SegTree": {
-		"scope": "cpp",
-		"prefix": "SegTree",
-		"body": [
-			"struct SegTree {",
-			"  ll n;",
-			"  vector<int> t;",
-			"  SegTree(ll _n) : n(_n), t(2 * n) {}",
-			"  void modify(ll p, int v) {",
-			"    t[p += n] += v;",
-			"    for (p /= 2; p; p /= 2) t[p] = t[2 * p] + t[2 * p + 1];",
-			"  }",
-			"  int query(ll l, ll r) {",
-			"    int res = 0;",
-			"    for (l += n, r += n; l < r; l /= 2, r /= 2) {",
-			"      if (l & 1) res += t[l++];",
-			"      if (r & 1) res += t[--r];",
-			"    }",
-			"    return res;",
-			"  }",
-			"};",
-		],
-		"description": "Plain SegTree"
-	},
-	"Node SegTree": {
-		"scope": "cpp",
-		"prefix": "SegTree",
-		"body": [
-			"struct Node {",
-			"  ll v = 0, init = 0;",
-			"};",
-			"",
-			"Node pull(const Node &a, const Node &b) {",
-			"  if (!a.init) return b;",
-			"  if (!b.init) return a;",
-			"  Node c;",
-			"  return c;",
-			"}",
-			"",
-			"struct SegTree {",
-			"  ll n;",
-			"  vector<Node> t;",
-			"  SegTree(ll _n) : n(_n), t(2 * n){};",
-			"  void modify(ll p, const Node &v) {",
-			"    t[p += n] = v;",
-			"    for (p /= 2; p; p /= 2) t[p] = pull(t[p * 2], t[p * 2 + 1]);",
-			"  }",
-			"  Node query(ll l, ll r) {",
-			"    Node left, right;",
-			"    for (l += n, r += n; l < r; l /= 2, r /= 2) {",
-			"      if (l & 1) left = pull(left, t[l++]);",
-			"      if (r & 1) right = pull(t[--r], right);",
-			"    }",
-			"    return pull(left, right);",
-			"  }",
-			"};",
-		],
-		"description": "Node SegTree"
-	},
-	"Lazy SegTree": {
-		"scope": "cpp",
-		"prefix": "lazy",
-		"body": [
-			"struct Node {",
-			"  ll v = 0;",
-			"};",
-			"struct Tag {",
-			"  ll v = 0;",
-			"};",
-			"Node pull(const Node& a, const Node& b) { return {max(a.v, b.v)}; }",
-			"",
-			"Tag pull(const Tag& a, const Tag& b) { return {a.v + b.v}; }",
-			"",
-			"Node apply_tag(const Node& a, const Tag& b) { return {a.v + b.v}; }",
-			"",
-			"struct SegTree {",
-			"  ll n, h;",
-			"  vector<Node> t;",
-			"  vector<Tag> lazy;",
-			"  SegTree(ll _n) : n(_n), h((ll)log2(n)), t(2 * _n), lazy(2 * _n) {}",
-			"  void apply(ll x, const Tag& tag) {",
-			"    t[x] = apply_tag(t[x], tag);",
-			"    lazy[x] = pull(lazy[x], tag);",
-			"  }",
-			"  void build(ll l) {",
-			"    for (l = (l + n) / 2; l > 0; l /= 2) {",
-			"      if (!lazy[l].v) t[l] = pull(t[l * 2], t[2 * l + 1]);",
-			"    }",
-			"  }",
-			"  void push(ll l) {",
-			"    for (ll s = h; s > 0; s--) {",
-			"      ll i = (l + n) >> s;",
-			"      if (lazy[i].v) apply(2 * i, lazy[i]), apply(2 * i + 1, lazy[i]);",
-			"      lazy[i] = Tag();",
-			"    }",
-			"  }",
-			"  void modify(ll l, ll r, const Tag& v) {",
-			"    push(l), push(r - 1);",
-			"    ll l0 = l, r0 = r;",
-			"    for (l += n, r += n; l < r; l /= 2, r /= 2) {",
-			"      if (l & 1) apply(l++, v);",
-			"      if (r & 1) apply(--r, v);",
-			"    }",
-			"    build(l0), build(r0 - 1);",
-			"  }",
-			"  Node query(ll l, ll r) {",
-			"    push(l), push(r - 1);",
-			"    Node left, right;",
-			"    for (l += n, r += n; l < r; l /= 2, r /= 2) {",
-			"      if (l & 1) left = pull(left, t[l++]);",
-			"      if (r & 1) right = pull(t[--r], right);",
-			"    }",
-			"    return pull(left, right);",
-			"  }",
-			"};"
-		],
-		"description": "Lazy SegTree"
-	},
-	"Persistent SegTree": {
-		"scope": "cpp",
-		"prefix": [
-			"SegTree",
-			"persistent"
-		],
-		"body": [
-			"struct Node {",
-			"  int lc = 0, rc = 0, p = 0;",
-			"};",
-			"",
-			"struct SegTree {",
-			"  vector<Node> t = {{}};  // init all",
-			"  SegTree() = default;",
-			"  SegTree(int n) { t.reserve(n * 20); }",
-			"  int modify(int p, int l, int r, int x, int v) {",
-			"    // p: original node, update a[x] -> v",
-			"    t.push_back(t[p]);",
-			"    int u = (int)t.size() - 1;",
-			"    if (r - l == 1) {",
-			"      t[u].p = v;",
-			"    } else {",
-			"      int mid = (l + r) / 2;",
-			"      if (x < mid) {",
-			"        t[u].lc = modify(t[p].lc, l, mid, x, v);",
-			"        t[u].rc = t[p].rc;",
-			"      } else {",
-			"        t[u].lc = t[p].lc;",
-			"        t[u].rc = modify(t[p].rc, mid, r, x, v);",
-			"      }",
-			"      t[u].p = t[t[u].lc].p + t[t[u].rc].p;",
-			"    }",
-			"    return u;",
-			"  }",
-			"  int query(int p, int l, int r, int x, int y) {",
-			"    // query sum a[x]...a[y-1] rooted at p",
-			"    // t[p] holds the info of [l, r)",
-			"    if (x <= l && r <= y) return t[p].p;",
-			"    int mid = (l + r) / 2, res = 0;",
-			"    if (x < mid) res += query(t[p].lc, l, mid, x, y);",
-			"    if (y > mid) res += query(t[p].rc, mid, r, x, y);",
-			"    return res;",
-			"  }",
-			"};",
-		],
-		"description": "Persistent SegTree"
-	},
-	"union find": {
-		"scope": "cpp",
-		"prefix": [
-			"p",
-			"union"
-		],
-		"body": [
-			"struct UnionFind {",
-			"  vector<int> p;",
-			"  UnionFind(int n) : p(n) { iota(p.begin(), p.end(), 0); }",
-			"  int find(int x) { return x == p[x] ? x : (p[x] = find(p[x])); }",
-			"  void merge(int x, int y) { p[find(x)] = find(y); }",
-			"};",
-		],
-		"description": "union find"
-	},
-	"primes": {
-		"scope": "cpp",
-		"prefix": "prime",
-		"body": [
-			"vector<int> min_primes(MAX_N), primes;",
-			"primes.reserve(1e5);",
-			"for (int i = 2; i < MAX_N; i++) {",
-			"  if (!min_primes[i]) min_primes[i] = i, primes.push_back(i);",
-			"  for (auto& p : primes) {",
-			"    if (p * i >= MAX_N) break;",
-			"    min_primes[p * i] = p;",
-			"    if (i % p == 0) break;",
-			"  }",
-			"}",
-		],
-		"description": "linear prime sieve"
-	},
-	"fac": {
-		"scope": "cpp",
-		"prefix": [
-			"fac",
-			"binom",
-			"comb"
-		],
-		"body": [
-			"struct Comb {",
-			"  vector<Z> f, rf;",
-			"  Comb(int n = 2) : f(n, 1), rf(n, 1) { fill(2, n); }",
-			"  void fill(int start, int n) {",
-			"    f.resize(n), rf.resize(n);",
-			"    for (int i = start; i < n; i++) f[i] = f[i - 1] * i;",
-			"    rf[n - 1] = power(f[n - 1], MOD - 2);",
-			"    for (int i = n - 2; i >= start; i--) rf[i] = rf[i + 1] * (i + 1);",
-			"  }",
-			"  Z binom(int n, int r) {",
-			"    if (n < 0 || r < 0 || n < r) return 0;",
-			"    if (f.size() <= n) fill(int(f.size()), n + 1);",
-			"    return f[n] * rf[n - r] * rf[r];",
-			"  }",
-			"};",
-		],
-		"description": "factorial"
-	},
-	"rng mt19937_64": {
-		"scope": "cpp",
-		"prefix": [
-			"rng",
-			"mt19937_64"
-		],
-		"body": [
-			"mt19937_64 rng(chrono::steady_clock::now().time_since_epoch().count());"
-		],
-		"description": "rng mt19937_64"
-	},
-	"compress": {
-		"scope": "cpp",
-		"prefix": [
-			"compress",
-		],
-		"body": [
-			"auto compress = ${0:a};",
-			"sort(compress.begin(), compress.end());",
-			"compress.erase(unique(compress.begin(), compress.end()), compress.end());",
-			"for (auto& x : ${0:a}) x = lower_bound(compress.begin(), compress.end(), x) - compress.begin();",
-		],
-		"description": "compress"
-	},
-	"quick io": {
-		"scope": "cpp",
-		"prefix": [
-			"io",
-		],
-		"body": [
-		"namespace io {",
-		"constexpr int SIZE = 1 << 16;",
-		"char buf[SIZE], *head, *tail;",
-		"char get_char() {",
-		"  if (head == tail) tail = (head = buf) + fread(buf, 1, SIZE, stdin);",
-		"  return *head++;",
-		"}",
-		"template <typename T>",
-		"T read() {",
-		"  T x = 0, f = 1;",
-		"  char c = get_char();",
-		"  for (; !isdigit(c); c = get_char()) (c == '-') && (f = -1);",
-		"  for (; isdigit(c); c = get_char()) x = x * 10 + c - '0';",
-		"  return x * f;",
-		"}",
-		"string read_s() {",
-		"  string str;",
-		"  char c = get_char();",
-		"  while (c == ' ' || c == '\\n' || c == '\\r') c = get_char();",
-		"  while (c != ' ' && c != '\\n' && c != '\\r') str += c, c = get_char();",
-		"  return str;",
-		"}",
-		"void print(int x) {",
-		"  if (x > 9) print(x / 10);",
-		"  putchar(x % 10 | '0');",
-		"}",
-		"void println(int x) { print(x), putchar('\\n'); }",
-		"struct Read {",
-		"  Read& operator>>(int& x) { return x = read<int>(), *this; }",
-		"  Read& operator>>(ll& x) { return x = read<ll>(), *this; }",
-		"  Read& operator>>(long double& x) { return x = stold(read_s()), *this; }",
-		"} in;",
-		"}  // namespace io",
-		],
-		"description": "quick io"
-	}
+  // Place your oj_env workspace snippets here. Each snippet is defined under a snippet name and has a scope, prefix, body and 
+  // description. Add comma separated ids of the languages where the snippet is applicable in the scope field. If scope 
+  // is left empty or omitted, the snippet gets applied to all languages. The prefix is what is 
+  // used to trigger the snippet and the body will be expanded and inserted. Possible variables are: 
+  // $1, $2 for tab stops, $0 for the final cursor position, and ${1:label}, ${2:another} for placeholders. 
+  // Placeholders with the same ids are connected.
+  // Example:
+  "multicase main": {
+    "scope": "cpp",
+    "prefix": [
+      "#include",
+      "main",
+      "multi"
+    ],
+    "body": [
+      "#include <bits/stdc++.h>",
+      "using namespace std;",
+      "using ll = long long;",
+      "",
+      "int main() {",
+      "  cin.tie(nullptr)->sync_with_stdio(false);",
+      "  int T;",
+      "  cin >> T;",
+      "  while (T--) {",
+      "    $0",
+      "  }",
+      "}",
+    ],
+    "description": "multicase main"
+  },
+  "singlecase main": {
+    "scope": "cpp",
+    "prefix": [
+      "#include",
+      "main",
+      "single"
+    ],
+    "body": [
+      "#include <bits/stdc++.h>",
+      "using namespace std;",
+      "using ll = long long;",
+      "",
+      "int main() {",
+      "  cin.tie(nullptr)->sync_with_stdio(false);",
+      "  $0",
+      "}",
+    ],
+    "description": "singlecase main"
+  },
+  "read_n": {
+    "scope": "cpp",
+    "prefix": "n",
+    "body": [
+      "int n;",
+      "cin >> n;\n"
+    ],
+    "description": "read_n"
+  },
+  "read_n_m": {
+    "scope": "cpp",
+    "prefix": "nm",
+    "body": [
+      "int n, m;",
+      "cin >> n >> m;\n"
+    ],
+    "description": "read_n_m"
+  },
+  "read_array": {
+    "scope": "cpp",
+    "prefix": "a",
+    "body": [
+      "vector<${0:int}> a(n);",
+      "for (auto& x : a) cin >> x;\n"
+    ],
+    "description": "read_array"
+  },
+  "read_2d_array": {
+    "scope": "cpp",
+    "prefix": "anm",
+    "body": [
+      "vector a(n, vector<${0:int}>(m));",
+      "for (auto& r : a) {",
+      "  for (auto& x : r) cin >> x;",
+      "}\n",
+    ],
+    "description": "read_2d_array"
+  },
+  "read_string": {
+    "scope": "cpp",
+    "prefix": "s",
+    "body": [
+      "string ${0:s};",
+      "cin >> ${0:s};\n"
+    ],
+    "description": "read_string"
+  },
+  "read_graph": {
+    "scope": "cpp",
+    "prefix": [
+      "g",
+    ],
+    "body": [
+      "vector<vector<int>> g(n);",
+      "for (int i = 0, u, v; i < ${0:n - 1}; i++) {",
+      "  cin >> u >> v, u--, v--;",
+      "  g[u].push_back(v), g[v].push_back(u);",
+      "}\n"
+    ],
+    "description": "read_graph"
+  },
+  "for_view": {
+    "scope": "cpp",
+    "prefix": [
+      "for",
+      "fori"
+    ],
+    "body": [
+      "for (auto ${1:i} : views::iota(0, ${2:n})) {",
+      "  ${0}",
+      "}"
+    ],
+    "description": "for_view_i"
+  },
+  "for_view_ij": {
+    "scope": "cpp",
+    "prefix": [
+      "forij",
+    ],
+    "body": [
+      "for (auto i : views::iota(0, n)) {",
+      "  for (auto j : views::iota(0, m)) {",
+      "    ${0}",
+      "  }",
+      "}",
+    ],
+    "description": "for_view_ij"
+  },
+  "dfs_graph": {
+    "scope": "cpp",
+    "prefix": [
+      "dfs",
+    ],
+    "body": [
+      "function<void(int, int)> dfs = [&](int node, int fa) {",
+      "  for (auto& ne : g[node]) {",
+      "    if (ne == fa) continue;",
+      "    dfs(ne, node);",
+      "    ${0}",
+      "  }",
+      "};",
+    ],
+    "description": "dfs_graph"
+  },
+  "mod": {
+    "scope": "cpp",
+    "prefix": [
+      "MOD",
+      "Z"
+    ],
+    "body": [
+      "constexpr ll MOD = ${1|998244353,1e9 + 7,9223372036737335297|};",
+      "template <typename T>",
+      "T power(T a, ll b, ll _MOD = MOD, T res = 1) {",
+      "  for (; b; b /= 2, (a *= a) %= _MOD)",
+      "    if (b & 1) (res *= a) %= _MOD;",
+      "  return res;",
+      "}",
+      "struct Z {",
+      "  ll x;",
+      "  Z(ll _x = 0) : x(norm(_x)) {}",
+      "  static ll norm(ll x) { return (x % MOD + MOD) % MOD; }",
+      "  auto operator<=>(const Z &) const = default;  // need c++ 20",
+      "  Z operator-() const { return Z(norm(MOD - x)); }",
+      "  Z inv() const { return power(*this, MOD - 2, MOD); }",
+      "  Z &operator*=(const Z &rhs) { return x = x * rhs.x % MOD, *this; }",
+      "  Z &operator+=(const Z &rhs) { return x = norm(x + rhs.x), *this; }",
+      "  Z &operator-=(const Z &rhs) { return x = norm(x - rhs.x), *this; }",
+      "  Z &operator/=(const Z &rhs) { return *this *= rhs.inv(); }",
+      "  Z &operator%=(const ll &rhs) { return x %= rhs, *this; }",
+      "  friend Z operator*(Z lhs, const Z &rhs) { return lhs *= rhs; }",
+      "  friend Z operator+(Z lhs, const Z &rhs) { return lhs += rhs; }",
+      "  friend Z operator-(Z lhs, const Z &rhs) { return lhs -= rhs; }",
+      "  friend Z operator/(Z lhs, const Z &rhs) { return lhs /= rhs; }",
+      "  friend Z operator%(Z lhs, const ll &rhs) { return lhs %= rhs; }",
+      "  friend auto &operator>>(istream &i, Z &z) { return i >> z.x; }",
+      "  friend auto &operator<<(ostream &o, const Z &z) { return o << z.x; }",
+      "};"
+    ],
+    "description": "mod"
+  },
+  "SegTree": {
+    "scope": "cpp",
+    "prefix": "SegTree",
+    "body": [
+      "struct SegTree {",
+      "  ll n;",
+      "  vector<int> t;",
+      "  SegTree(ll _n) : n(_n), t(2 * n) {}",
+      "  void modify(ll p, int v) {",
+      "    t[p += n] += v;",
+      "    for (p /= 2; p; p /= 2) t[p] = t[2 * p] + t[2 * p + 1];",
+      "  }",
+      "  int query(ll l, ll r) {",
+      "    int res = 0;",
+      "    for (l += n, r += n; l < r; l /= 2, r /= 2) {",
+      "      if (l & 1) res += t[l++];",
+      "      if (r & 1) res += t[--r];",
+      "    }",
+      "    return res;",
+      "  }",
+      "};",
+    ],
+    "description": "Plain SegTree"
+  },
+  "Node SegTree": {
+    "scope": "cpp",
+    "prefix": "SegTree",
+    "body": [
+      "struct Node {",
+      "  ll v = 0, init = 0;",
+      "};",
+      "",
+      "Node pull(const Node &a, const Node &b) {",
+      "  if (!a.init) return b;",
+      "  if (!b.init) return a;",
+      "  Node c;",
+      "  return c;",
+      "}",
+      "",
+      "struct SegTree {",
+      "  ll n;",
+      "  vector<Node> t;",
+      "  SegTree(ll _n) : n(_n), t(2 * n){};",
+      "  void modify(ll p, const Node &v) {",
+      "    t[p += n] = v;",
+      "    for (p /= 2; p; p /= 2) t[p] = pull(t[p * 2], t[p * 2 + 1]);",
+      "  }",
+      "  Node query(ll l, ll r) {",
+      "    Node left, right;",
+      "    for (l += n, r += n; l < r; l /= 2, r /= 2) {",
+      "      if (l & 1) left = pull(left, t[l++]);",
+      "      if (r & 1) right = pull(t[--r], right);",
+      "    }",
+      "    return pull(left, right);",
+      "  }",
+      "};",
+    ],
+    "description": "Node SegTree"
+  },
+  "Lazy SegTree": {
+    "scope": "cpp",
+    "prefix": "lazy",
+    "body": [
+      "struct Node {",
+      "  ll v = 0;",
+      "};",
+      "struct Tag {",
+      "  ll v = 0;",
+      "};",
+      "Node pull(const Node& a, const Node& b) { return {max(a.v, b.v)}; }",
+      "",
+      "Tag pull(const Tag& a, const Tag& b) { return {a.v + b.v}; }",
+      "",
+      "Node apply_tag(const Node& a, const Tag& b) { return {a.v + b.v}; }",
+      "",
+      "struct SegTree {",
+      "  ll n, h;",
+      "  vector<Node> t;",
+      "  vector<Tag> lazy;",
+      "  SegTree(ll _n) : n(_n), h((ll)log2(n)), t(2 * _n), lazy(2 * _n) {}",
+      "  void apply(ll x, const Tag& tag) {",
+      "    t[x] = apply_tag(t[x], tag);",
+      "    lazy[x] = pull(lazy[x], tag);",
+      "  }",
+      "  void build(ll l) {",
+      "    for (l = (l + n) / 2; l > 0; l /= 2) {",
+      "      if (!lazy[l].v) t[l] = pull(t[l * 2], t[2 * l + 1]);",
+      "    }",
+      "  }",
+      "  void push(ll l) {",
+      "    for (ll s = h; s > 0; s--) {",
+      "      ll i = (l + n) >> s;",
+      "      if (lazy[i].v) apply(2 * i, lazy[i]), apply(2 * i + 1, lazy[i]);",
+      "      lazy[i] = Tag();",
+      "    }",
+      "  }",
+      "  void modify(ll l, ll r, const Tag& v) {",
+      "    push(l), push(r - 1);",
+      "    ll l0 = l, r0 = r;",
+      "    for (l += n, r += n; l < r; l /= 2, r /= 2) {",
+      "      if (l & 1) apply(l++, v);",
+      "      if (r & 1) apply(--r, v);",
+      "    }",
+      "    build(l0), build(r0 - 1);",
+      "  }",
+      "  Node query(ll l, ll r) {",
+      "    push(l), push(r - 1);",
+      "    Node left, right;",
+      "    for (l += n, r += n; l < r; l /= 2, r /= 2) {",
+      "      if (l & 1) left = pull(left, t[l++]);",
+      "      if (r & 1) right = pull(t[--r], right);",
+      "    }",
+      "    return pull(left, right);",
+      "  }",
+      "};"
+    ],
+    "description": "Lazy SegTree"
+  },
+  "Persistent SegTree": {
+    "scope": "cpp",
+    "prefix": [
+      "SegTree",
+      "persistent"
+    ],
+    "body": [
+      "struct Node {",
+      "  int lc = 0, rc = 0, p = 0;",
+      "};",
+      "",
+      "struct SegTree {",
+      "  vector<Node> t = {{}};  // init all",
+      "  SegTree() = default;",
+      "  SegTree(int n) { t.reserve(n * 20); }",
+      "  int modify(int p, int l, int r, int x, int v) {",
+      "    // p: original node, update a[x] -> v",
+      "    t.push_back(t[p]);",
+      "    int u = (int)t.size() - 1;",
+      "    if (r - l == 1) {",
+      "      t[u].p = v;",
+      "    } else {",
+      "      int mid = (l + r) / 2;",
+      "      if (x < mid) {",
+      "        t[u].lc = modify(t[p].lc, l, mid, x, v);",
+      "        t[u].rc = t[p].rc;",
+      "      } else {",
+      "        t[u].lc = t[p].lc;",
+      "        t[u].rc = modify(t[p].rc, mid, r, x, v);",
+      "      }",
+      "      t[u].p = t[t[u].lc].p + t[t[u].rc].p;",
+      "    }",
+      "    return u;",
+      "  }",
+      "  int query(int p, int l, int r, int x, int y) {",
+      "    // query sum a[x]...a[y-1] rooted at p",
+      "    // t[p] holds the info of [l, r)",
+      "    if (x <= l && r <= y) return t[p].p;",
+      "    int mid = (l + r) / 2, res = 0;",
+      "    if (x < mid) res += query(t[p].lc, l, mid, x, y);",
+      "    if (y > mid) res += query(t[p].rc, mid, r, x, y);",
+      "    return res;",
+      "  }",
+      "};",
+    ],
+    "description": "Persistent SegTree"
+  },
+  "union find": {
+    "scope": "cpp",
+    "prefix": [
+      "p",
+      "uf",
+      "union",
+    ],
+    "body": [
+      "struct UnionFind {",
+      "  vector<int> p;",
+      "  UnionFind(int n) : p(n) { iota(p.begin(), p.end(), 0); }",
+      "  int find(int x) { return x == p[x] ? x : (p[x] = find(p[x])); }",
+      "  void merge(int x, int y) { p[find(x)] = find(y); }",
+      "};",
+    ],
+    "description": "union find"
+  },
+  "primes": {
+    "scope": "cpp",
+    "prefix": "prime",
+    "body": [
+      "vector<int> min_primes(MAX_N), primes;",
+      "primes.reserve(1e5);",
+      "for (int i = 2; i < MAX_N; i++) {",
+      "  if (!min_primes[i]) min_primes[i] = i, primes.push_back(i);",
+      "  for (auto& p : primes) {",
+      "    if (p * i >= MAX_N) break;",
+      "    min_primes[p * i] = p;",
+      "    if (i % p == 0) break;",
+      "  }",
+      "}",
+    ],
+    "description": "linear prime sieve"
+  },
+  "fac": {
+    "scope": "cpp",
+    "prefix": [
+      "fac",
+      "binom",
+      "comb"
+    ],
+    "body": [
+      "struct Comb {",
+      "  vector<Z> f, rf;",
+      "  Comb(int n = 2) : f(n, 1), rf(n, 1) { fill(2, n); }",
+      "  void fill(int start, int n) {",
+      "    f.resize(n), rf.resize(n);",
+      "    for (int i = start; i < n; i++) f[i] = f[i - 1] * i;",
+      "    rf[n - 1] = power(f[n - 1], MOD - 2);",
+      "    for (int i = n - 2; i >= start; i--) rf[i] = rf[i + 1] * (i + 1);",
+      "  }",
+      "  Z binom(int n, int r) {",
+      "    if (n < 0 || r < 0 || n < r) return 0;",
+      "    if (f.size() <= n) fill(int(f.size()), n + 1);",
+      "    return f[n] * rf[n - r] * rf[r];",
+      "  }",
+      "};",
+    ],
+    "description": "factorial"
+  },
+  "rng mt19937_64": {
+    "scope": "cpp",
+    "prefix": [
+      "rng",
+      "mt19937_64"
+    ],
+    "body": [
+      "mt19937_64 rng(chrono::steady_clock::now().time_since_epoch().count());"
+    ],
+    "description": "rng mt19937_64"
+  },
+  "compress": {
+    "scope": "cpp",
+    "prefix": [
+      "compress",
+    ],
+    "body": [
+      "auto compress = ${0:a};",
+      "sort(compress.begin(), compress.end());",
+      "compress.erase(unique(compress.begin(), compress.end()), compress.end());",
+      "for (auto& x : ${0:a}) x = lower_bound(compress.begin(), compress.end(), x) - compress.begin();",
+    ],
+    "description": "compress"
+  },
+  "quick io": {
+    "scope": "cpp",
+    "prefix": [
+      "io",
+    ],
+    "body": [
+      "namespace io {",
+      "constexpr int SIZE = 1 << 16;",
+      "char buf[SIZE], *head, *tail;",
+      "char get_char() {",
+      "  if (head == tail) tail = (head = buf) + fread(buf, 1, SIZE, stdin);",
+      "  return *head++;",
+      "}",
+      "template <typename T>",
+      "T read() {",
+      "  T x = 0, f = 1;",
+      "  char c = get_char();",
+      "  for (; !isdigit(c); c = get_char()) (c == '-') && (f = -1);",
+      "  for (; isdigit(c); c = get_char()) x = x * 10 + c - '0';",
+      "  return x * f;",
+      "}",
+      "string read_s() {",
+      "  string str;",
+      "  char c = get_char();",
+      "  while (c == ' ' || c == '\\n' || c == '\\r') c = get_char();",
+      "  while (c != ' ' && c != '\\n' && c != '\\r') str += c, c = get_char();",
+      "  return str;",
+      "}",
+      "void print(int x) {",
+      "  if (x > 9) print(x / 10);",
+      "  putchar(x % 10 | '0');",
+      "}",
+      "void println(int x) { print(x), putchar('\\n'); }",
+      "struct Read {",
+      "  Read& operator>>(int& x) { return x = read<int>(), *this; }",
+      "  Read& operator>>(ll& x) { return x = read<ll>(), *this; }",
+      "  Read& operator>>(long double& x) { return x = stold(read_s()), *this; }",
+      "  Read& operator>>(string& x) { return x = read_s(), *this; }",
+      "} in;",
+      "}  // namespace io",
+    ],
+    "description": "quick io"
+  },
+  "heavy light": {
+    "scope": "cpp",
+    "prefix": [
+      "hld",
+      "heavylight"
+    ],
+    "body": [
+      "struct HeavyLight {",
+      "  int root = 0, n = 0;",
+      "  vector<int> parent, deep, hson, top, sz, dfn;",
+      "  HeavyLight(vector<vector<int>> &g, int _root)",
+      "      : root(_root), n(int(g.size())), parent(n), deep(n), hson(n, -1), top(n), sz(n), dfn(n, -1) {",
+      "    int cur = 0;",
+      "    function<int(int, int, int)> dfs = [&](int node, int fa, int dep) {",
+      "      deep[node] = dep, sz[node] = 1, parent[node] = fa;",
+      "      for (auto &ne : g[node]) {",
+      "        if (ne == fa) continue;",
+      "        sz[node] += dfs(ne, node, dep + 1);",
+      "        if (hson[node] == -1 || sz[ne] > sz[hson[node]]) hson[node] = ne;",
+      "      }",
+      "      return sz[node];",
+      "    };",
+      "    function<void(int, int)> dfs2 = [&](int node, int t) {",
+      "      top[node] = t, dfn[node] = cur++;",
+      "      if (hson[node] == -1) return;",
+      "      dfs2(hson[node], t);",
+      "      for (auto &ne : g[node]) {",
+      "        if (ne == parent[node] || ne == hson[node]) continue;",
+      "        dfs2(ne, ne);",
+      "      }",
+      "    };",
+      "    dfs(root, -1, 0), dfs2(root, root);",
+      "  }",
+      "  ",
+      "  int lca(int x, int y) {",
+      "    while (top[x] != top[y]) {",
+      "      if (deep[top[x]] < deep[top[y]]) swap(x, y);",
+      "      x = parent[top[x]];",
+      "    }",
+      "    return deep[x] < deep[y] ? x : y;",
+      "  }",
+      "};",
+    ],
+    "description": "compress"
+  },
 }
