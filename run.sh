@@ -1,8 +1,8 @@
 ## build file
 # g++.exe --std=c++17 -g roundc/A.cpp -o main.exe && ./main.exe < input.txt > output.txt
 
-## local interact test
-python .croupier.py -q ./main.exe "python a.py"
+# local interact test
+python croupier.py ./main "python gen.py"
 
 ## single file stress test
 # while sh run.sh ;
@@ -11,7 +11,7 @@ python .croupier.py -q ./main.exe "python a.py"
 #   echo $(date +"%I:%M:%S")
 # done
 
-## two files stress test
+# # two files stress test
 # while true; do
 #   python gen.py > input.txt
 #   ./bf < input.txt > tmp.out

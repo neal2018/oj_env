@@ -142,10 +142,10 @@
       "dfs",
     ],
     "body": [
-      "function<void(int, int)> dfs = [&](int node, int fa) {",
-      "  for (auto& ne : g[node]) {",
+      "function<void(int, int)> ${1:dfs} = [&](int node, int fa) {",
+      "  for (auto& ne : ${2:g}[node]) {",
       "    if (ne == fa) continue;",
-      "    dfs(ne, node);",
+      "    ${1:dfs}(ne, node);",
       "    ${0}",
       "  }",
       "};",

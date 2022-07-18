@@ -35,6 +35,13 @@ def gen_str(length, start="a", size=26) -> str:
   return string
 
 
+def gen_str_pool(length, pool) -> str:
+  string = ""
+  for _ in range(length):
+    string += random.choice(pool)
+  return string
+
+
 def gen_array(length, mini=1, maxi=10**9, total=10**18) -> list[int]:
   res = []
   for _ in range(length):
@@ -63,13 +70,13 @@ def gen_l_r(mini, maxi):
 
 
 if __name__ == "__main__":
-  print(N := 2 * 10 ** 5)
-  print(C := 40)
-  print(Q := 10**4)
-  sz = N
-  print(gen_str(N))
-  for _ in range(C):
-    print(1, sz)
-    sz *= 2
-  for _ in range(Q):
-    print(random.randint(1, sz))
+  a = [0] * 120 + [1] * 3
+  total = 0
+  N = 100000
+  for _ in range(N):
+    random.shuffle(a)
+    for i, v in enumerate(a):
+      if v == 1:
+        total += i + 1
+        break
+  print(total / N)
