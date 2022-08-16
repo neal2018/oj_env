@@ -3,6 +3,7 @@ import argparse
 import subprocess as sp
 import json
 import os
+import re
 
 
 class cd:
@@ -53,7 +54,20 @@ def get_int(string):
 def get_test_path(contest, problem_id):
   CODEFORCES_GYM_THRESHOLD = 100000
   place = "gym" if int(contest) >= CODEFORCES_GYM_THRESHOLD else "contest"
-  return f".config/data/cf/{place}/{contest}/{problem_id}"
+  return os.path.abspath(f".config/data/cf/{place}/{contest}/{problem_id}")
+
+
+def clean_input(contest_path):
+  for problem_id in os.listdir(contest_path):
+    problem_id = os.path.join(contest_path, problem_id)
+    for testcase in os.listdir(problem_id):
+      testcase = os.path.join(problem_id, testcase)
+      with open(testcase, "r+") as f:
+        content = f.read()
+        content = re.sub(r"<div.*?>(.*?)</div>", r"\1\n", content)
+        f.seek(0)
+        f.truncate()
+        f.write(content)
 
 
 if __name__ == "__main__":
@@ -118,6 +132,7 @@ if __name__ == "__main__":
   if not os.path.exists(os.path.dirname(test_path)):
     print(cf_cmd := f"{abs_cf} parse {contest}")
     sp.run(cf_cmd, shell=True)
+    clean_input(os.path.dirname(test_path))
     print()
 
   # verify probelm id

@@ -1,7 +1,9 @@
 import random
+from random import randint
+import sys
 
 
-def gen_tree(point_num: int, one_based=True) -> list[tuple[int, int]]:
+def gen_tree(point_num: int, one_based=True):
   res = []
   for i in range(1, point_num):
     u = random.randint(0, i - 1)
@@ -12,7 +14,7 @@ def gen_tree(point_num: int, one_based=True) -> list[tuple[int, int]]:
   return res
 
 
-def gen_graph(point_num: int, edge_num: int, one_based=True) -> list[tuple[int, int]]:
+def gen_graph(point_num: int, edge_num: int, one_based=True):
   res = gen_tree(point_num, False)
   used_edges = set(res)
   while len(used_edges) < edge_num:
@@ -42,18 +44,15 @@ def gen_str_pool(length, pool) -> str:
   return string
 
 
-def gen_array(length, mini=1, maxi=10**9, total=10**18) -> list[int]:
+def gen_array(length, mini=1, maxi=10**9):
   res = []
   for _ in range(length):
     cur = random.randint(mini, maxi)
     res.append(cur)
-  res_total = sum(res)
-  if res_total > total:
-    res = [x * total // res_total for x in res]
   return res
 
 
-def gen_permutation(length, one_based=True) -> list[int]:
+def gen_permutation(length, one_based=True):
   res = [i for i in range(length)]
   random.shuffle(res)
   if one_based:
@@ -69,14 +68,41 @@ def gen_l_r(mini, maxi):
   return [l, r]
 
 
-if __name__ == "__main__":
-  a = [0] * 120 + [1] * 3
+def gen_sum_array(n: int, s: int):
+  if n == 0:
+    return []
+  pool = [i for i in range(1, s)]
+  a = sorted([0] + random.sample(pool, n - 1) + [s])
+  return [a[i + 1] - a[i] for i in range(n)]
+
+
+def gen_sum_array_max(n: int, s: int, maxi: int):
+  a = gen_sum_array(n, s)
   total = 0
-  N = 100000
-  for _ in range(N):
-    random.shuffle(a)
-    for i, v in enumerate(a):
-      if v == 1:
-        total += i + 1
-        break
-  print(total / N)
+  for i in range(n):
+    if a[i] > maxi:
+      total += a[i] - maxi
+      a[i] = maxi
+  index = [i for i in range(n)]
+  random.shuffle(index)
+  for i in index:
+    minus = min(total, maxi - a[i])
+    a[i] += minus
+    total -= minus
+  return a
+
+
+def print_array(a, need_len=True, delimiter=" ", end="\n"):
+  if need_len:
+    print(len(a))
+  for i, v in enumerate(a):
+    if i != 0:
+      print(delimiter, end="")
+    print(v, end="")
+  print(end, end="")
+
+
+if __name__ == "__main__":
+  print(T := 1)
+  N = 8
+  print(gen_str(N, 'a', 5))
