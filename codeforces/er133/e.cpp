@@ -2,12 +2,9 @@
 using namespace std;
 using ll = long long;
 
-
 // max subarray
-constexpr ll inf = 1e14;
-
 struct Node {
-  ll v = -inf, sum = -inf, pre_sum = -inf, suf_sum = -inf;
+  ll v = 0, sum = 0, pre_sum = 0, suf_sum = 0;
 };
 
 Node pull(const Node &a, const Node &b) {
@@ -35,25 +32,18 @@ struct SegTree {
 
 int main() {
   cin.tie(nullptr)->sync_with_stdio(false);
-  int T;
-  cin >> T;
-  while (T--) {
-    ll n;
-    cin >> n;
-    vector<ll> a(n);
-    for (auto &x : a) cin >> x;
-    vector<ll> order(n);
-    iota(order.begin(), order.end(), 0);
-    sort(order.begin(), order.end(), [&](ll x, ll y) { return a[x] < a[y]; });
-    SegTree seg(n);
-    cout << ([&] {
-      for (auto &i : order) {
-        seg.modify(i, {a[i], a[i], a[i], a[i]});
-        if (seg.query(0, n).v > a[i]) return false;
-      }
-      return true;
-    }()
-                 ? "YES\n"
-                 : "NO\n");
+  int n;
+  cin >> n;
+  int N = 1 << n;
+  vector<int> a(N);
+  for (auto &x : a) cin >> x;
+  SegTree seg(N);
+  for (int i = 0; i < N; i++) seg.t[i + N] = {a[i], a[i], a[i], a[i]};
+  for (int i = N - 1; i >= 0; i--) seg.t[i] = pull(seg.t[2 * i], seg.t[2 * i + 1]);
+  int q;
+  cin >> q;
+  while (q--) {
+    int k;
+    cin >> k;
   }
 }
