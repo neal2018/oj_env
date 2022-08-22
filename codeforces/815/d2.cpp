@@ -2,6 +2,8 @@
 using namespace std;
 using ll = long long;
 
+constexpr int SIZE = 30;
+
 int main() {
   cin.tie(nullptr)->sync_with_stdio(false);
   int T;
@@ -27,17 +29,17 @@ int main() {
     // i = 1, ai = 1, j = 0, aj = 1
     for (int i = 0; i < n; i++) {
       int x = a[i] ^ i, p = 0, cur = 1;
-      for (int k = 1; k >= 0; k--) {
+      for (int k = SIZE; k >= 0; k--) {
         int v = (x >> k) & 1;
-        if (trie[p][v] == 0) break;
         if (trie[p][!v] != 0) {
           cur = max(cur, dp[trie[p][!v]][(i >> k) & 1] + 1);
         }
+        if (trie[p][v] == 0) break;
         p = trie[p][v];
       }
       p = 0;
       res = max(res, cur);
-      for (int k = 1; k >= 0; k--) {
+      for (int k = SIZE; k >= 0; k--) {
         int v = (x >> k) & 1;
         if (trie[p][v] == 0) {
           trie.push_back({0, 0}), dp.push_back({0, 0});

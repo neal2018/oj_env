@@ -2,113 +2,67 @@
 using namespace std;
 using ll = long long;
 
+constexpr int inf = 1e9;
+
 int main() {
   cin.tie(nullptr)->sync_with_stdio(false);
-  int T;
-  cin >> T;
-  for (int tt = 0; tt < T; ++tt) {
-    int n;
-    cin >> n;
-    vector a(n, vector<int>(n));
-    for (auto& r : a) {
-      for (auto& x : r) cin >> x;
+  int n, k;
+  cin >> n >> k;
+  vector<int> compress;
+  vector a(n, vector<int>(n));
+  for (auto& r : a) {
+    for (auto& x : r) cin >> x, compress.push_back(x);
+  }
+  sort(compress.begin(), compress.end());
+  compress.erase(unique(compress.begin(), compress.end()), compress.end());
+
+  int m = int(compress.size());
+  if (k >= m) {
+    cout << k - m << "\n";
+    return 0;
+  }
+  if (k == 1) {
+    cout << "1\n";
+    return 0;
+  }
+
+  vector<array<int, 4>> p(m, {inf, -inf, inf, -inf});
+  for (int i = 0; i < n; i++) {
+    for (int j = 0; j < n; j++) {
+      int x = int(lower_bound(compress.begin(), compress.end(), a[i][j]) - compress.begin());
+      p[x][0] = min(p[x][0], i);
+      p[x][1] = max(p[x][1], i);
+      p[x][2] = min(p[x][2], j);
+      p[x][3] = max(p[x][3], j);
     }
-    auto oa = a;
-    vector need(n, vector<int>(n));
+  }
+
+  for (int len = 1; len < n; len++) {
+    vector c(n + 1, vector<int>(n + 1));
+    for (auto& [x_min, x_max, y_min, y_max] : p) {
+      int x1 = max(0, x_max - len + 1);
+      int y1 = max(0, y_max - len + 1);
+      int x2 = min(n, x_min + 1);
+      int y2 = min(n, y_min + 1);
+      if (x1 < x2 && y1 < y2) {
+        c[x1][y1]++, c[x2][y2]++, c[x2][y1]--, c[x1][y2]--;
+      }
+    }
     for (int i = 0; i < n; i++) {
-      for (int j = i + 1; j < n; j++) {
-        if (a[i][j] > a[j][i]) {
-          need[i][j] = 1, need[j][i] = -1;
-        } else if (a[i][j] < a[j][i]) {
-          need[i][j] = -1, need[j][i] = 1;
-        }
-      }
+      for (int j = 1; j < n; j++) c[i][j] += c[i][j - 1];
     }
-    {
-      vector<int> q, nq;
-      vector<vector<int>> g(2 * n);
-      for (int i = 0; i < n; i++) {
-        for (int j = 0; j < n; j++) {
-          if (need[i][j]) {
-            g[i].push_back(j + n);
-            g[j + n].push_back(i);
-          }
-        }
-      }
-      vector<int> deg(2 * n);
-      for (int i = 0; i < 2 * n; i++) {
-        deg[i] = int(g.size());
-        if (g[i].size() == 1) q.push_back(i);
-      }
-      for (; q.size(); swap(q, nq), nq.clear()) {
-        for (auto& node : q) {
-          for (auto& ne : g[node]) {
-            {
-              int row = node, col = ne;
-              if (row >= n) swap(row, col);
-              if (need[row][col - n] == 0) continue;
-              need[row][col - n] = 0;
-            }
-            deg[ne]--;
-            if (deg[ne] == 1) {
-              nq.push_back(ne);
-            }
-          }
-        }
-      }
+    for (int i = 1; i < n; i++) {
+      for (int j = 0; j < n; j++) c[i][j] += c[i - 1][j];
     }
-    auto print = [&](auto& t) {
-      for (auto& r : t) {
-        for (auto& x : r) cout << x << ' ';
-        cout << "\n";
-      }
-      cout << "\n";
-    };
-    // print(need);
-    vector<int> flip_row(n), flip_col(n);
-    vector<int> can(n, 1);
-    vector good(n, vector<int>(n));
-    auto trigger = [&](int x) {
-      cout << "trigger " << x << "\n";
-      flip_row[x] ^= 1, flip_col[x] ^= 1;
-    };
-    auto mark = [&](int i, int j) {
-      good[i][j] = 1;
-      can[i] = 0, can[j] = 0;
-    };
-    for (int i = 0; i < n; i++) {
-      for (int j = i + 1; j < n; j++) {
-        if (need[i][j] != 0) {
-          int flip = flip_row[i] ^ flip_col[j];
-          if ((2 * flip - 1) != need[i][j]) {
-            if (can[i]) {
-              trigger(i);
-              mark(i, j);
-            } else if (can[j]) {
-              trigger(j);
-              mark(i, j);
-            }
-          } else {
-            mark(i, j);
-          }
-        }
-      }
-    }
-    // print(need);
-    // print(good);
 
     for (int i = 0; i < n; i++) {
-      for (int j = i + 1; j < n; j++) {
-        if ((need[i][j] == 0 || good[i][j]) == (a[i][j] > a[j][i])) {
-          swap(a[i][j], a[j][i]);
+      for (int j = 0; j < n; j++) {
+        if (c[i][j] == m - k || c[i][j] == m - k + 1) {
+          cout << "1\n";
+          return 0;
         }
       }
     }
-    // for (int i = 0; i < n; i++) {
-    //   for (int j = 0; j < n; j++) {
-    //     assert(a[i][j] == i * n + j + 1);
-    //   }
-    // }
-    print(a);
   }
+  cout << "2\n";
 }

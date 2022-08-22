@@ -15,13 +15,10 @@ int main() {
     for (int i = 1; i < n; i++) {
       for (int j = max(0, i - 1000); j < i; j++) {
         if ((a[j] ^ i) < (a[i] ^ j)) {
-          // cout << "connect " << i << " " << j << "\n";
           dp[i] = max(dp[i], dp[j] + 1);
         }
       }
     }
-    // for (auto& x : dp) cout << x << " ";
-    // cout << "\n";
     cout << ranges::max(dp) << "\n";
   }
 }
