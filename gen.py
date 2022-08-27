@@ -3,30 +3,40 @@ from random import randint
 import sys
 
 
-def gen_tree(point_num: int, one_based=True):
+def gen_tree(point_num: int, weighted=False, weight_min=1, weight_max=10**5, one_based=True):
   res = []
   for i in range(1, point_num):
     u = random.randint(0, i - 1)
-    res.append((u, i))
+    if weighted:
+      res.append([u, i, random.randint(weight_min, weight_max)])
+    else:
+      res.append([u, i])
   random.shuffle(res)
   if one_based:
-    res = [(u + 1, v + 1) for u, v in res]
+    for x in res:
+      x[0] += 1
+      x[1] += 1
   return res
 
 
-def gen_graph(point_num: int, edge_num: int, one_based=True):
-  res = gen_tree(point_num, False)
-  used_edges = set(res)
+def gen_graph(point_num: int, edge_num: int, weighted=False, weight_min=1, weight_max=10**5, connected=True, one_based=True):
+  res = gen_tree(point_num, weighted, weight_min, weight_max, False) if connected else []
+  used_edges = set(tuple(x) for x in res)
   while len(used_edges) < edge_num:
-    u = random.randint(0, point_num)
-    v = random.randint(0, point_num)
+    u = random.randint(0, point_num - 1)
+    v = random.randint(0, point_num - 1)
     if u == v or (u, v) in used_edges:
       continue
-    res.append((u, v))
+    if weighted:
+      res.append([u, v, random.randint(weight_min, weight_max)])
+    else:
+      res.append([u, v])
     used_edges.add((u, v))
   random.shuffle(res)
   if one_based:
-    res = [(u + 1, v + 1) for u, v in res]
+    for x in res:
+      x[0] += 1
+      x[1] += 1
   return res
 
 
@@ -103,6 +113,7 @@ def print_array(a, need_len=True, delimiter=" ", end="\n"):
 
 
 if __name__ == "__main__":
-  print(T := 1)
-  N = 8
-  print(gen_str(N, 'a', 5))
+  print(gen_str(10**6, 'a', 26))
+  print(Q := 10**5)
+  for _ in range(Q):
+    print(gen_str(10, 'a', 26))
