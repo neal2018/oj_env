@@ -13,7 +13,7 @@ const char nl = '\n';
 mt19937_64 rng(chrono::steady_clock::now().time_since_epoch().count());
 
 using Hash = pair<ll, ll>;
-Hash mod = {1000000069, 1000000067};
+Hash mod = {1000000033, 1000000087};
 
 Hash operator*(const Hash& a, const Hash& b) {
   return {(a.first * b.first % mod.first + mod.first) % mod.first,

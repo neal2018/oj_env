@@ -1,22 +1,43 @@
-#include <functional>
-#include <iostream>
- 
-void f(int& n1, int& n2, const int& n3)
-{
-    std::cout << "In function: " << n1 << ' ' << n2 << ' ' << n3 << '\n';
-    ++n1; // increments the copy of n1 stored in the function object
-    ++n2; // increments the main()'s n2
-    // ++n3; // compile error
-}
- 
-int main()
-{
-    int n1 = 1, n2 = 2, n3 = 3;
-    std::function<void()> bound_f = std::bind(f, n1, std::ref(n2), std::cref(n3));
-    n1 = 10;
-    n2 = 11;
-    n3 = 12;
-    std::cout << "Before function: " << n1 << ' ' << n2 << ' ' << n3 << '\n';
-    bound_f();
-    std::cout << "After function: " << n1 << ' ' << n2 << ' ' << n3 << '\n';
+#include <bits/stdc++.h>
+using namespace std;
+using ll = long long;
+
+int main() {
+  cin.tie(nullptr)->sync_with_stdio(false);
+  int T;
+  cin >> T;
+  while (T--) {
+    int n;
+    cin >> n;
+    vector<ll> a(n);
+    for (auto& x : a) cin >> x;
+    ll sum = accumulate(a.begin(), a.end(), 0ll);
+    ll sum_f = 1, cnt = 1;
+    vector<ll> f = {0, 1};
+    while (sum_f < sum) {
+      ll nex = f[cnt - 1] + f[cnt];
+      cnt++, sum_f += nex;
+      f.push_back(nex);
+    }
+    if (sum_f > sum) {
+      cout << "NO\n";
+      continue;
+    }
+    ll pre = -1;
+    priority_queue<ll> pq(a.begin(), a.end());
+    pq.push(0);
+    while (f.size()) {
+      ll c = pq.top();
+      pq.pop();
+      if (c == pre) {
+        ll nc = pq.top();
+        pq.pop(), pq.push(c), c = nc;
+      }
+      if (c < f.back()) break;
+      c -= f.back(), f.pop_back();
+      pre = c;
+      pq.push(c);
+    }
+    cout << (f.size() ? "NO\n" : "YES\n");
+  }
 }
