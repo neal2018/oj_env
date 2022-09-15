@@ -72,7 +72,7 @@ def clean_input(contest_path):
 
 if __name__ == "__main__":
   PATH_TO_CONTEST_FILE = "./.config/path_to_contest.json"
-  TOOL_PREFIX = "/usr/bin/"
+  TOOL_PREFIX = "/opt/homebrew/bin/"
   parser = argparse.ArgumentParser(allow_abbrev=False)
   parser.add_argument("-f", "--file", required=True)
   parser.add_argument("-c", "--contest")

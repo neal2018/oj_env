@@ -3,42 +3,59 @@
     "configurations": [
         {
             "name": "g++.exe - Build and debug active file",
-            "type": "cppdbg",
+            // "type": "cppdbg",
+            "type": "lldb",
             "request": "launch",
             "program": "${workspaceRoot}/main",
             "args": [
-                "<",
-                "${workspaceRoot}/input.txt",
-                ">",
-                "${workspaceRoot}/output.txt"
+                // "<",
+                // "${workspaceRoot}/input.txt",
+                // ">",
+                // "${workspaceRoot}/output.txt"
             ],
-            "stopAtEntry": false,
+            // "stopAtEntry": false,
             "cwd": "${workspaceFolder}",
-            "environment": [
-                {
-                    "name": "ASAN_OPTIONS",
-                    "value": "detect_leaks=0"
-                }
+            "stdio": [
+                "input.txt",
+                "output.txt"
             ],
-            "externalConsole": false,
-            "MIMode": "gdb",
-            "miDebuggerPath": "/usr/bin/gdb",
-            "setupCommands": [
-                {
-                    "description": "Enable pretty-printing for gdb",
-                    "text": "-enable-pretty-printing",
-                    "ignoreFailures": true
-                },
-                {
-                    "text": "set charset UTF-8"
-                },
-                {
-                    "description": "Enable break on all exceptions",
-                    "text": "catch throw",
-                    "ignoreFailures": true
-                }
-            ],
-            "preLaunchTask": "C/C++: g++.exe build active file"
+            // "logging": {
+            //     "engineLogging": true
+            // },
+            // "environment": [
+            //     {
+            //         "name": "ASAN_OPTIONS",
+            //         "value": "detect_leaks=0"
+            //     }
+            // ],
+            // "externalConsole": false,
+            // "MIMode": "lldb",
+            // "setupCommands": [
+            //     {
+            //         "text": "settings set target.input-path ${workspaceRoot}/input.txt"
+            //     },
+            //     {
+            //         "text": "settings set target.output-path ${workspaceRoot}/output.txt"
+            //     },
+            //     {
+            //         "description": "Enable pretty-printing for gdb",
+            //         "text": "-enable-pretty-printing",
+            //         "ignoreFailures": true
+            //     },
+            //     {
+            //         "text": "pro hand -p true -s false -n false SIGCONT"
+            //     }
+            //     // {
+            //     //     "text": "set charset UTF-8"
+            //     // },
+            //     // {
+            //     //     "description": "Enable break on all exceptions",
+            //     //     "text": "catch throw",
+            //     //     "ignoreFailures": true
+            //     // }
+            // ],
+            // "preLaunchTask": "C/C++: g++.exe build ac≈tive file"
+            "preLaunchTask": "Build"
         }
     ]
 }

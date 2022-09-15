@@ -10,9 +10,11 @@
                 "UNICODE",
                 "_UNICODE"
             ],
-            "windowsSdkVersion": "10.0.17763.0",
-            "compilerPath": "/usr/bin/g++-12",
-            "intelliSenseMode": "linux-gcc-x64",
+            // "windowsSdkVersion": "10.0.17763.0",
+            // "compilerPath": "/opt/homebrew/bin/g++-12",
+            // "intelliSenseMode": "gcc-arm64",
+            "compilerPath": "/usr/bin/clang++",
+            "intelliSenseMode": "clang-arm64",
             "cStandard": "c17",
             "cppStandard": "c++20"
         }
