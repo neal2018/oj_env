@@ -84,7 +84,7 @@ if __name__ == "__main__":
   origin_file = os.path.normpath(args.file)
   filename = os.path.normpath(os.path.relpath(args.file))
   contest = args.contest
-  platform = "cf" if "codeforces" in filename else "at"
+  platform = "at" if "atcoder" in filename else "cf"
   abs_tool = os.path.abspath(os.path.join(TOOL_PREFIX, platform))
 
   if platform == "at":
