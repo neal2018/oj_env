@@ -44,17 +44,17 @@ def print_with_empty_line(string):
   print(string, end="\n\n")
 
 
-def get_int(string):
+def get_contest_id(string):
   res = "invalid string"
-  while not res.isdigit():
+  while not (res.isdigit() or (len(res) == 6 and res[-3:].isdigit())):
     res = input(string)
-  return int(res)
+  return res
 
 
-def get_test_path(contest, problem_id):
+def get_test_path(contest, problem_id, platform):
   CODEFORCES_GYM_THRESHOLD = 100000
-  place = "gym" if int(contest) >= CODEFORCES_GYM_THRESHOLD else "contest"
-  return os.path.abspath(f".config/data/cf/{place}/{contest}/{problem_id}")
+  place = "gym" if platform == "cf" and int(contest) >= CODEFORCES_GYM_THRESHOLD else "contest"
+  return os.path.abspath(f".config/data/{platform}/{place}/{contest}/{problem_id}")
 
 
 def clean_input(contest_path):
@@ -72,6 +72,7 @@ def clean_input(contest_path):
 
 if __name__ == "__main__":
   PATH_TO_CONTEST_FILE = "./.config/path_to_contest.json"
+  TOOL_PREFIX = "/usr/bin/"
   parser = argparse.ArgumentParser(allow_abbrev=False)
   parser.add_argument("-f", "--file", required=True)
   parser.add_argument("-c", "--contest")
@@ -83,11 +84,15 @@ if __name__ == "__main__":
   origin_file = os.path.normpath(args.file)
   filename = os.path.normpath(os.path.relpath(args.file))
   contest = args.contest
-  abs_cf = os.path.abspath("/usr/bin/cf")
+  platform = "cf" if "codeforces" in filename else "at"
+  abs_tool = os.path.abspath(os.path.join(TOOL_PREFIX, platform))
+
+  if platform == "at":
+    contest = os.path.basename(os.path.dirname(filename))
 
   # fetch contest id, problem id
   if args.only:
-    contest = get_int(make_yellow("enter the contest id:") + " ")
+    contest = get_contest_id(make_yellow("enter the contest id:") + " ")
     problem_id = input(make_sky_blue("enter the problem id:") + " ")
     print()
   else:
@@ -115,9 +120,9 @@ if __name__ == "__main__":
       if path in path_to_contest:
         contest = path_to_contest[path]
       else:
-        contest = get_int(make_yellow("enter the contest id:") + " ")
+        contest = get_contest_id(make_yellow("enter the contest id:") + " ")
         # if next promt is not a query, add an empty line
-        test_path = get_test_path(contest, problem_id)
+        test_path = get_test_path(contest, problem_id, platform)
         if not os.path.exists(os.path.dirname(test_path)) or os.path.exists(test_path):
           print()
         # save
@@ -126,11 +131,11 @@ if __name__ == "__main__":
         with open(PATH_TO_CONTEST_FILE, "w+") as f:
           f.write(json.dumps(path_to_contest, sort_keys=True, indent=2))
 
-  test_path = get_test_path(contest, problem_id)
+  test_path = get_test_path(contest, problem_id, platform)
 
   # parse samples
   if not os.path.exists(os.path.dirname(test_path)):
-    print(cf_cmd := f"{abs_cf} parse {contest}")
+    print(cf_cmd := f"{abs_tool} parse {contest}")
     sp.run(cf_cmd, shell=True)
     clean_input(os.path.dirname(test_path))
     print()
@@ -140,14 +145,14 @@ if __name__ == "__main__":
     problem_id = problem_id[0].upper() + problem_id[1:]
     while not os.path.exists(test_path):
       problem_id = input(make_sky_blue("enter the problem id:") + " ")
-      test_path = get_test_path(contest, problem_id)
+      test_path = get_test_path(contest, problem_id, platform)
     print()
 
   # test sample
   if args.run:
     print_with_empty_line(make_blue("Testing Sample..."))
     with cd(test_path):
-      print_with_empty_line(cf_cmd := f"{abs_cf} test {origin_file}")
+      print_with_empty_line(cf_cmd := f"{abs_tool} test {origin_file}")
       p = sp.run(cf_cmd, shell=True, capture_output=True, text=True)
       AC, WA, RE = "AC", "WA", "RE"
       test_result_str = (p.stdout.replace("Passed", make_green(AC))
@@ -176,5 +181,5 @@ if __name__ == "__main__":
   # submit
   if args.submit:
     print_with_empty_line(make_blue("Submitting..."))
-    print(cf_cmd := f"{abs_cf} submit -f {origin_file} {contest} {problem_id}")
+    print(cf_cmd := f"{abs_tool} submit -f {origin_file} {contest} {problem_id}")
     sp.run(cf_cmd, shell=True)
