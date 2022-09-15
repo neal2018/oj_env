@@ -17,7 +17,7 @@ auto duval(string_view s) {
   return t;
 }
 
-auto minimal(string s) {
+auto minimal_represent(string s) {
   int n = (int)s.size(), res = 0;
   s += s;
   for (int i = 0; i < n;) {
@@ -118,7 +118,7 @@ int main() {
   auto t = string(s.begin() + res.size(), s.end());
   auto rt = string(t.rbegin(), t.rend());
   auto need = t;
-  need = min(need, minimal(rt));
+  need = min(need, minimal_represent(rt));
   need = min(need, prefix(t));
   need = min(need, suffix(t));
   cout << res + need << '\n';

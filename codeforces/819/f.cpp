@@ -60,49 +60,51 @@ struct Dinic {
 
 int main() {
   cin.tie(nullptr)->sync_with_stdio(false);
-  int n1, n2, m, q;
-  cin >> n1 >> n2 >> m >> q;
-  Dinic dinic(n1 + n2 + 2);
-  int source = n1 + n2, sink = source + 1;
+  int n, m;
+  cin >> n >> m;
+  vector<int> s(n), a(n), deg(n);
+  for (auto& x : s) cin >> x;
+  for (auto& x : a) cin >> x;
   vector<pair<int, int>> edges(m);
-  for (auto&[x, y]:edges) {
-    cin >> x >> y, x--, y--;
-    edges.push_back({x, n1 + y});
-    dinic.add_edge(x, n1 + y, 1);
-  }
-  for (int i = 0; i < n1; i++) {
-    dinic.add_edge(source, i, 1);
-  }
-
-  for (int i = 0; i < n2; i++) {
-    dinic.add_edge(n1 + i, sink, 1);
-  }
-
-  dinic.max_flow(source, sink);
-  vector<pair<int, int>> cover;
-  ll sum = 0;
-  for (int i = 0; i < edges.size(); i++) {
-    if (dinic.e[2 * i].remain == 0) {
-      auto [u, v] = edges[i];
-      int key = dinic.d[v] != inf ? v : u;
-      cover.push_back({key, i});
-      sum += i + 1;
+  for (auto& [u, v] : edges) cin >> u >> v, u--, v--, deg[u]++, deg[v]++;
+  int k = m;
+  for (int i = 0; i < n; i++) {
+    if (s[i] != 0) {
+      int t = (a[i] + deg[i]) / 2;
+      k -= t;
+      if ((a[i] + deg[i]) % 2 != 0 || t < 0) {
+        cout << "NO\n";
+        return 0;
+      }
     }
   }
-  while (q--) {
-    int t;
-    cin >> t;
-    if (t == 1) {
-      cout << "1\n";
-      auto [rm, id] = cover.back();
-      sum -= id + 1;
-      cout << (rm < n1 ? rm + 1 : (-(rm - n1 + 1))) << "\n";
-      cout << sum << "\n" << endl;
-      cover.pop_back();
+  Dinic dinic(n + m + 3);
+  int source = n + m, sink = n + m + 1, temp = n + m + 2;
+  for (int i = 0; i < m; i++) {
+    auto [u, v] = edges[i];
+    dinic.add_edge(source, n + i, 1);
+    dinic.add_edge(n + i, u, 1);
+    dinic.add_edge(n + i, v, 1);
+  }
+  for (int i = 0; i < n; i++) {
+    if (s[i] == 0) {
+      dinic.add_edge(i, temp, k);
     } else {
-      cout << cover.size() << "\n";
-      for (auto& [p, e] : cover) cout << e + 1 << " ";
-      cout << "\n" << endl;
+      dinic.add_edge(i, sink, (a[i] + deg[i]) / 2);
     }
   }
+  dinic.add_edge(temp, sink, k);
+
+  if (k < 0 || dinic.max_flow(source, sink) != m) {
+    cout << "NO\n";
+    return 0;
+  }
+
+  vector<int> res(n);
+  for (int i = 0; i < m; i++) {
+    auto& [u, v] = edges[i];
+    if (dinic.e[i * 6 + 2].remain == 0) swap(v, u);
+  }
+  cout << "YES\n";
+  for (auto& [u, v] : edges) cout << u + 1 << " " << v + 1 << "\n";
 }
