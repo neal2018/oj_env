@@ -34,12 +34,6 @@ ll exBSGS(ll a, ll n, ll p) {
   return ans + cnt;
 }
 
-int read() {
-  int x;
-  cin >> x;
-  return x;
-}
-
 int main() {
   cin.tie(nullptr)->sync_with_stdio(false);
   cout << ([&] {
