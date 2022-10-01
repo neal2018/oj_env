@@ -1,23 +1,29 @@
-#include <bits/stdc++.h>
+#include <iostream>
 using namespace std;
-using ll = long long;
+
+class Mother {
+public:
+  virtual void f() { cout << "Mother\n"; }
+  int mother_data;
+};
+
+class Father {
+public:
+  virtual void f() { cout << "Father\n"; }
+  int father_data;
+};
+
+class Child : public Mother, public Father {
+public:
+  virtual void f() { cout << "Child\n"; }
+  int child_data;
+};
 
 int main() {
-  cin.tie(nullptr)->sync_with_stdio(false);
-  int T;
-  cin >> T;
-  while (T--) {
-    int n, c;
-    cin >> n >> c;
-    ll res = 0;
-    map<int, int> mp;
-    for (int i = 0; i < n; i++) {
-      int x;
-      cin >> x, mp[x]++;
-    }
-    for (auto& [k, v] : mp) {
-      res += min(c, v);
-    }
-    cout << res << "\n";
-  }
+  auto p = new Child();
+  p->f();
+  auto q = static_cast<Mother*>(p);
+  q->f();
+  auto t = Child();
+  static_cast<Mother>(t).f();
 }
