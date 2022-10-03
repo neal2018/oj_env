@@ -3,7 +3,8 @@
         {
             "name": "Linux",
             "includePath": [
-                "${default}"
+                "${default}",
+                "${workspaceRoot}"
             ],
             "defines": [
                 "_DEBUG",

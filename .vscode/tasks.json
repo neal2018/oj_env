@@ -38,6 +38,7 @@
 				// "-H",
 				// "-O2",
 				"${file}",
+				"-I${workspaceRoot}",
 				// "${fileDirname}/grader.cpp",
 				"-o",
 				"${workspaceRoot}/main",
