@@ -1,6 +1,6 @@
+import sys
 import random
 from random import randint
-import sys
 
 
 def gen_tree(point_num: int, weighted=False, weight_min=1, weight_max=10**5, one_based=True):
@@ -54,10 +54,15 @@ def gen_str_pool(length, pool) -> str:
   return string
 
 
-def gen_array(length, mini=1, maxi=10**9):
+def gen_array(length, mini=1, maxi=10**9, unique=False):
   res = []
+  res_set = set()
   for _ in range(length):
     cur = random.randint(mini, maxi)
+    if unique:
+      while cur in res_set:
+        cur = random.randint(mini, maxi)
+      res_set.add(cur)
     res.append(cur)
   return res
 
@@ -113,7 +118,8 @@ def print_array(a, need_len=True, delimiter=" ", end="\n"):
 
 
 if __name__ == "__main__":
-  print(gen_str(10**6, 'a', 26))
-  print(Q := 10**5)
-  for _ in range(Q):
-    print(gen_str(10, 'a', 26))
+  N = 10000
+  d = random.randint(10**9, 10**10)
+  print(N, d)
+  for i in range(N):
+    print(random.randint(10**10, 10**16))
