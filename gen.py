@@ -86,6 +86,8 @@ def gen_l_r(mini, maxi):
 def gen_sum_array(n: int, s: int):
   if n == 0:
     return []
+  if n == 1:
+    return [s]
   pool = [i for i in range(1, s)]
   a = sorted([0] + random.sample(pool, n - 1) + [s])
   return [a[i + 1] - a[i] for i in range(n)]
@@ -118,8 +120,6 @@ def print_array(a, need_len=True, delimiter=" ", end="\n"):
 
 
 if __name__ == "__main__":
-  N = 10000
-  d = random.randint(10**9, 10**10)
-  print(N, d)
-  for i in range(N):
-    print(random.randint(10**10, 10**16))
+  print(T := 1)
+  print(N := randint(1, 10), M := randint(1, 5), K := randint(1, 5))
+  print_array(gen_sum_array(M, N), False)
