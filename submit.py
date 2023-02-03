@@ -140,9 +140,10 @@ if __name__ == "__main__":
     clean_input(os.path.dirname(test_path))
     print()
 
-  # verify probelm id
+  # verify problem id
   if not os.path.exists(test_path):
-    problem_id = problem_id[0].upper() + problem_id[1:]
+    problem_id = os.path.splitext(os.path.basename(filename))[0].upper()
+    test_path = get_test_path(contest, problem_id, platform)
     while not os.path.exists(test_path):
       problem_id = input(make_sky_blue("enter the problem id:") + " ")
       test_path = get_test_path(contest, problem_id, platform)
