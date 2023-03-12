@@ -2,7 +2,8 @@
 using namespace std;
 using ll = long long;
 
-constexpr int MOD = 998244353;
+constexpr int MOD = 1e9 + 9;
+int power(int, ll) = delete;
 template <typename T>
 T power(T a, ll b, int _MOD = MOD, T res = 1) {
   for (; b; b /= 2, (a *= a) %= _MOD)
@@ -34,36 +35,30 @@ struct Z {
   friend auto &operator<<(ostream &o, const Z &z) { return o << z.x; }
 };
 
+struct Comb {
+  vector<Z> f, rf;
+  Comb(int n = 2) : f(n, 1), rf(n, 1) { fill(2, n); }
+  void fill(int start, int n) {
+    f.resize(n), rf.resize(n);
+    for (int i = start; i < n; i++) f[i] = f[i - 1] * i;
+    rf[n - 1] = power(f[n - 1], MOD - 2);
+    for (int i = n - 2; i >= start; i--) rf[i] = rf[i + 1] * (i + 1);
+  }
+  Z binom(int n, int r) {
+    if (n < 0 || r < 0 || n < r) return 0;
+    if (f.size() <= n) fill(int(f.size()), n + 1);
+    return f[n] * rf[n - r] * rf[r];
+  }
+};
+
 int main() {
   cin.tie(nullptr)->sync_with_stdio(false);
-  int n;
-  cin >> n;
-  vector<vector<int>> g(n);
-  for (int i = 0, u, v; i < n - 1; i++) {
-    cin >> u >> v, u--, v--;
-    g[u].push_back(v), g[v].push_back(u);
-  }
-  vector<int> sz(n);
-
-  vector dp(2, vector(n, vector<Z>(n + 1)));
-  for (int i = 0; i < n; i++) dp[1][i][1] = 1, dp[0][i][0] = 1;
-  function<void(int, int)> dfs = [&](int node, int fa) {
-    sz[node] = 1;
-    for (auto &ne : g[node]) {
-      if (ne == fa) continue;
-      dfs(ne, node);
-      for (int j = sz[node] + sz[ne]; j >= 1; j--) {
-        for (int k = max(1, j - sz[node]); k <= sz[ne] && k <= j; k++) {
-          dp[0][node][j] += dp[0][node][j - k] * dp[0][ne][k] + dp[0][node][j - k] * dp[1][ne][k];
-          dp[1][node][j] +=
-              dp[1][node][j - k] * dp[0][ne][k] + dp[1][node][j - k + 1] * dp[1][ne][k];
-        }
-      }
-      sz[node] += sz[ne];
-    }
-  };
-  dfs(0, -1);
-  for (int i = 1; i <= n; i++) {
-    cout << (dp[0][0][i] + dp[1][0][i]) << "\n";
+  int T;
+  cin >> T;
+  while (T--) {
+    int n;
+    cin >> n;
+    vector<int> a(n);
+    for (auto &x : a) cin >> x;
   }
 }

@@ -3,6 +3,7 @@ using namespace std;
 using ll = long long;
 
 constexpr int MOD = 998244353;
+int power(int, ll) = delete;
 template <typename T>
 T power(T a, ll b, int _MOD = MOD, T res = 1) {
   for (; b; b /= 2, (a *= a) %= _MOD)
@@ -17,7 +18,7 @@ struct Z {
     if (x >= MOD) x -= MOD;
     return x;
   }
-  // auto operator<=>(const Z &) const = default;  // need c++ 20
+  auto operator<=>(const Z &) const = default;  // need c++ 20
   Z operator-() const { return Z(norm(MOD - x)); }
   Z inv() const { return power(*this, MOD - 2, MOD); }
   Z &operator*=(const Z &rhs) { return x = int(ll(x) * rhs.x % MOD), *this; }
@@ -36,34 +37,35 @@ struct Z {
 
 int main() {
   cin.tie(nullptr)->sync_with_stdio(false);
-  int n;
-  cin >> n;
-  vector<vector<int>> g(n);
-  for (int i = 0, u, v; i < n - 1; i++) {
-    cin >> u >> v, u--, v--;
-    g[u].push_back(v), g[v].push_back(u);
-  }
-  vector<int> sz(n);
-
-  vector dp(2, vector(n, vector<Z>(n + 1)));
-  for (int i = 0; i < n; i++) dp[1][i][1] = 1, dp[0][i][0] = 1;
-  function<void(int, int)> dfs = [&](int node, int fa) {
-    sz[node] = 1;
-    for (auto &ne : g[node]) {
-      if (ne == fa) continue;
-      dfs(ne, node);
-      for (int j = sz[node] + sz[ne]; j >= 1; j--) {
-        for (int k = max(1, j - sz[node]); k <= sz[ne] && k <= j; k++) {
-          dp[0][node][j] += dp[0][node][j - k] * dp[0][ne][k] + dp[0][node][j - k] * dp[1][ne][k];
-          dp[1][node][j] +=
-              dp[1][node][j - k] * dp[0][ne][k] + dp[1][node][j - k + 1] * dp[1][ne][k];
-        }
+  int T;
+  cin >> T;
+  // constexpr int MAX_N = 1e6 + 10, MAX_LEN = 21;
+  // vector<vector<Z>> memo(MAX_N, vector<Z>(MAX_LEN, -1));
+  while (T--) {
+    ll l, r;
+    cin >> l >> r;
+    // l = 1000000 / 4 + 1, r = 1000000;
+    auto cnt = [&] {
+      ll res = 1;
+      ll x = l;
+      while (2 * x <= r) {
+        x *= 2, res++;
       }
-      sz[node] += sz[ne];
+      return res;
+    }();
+    cout << cnt << " ";
+    ll mul = (1 << (cnt - 1));
+    if (cnt == 1) {
+      cout << r - l + 1 << "\n";
+      continue;
     }
-  };
-  dfs(0, -1);
-  for (int i = 1; i <= n; i++) {
-    cout << (dp[0][0][i] + dp[1][0][i]) << "\n";
+    Z res = r / mul - l + 1;
+    if (mul % 2 == 0) {
+      ll mul_three = mul / 2 * 3;
+      if (l * mul_three <= r) {
+        res += (r / mul_three - l + 1) * (cnt - 1);
+      }
+    }
+    cout << res << "\n";
   }
 }

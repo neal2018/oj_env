@@ -2,7 +2,8 @@
 using namespace std;
 using ll = long long;
 
-constexpr int MOD = 998244353;
+constexpr int MOD = 1e9 + 9;
+int power(int, ll) = delete;
 template <typename T>
 T power(T a, ll b, int _MOD = MOD, T res = 1) {
   for (; b; b /= 2, (a *= a) %= _MOD)
@@ -36,34 +37,22 @@ struct Z {
 
 int main() {
   cin.tie(nullptr)->sync_with_stdio(false);
-  int n;
-  cin >> n;
-  vector<vector<int>> g(n);
-  for (int i = 0, u, v; i < n - 1; i++) {
-    cin >> u >> v, u--, v--;
-    g[u].push_back(v), g[v].push_back(u);
-  }
-  vector<int> sz(n);
-
-  vector dp(2, vector(n, vector<Z>(n + 1)));
-  for (int i = 0; i < n; i++) dp[1][i][1] = 1, dp[0][i][0] = 1;
-  function<void(int, int)> dfs = [&](int node, int fa) {
-    sz[node] = 1;
-    for (auto &ne : g[node]) {
-      if (ne == fa) continue;
-      dfs(ne, node);
-      for (int j = sz[node] + sz[ne]; j >= 1; j--) {
-        for (int k = max(1, j - sz[node]); k <= sz[ne] && k <= j; k++) {
-          dp[0][node][j] += dp[0][node][j - k] * dp[0][ne][k] + dp[0][node][j - k] * dp[1][ne][k];
-          dp[1][node][j] +=
-              dp[1][node][j - k] * dp[0][ne][k] + dp[1][node][j - k + 1] * dp[1][ne][k];
-        }
-      }
-      sz[node] += sz[ne];
-    }
+  int base;
+  cin >> base;
+  int n = (1 << base);
+  vector<Z> a(n);
+  for (auto &x : a) cin >> x.x;
+  function<Z(vector<Z>)> solve = [&](const vector<Z>& arr) {
+    if (arr.size() == 1) return arr[0];
+    int sz = int(arr.size());
+    int half = int(sz / 2);
+    vector<Z> first(half), second(half);
+    for (int i = half; i < sz; i++) second[i - half] = arr[i];
+    for (int i = 0; i < half; i++) first[i] = arr[i] - second[i];
+    auto x = solve(first);
+    auto y = solve(second);
+    return x * y;
   };
-  dfs(0, -1);
-  for (int i = 1; i <= n; i++) {
-    cout << (dp[0][0][i] + dp[1][0][i]) << "\n";
-  }
+  auto res = solve(a);
+  cout << res << "\n";
 }

@@ -2,7 +2,8 @@
 using namespace std;
 using ll = long long;
 
-constexpr int MOD = 998244353;
+constexpr int MOD = 1e9 + 7;
+int power(int, ll) = delete;
 template <typename T>
 T power(T a, ll b, int _MOD = MOD, T res = 1) {
   for (; b; b /= 2, (a *= a) %= _MOD)
@@ -17,7 +18,7 @@ struct Z {
     if (x >= MOD) x -= MOD;
     return x;
   }
-  // auto operator<=>(const Z &) const = default;  // need c++ 20
+  auto operator<=>(const Z &) const = default;  // need c++ 20
   Z operator-() const { return Z(norm(MOD - x)); }
   Z inv() const { return power(*this, MOD - 2, MOD); }
   Z &operator*=(const Z &rhs) { return x = int(ll(x) * rhs.x % MOD), *this; }
@@ -38,32 +39,20 @@ int main() {
   cin.tie(nullptr)->sync_with_stdio(false);
   int n;
   cin >> n;
-  vector<vector<int>> g(n);
-  for (int i = 0, u, v; i < n - 1; i++) {
-    cin >> u >> v, u--, v--;
-    g[u].push_back(v), g[v].push_back(u);
-  }
-  vector<int> sz(n);
-
-  vector dp(2, vector(n, vector<Z>(n + 1)));
-  for (int i = 0; i < n; i++) dp[1][i][1] = 1, dp[0][i][0] = 1;
-  function<void(int, int)> dfs = [&](int node, int fa) {
-    sz[node] = 1;
-    for (auto &ne : g[node]) {
-      if (ne == fa) continue;
-      dfs(ne, node);
-      for (int j = sz[node] + sz[ne]; j >= 1; j--) {
-        for (int k = max(1, j - sz[node]); k <= sz[ne] && k <= j; k++) {
-          dp[0][node][j] += dp[0][node][j - k] * dp[0][ne][k] + dp[0][node][j - k] * dp[1][ne][k];
-          dp[1][node][j] +=
-              dp[1][node][j - k] * dp[0][ne][k] + dp[1][node][j - k + 1] * dp[1][ne][k];
-        }
-      }
-      sz[node] += sz[ne];
-    }
+  vector<int> a(n);
+  for (auto &x : a) cin >> x;
+  auto dist = [&](int i, int j) {
+    if (i == -1 || j == -1) return INT_MAX;
+    if (i == n || j == n) return INT_MAX;
+    return abs(a[i] - a[j]);
   };
-  dfs(0, -1);
-  for (int i = 1; i <= n; i++) {
-    cout << (dp[0][0][i] + dp[1][0][i]) << "\n";
+  Z res = 0;
+  for (int i = 0; i < n; i++) {
+    for (int left = i, j = i + 1, right = j; j < n; j++) {
+      while (dist(left, i) <= dist(i, j)) left--;
+      while (dist(j, right) < dist(i, j)) right++;
+      res += power(Z(2), left + 1 + (n - right));
+    }
   }
+  cout << res << "\n";
 }

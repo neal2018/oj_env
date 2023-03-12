@@ -52,11 +52,11 @@ int main() {
     for (auto &ne : g[node]) {
       if (ne == fa) continue;
       dfs(ne, node);
-      for (int j = sz[node] + sz[ne]; j >= 1; j--) {
-        for (int k = max(1, j - sz[node]); k <= sz[ne] && k <= j; k++) {
-          dp[0][node][j] += dp[0][node][j - k] * dp[0][ne][k] + dp[0][node][j - k] * dp[1][ne][k];
-          dp[1][node][j] +=
-              dp[1][node][j - k] * dp[0][ne][k] + dp[1][node][j - k + 1] * dp[1][ne][k];
+      for (int j = sz[node]; j >= 0; j--) {
+        for (int k = min(sz[ne], n - j); k >= 1; k--) {
+          dp[0][node][j + k] += dp[0][node][j] * dp[0][ne][k] + dp[0][node][j] * dp[1][ne][k];
+          dp[1][node][j + k] += dp[1][node][j] * dp[0][ne][k];
+          dp[1][node][j + k - 1] += dp[1][node][j] * dp[1][ne][k];
         }
       }
       sz[node] += sz[ne];

@@ -2,7 +2,8 @@
 using namespace std;
 using ll = long long;
 
-constexpr int MOD = 998244353;
+int MOD = 998244353;
+int power(int, ll) = delete;
 template <typename T>
 T power(T a, ll b, int _MOD = MOD, T res = 1) {
   for (; b; b /= 2, (a *= a) %= _MOD)
@@ -36,34 +37,38 @@ struct Z {
 
 int main() {
   cin.tie(nullptr)->sync_with_stdio(false);
-  int n;
-  cin >> n;
-  vector<vector<int>> g(n);
-  for (int i = 0, u, v; i < n - 1; i++) {
-    cin >> u >> v, u--, v--;
-    g[u].push_back(v), g[v].push_back(u);
-  }
-  vector<int> sz(n);
-
-  vector dp(2, vector(n, vector<Z>(n + 1)));
-  for (int i = 0; i < n; i++) dp[1][i][1] = 1, dp[0][i][0] = 1;
-  function<void(int, int)> dfs = [&](int node, int fa) {
-    sz[node] = 1;
-    for (auto &ne : g[node]) {
-      if (ne == fa) continue;
-      dfs(ne, node);
-      for (int j = sz[node] + sz[ne]; j >= 1; j--) {
-        for (int k = max(1, j - sz[node]); k <= sz[ne] && k <= j; k++) {
-          dp[0][node][j] += dp[0][node][j - k] * dp[0][ne][k] + dp[0][node][j - k] * dp[1][ne][k];
-          dp[1][node][j] +=
-              dp[1][node][j - k] * dp[0][ne][k] + dp[1][node][j - k + 1] * dp[1][ne][k];
-        }
-      }
-      sz[node] += sz[ne];
+  string s;
+  cin >> s >> MOD;
+  constexpr int MAX = 94, BASE = 33;
+  // constexpr int MAX = 3, BASE = 'a';
+  vector<Z> one(MAX);
+  vector two(MAX, vector<Z>(MAX));
+  string rev(s.rbegin(), s.rend());
+  for (auto &c : rev) {
+    int cur = c - BASE;
+    for (int i = 0; i < MAX; i++) {
+      two[i][cur] += one[i];
     }
-  };
-  dfs(0, -1);
-  for (int i = 1; i <= n; i++) {
-    cout << (dp[0][0][i] + dp[1][0][i]) << "\n";
+    one[cur] += 1;
   }
+  Z res = 0;
+  Z sum_pair = 0;
+  vector<Z> one_pos(MAX);
+  vector two_pos(MAX, vector<Z>(MAX));
+  for (auto &c : s) {
+    int cur = c - BASE;
+    one[cur] -= 1;
+    for (int i = 0; i < MAX; i++) {
+      two[i][cur] -= one[i];
+      sum_pair -= one[i] * two_pos[i][cur];
+    }
+    // cout << sum_pair << "\n";
+    res += sum_pair;
+    for (int i = 0; i < MAX; i++) {
+      two_pos[i][cur] += one_pos[i];
+      sum_pair += two[i][cur] * one_pos[i];
+    }
+    one_pos[cur] += 1;
+  }
+  cout << res << "\n";
 }
