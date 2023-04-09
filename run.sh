@@ -3,6 +3,12 @@
 
 ## local interact test
 # python croupier.py ./main "python gen.py"
+#
+# i=0
+# while python croupier.py ./main "python gen.py"; do
+#   i=$(expr $i + 1)
+#   echo $(date +"%I:%M:%S.%3N") AC ON TEST $i
+# done
 
 ## single file stress test
 # i=0
