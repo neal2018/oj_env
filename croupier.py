@@ -12,6 +12,19 @@ import argparse
 from typing import TextIO
 
 
+class Color:
+    PURPLE = "\033[95m"
+    CYAN = "\033[96m"
+    DARK_CYAN = "\033[36m"
+    BLUE = "\033[94m"
+    GREEN = "\033[92m"
+    YELLOW = "\033[93m"
+    RED = "\033[91m"
+    BOLD = "\033[1m"
+    UNDERLINE = "\033[4m"
+    END = "\033[0m"
+
+
 def parts_to_print_gen(print_buffer: bytearray, parts: list[bytes]):
     yield print_buffer
     for part in parts[1:-1]:
@@ -42,7 +55,8 @@ def transfer_and_print(
                 except UnicodeDecodeError:
                     s = str(bytes(part))
                 if screen:
-                    print(f"{name}: {s}" if name else s, file=screen)
+                    color = Color.YELLOW if log_file else Color.DARK_CYAN
+                    print(f"{color}{name}: {s}{Color.END}" if name else s, file=screen)
                 if log_file:
                     print(f"{s}", file=log_file)
             print_buffer = bytearray(parts[-1])
