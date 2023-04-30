@@ -121,7 +121,7 @@ if __name__ == "__main__":
         contest = path_to_contest[path]
       else:
         contest = get_contest_id(make_yellow("enter the contest id:") + " ")
-        # if next promt is not a query, add an empty line
+        # if next prompt is not a query, add an empty line
         test_path = get_test_path(contest, problem_id, platform)
         if not os.path.exists(os.path.dirname(test_path)) or os.path.exists(test_path):
           print()

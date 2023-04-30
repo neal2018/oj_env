@@ -6,9 +6,9 @@ using ll = long long;
 int main() {
   cin.tie(nullptr)->sync_with_stdio(false);
   int T;
-  cin >> T;  
+  cin >> T;
   set<int> st;
-  
+
   while (T--) {
     int n;
     cin >> n;
