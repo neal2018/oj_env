@@ -6,92 +6,92 @@ int main() {
   cin.tie(nullptr)->sync_with_stdio(false);
   int T;
   cin >> T;
-  auto clear = [&] {
-    int got = 0;
-    cin >> got;
-    if (got != 1) exit(0);
-  };
-
-  auto ask = [&](int i, int j) {
-    if (i == j) return 0;
-    cout << "? " << i + 1 << " " << j + 1 << endl;
-    int res;
-    cin >> res;
-    if (res == -2) exit(0);
-    return res;
-  };
-
   while (T--) {
-    int n;
-    cin >> n;
+    int n, m;
+    cin >> n >> m;
     vector<vector<int>> g(n);
-    auto add = [&](int x) {
-      if (x < 2 || x > 2 * n) return;
-      cout << "+ " << x << endl;
-      clear();
-      x -= 2;
+    vector<int> deg(n);
+    for (int i = 0, u, v; i < m; i++) {
+      cin >> u >> v, u--, v--;
+      g[u].push_back(v), g[v].push_back(u);
+      deg[u]++, deg[v]++;
+    }
+    int cnt = 0, now = 0;
+    vector<ll> dfn(n, -1), low(n), belong(n, -1);
+    {
+      vector<ll> stk;
+      function<void(ll, ll)> tarjan = [&](ll node, ll fa) {
+        dfn[node] = low[node] = now++, stk.push_back(node);
+        for (auto& ne : g[node]) {
+          if (ne == fa) continue;  // remove if directed
+          if (dfn[ne] == -1) {
+            tarjan(ne, node);
+            low[node] = min(low[node], low[ne]);
+          } else if (belong[ne] == -1) {
+            low[node] = min(low[node], dfn[ne]);
+          }
+        }
+        if (dfn[node] == low[node]) {
+          while (true) {
+            auto v = stk.back();
+            belong[v] = cnt;
+            stk.pop_back();
+            if (v == node) break;
+          }
+          ++cnt;
+        }
+      };
       for (int i = 0; i < n; i++) {
-        if (0 <= x - i && x - i < n && i < x - i) {
-          g[i].push_back(x - i);
-          g[x - i].push_back(i);
+        assert(stk.size() == 0);
+        if (dfn[i] == -1) tarjan(i, -1);
+      }
+    }
+    vector<int> freq(cnt);
+    for (auto& x : belong) freq[x]++;
+    int good = 0;
+    [&] {
+      for (int i = 0; i < n; i++) {
+        if (deg[i] >= 4 && freq[belong[i]] >= 3) {
+          vector<int> stk, seen(n);
+          vector<int> path;
+          function<void(int, int)> dfs = [&](int node, int fa) {
+            if (good) return;
+            if (node == i && stk.size() > 0) {
+              path = stk;
+              vector<array<int, 2>> res;
+              for (int ii = 0; ii < path.size(); ii++) {
+                res.push_back({path[ii], path[(ii + 1) % path.size()]});
+              }
+              set st(path.begin(), path.end());
+              int need = 0;
+              for (auto& ne : g[i]) {
+                if (st.count(ne) == 0) {
+                  res.push_back({i, ne});
+                  need++;
+                }
+                if (need == 2) break;
+              }
+              if (need == 2) {
+                cout << "YES\n";
+                cout << res.size() << "\n";
+                for (auto& [x, y] : res) cout << x + 1 << " " << y + 1 << "\n";
+                good = 1;
+                return;
+              }
+            }
+            if (seen[node]) return;
+            seen[node] = 1;
+            stk.push_back(node);
+            for (auto& ne : g[node]) {
+              if (ne == fa) continue;
+              dfs(ne, node);
+            }
+            stk.pop_back();
+          };
+          dfs(i, -1);
         }
       }
-    };
-    if (n % 2 == 1) {
-      add(n);
-      add(n + 2);
-    } else {
-      add(n - 1);
-      add(n + 1);
-    }
-    vector<array<int, 2>> dist(n);
-    for (int i = 1; i < n; i++) {
-      int x = ask(0, i);
-      dist[i] = {x, i};
-    }
-    sort(dist.rbegin(), dist.rend());
-    int root = dist[0][1];
-    dist = vector<array<int, 2>>(n);
-    for (int i = 0; i < n; i++) {
-      if (i == root) {
-        dist[i] = {0, root};
-      } else {
-        int x = ask(root, i);
-        dist[i] = {x, i};
-      }
-    }
-    sort(dist.begin(), dist.end());
-    vector<int> path;
-    auto tree_root = [&] {
-      for (int i = 0; i < n; i++) {
-        if (g[i].size() == 1) return i;
-      }
-      return -1;
+      if (!good) cout << "NO\n";
     }();
-    int cur = tree_root, prev = -1;
-    while (true) {
-      path.push_back(cur);
-      int n_cur = g[cur][0] == prev ? g[cur][1] : g[cur][0];
-      prev = cur, cur = n_cur;
-      if (g[cur].size() == 1) {
-        path.push_back(cur);
-        break;
-      }
-    }
-    cout << "! ";
-    {
-      vector<int> res(n);
-      for (int i = 0; i < n; i++) {
-        res[dist[i][1]] = path[i];
-      }
-      for (auto& x : res) cout << x + 1 << " ";
-      reverse(path.begin(), path.end());
-      for (int i = 0; i < n; i++) {
-        res[dist[i][1]] = path[i];
-      }
-      for (auto& x : res) cout << x + 1 << " ";
-    }
-    cout << endl;
-    clear();
   }
 }
