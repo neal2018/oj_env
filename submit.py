@@ -9,15 +9,15 @@ import re
 class cd:
   """Context manager for changing the current working directory"""
 
-  def __init__(self, newPath):
-    self.newPath = os.path.expanduser(newPath)
+  def __init__(self, new_path):
+    self.newPath = os.path.expanduser(new_path)
 
   def __enter__(self):
-    self.savedPath = os.getcwd()
+    self.saved_path = os.getcwd()
     os.chdir(self.newPath)
 
   def __exit__(self, etype, value, traceback):
-    os.chdir(self.savedPath)
+    os.chdir(self.saved_path)
 
 
 def make_red(string):
@@ -144,6 +144,10 @@ if __name__ == "__main__":
   if not os.path.exists(test_path):
     problem_id = os.path.splitext(os.path.basename(filename))[0].upper()
     test_path = get_test_path(contest, problem_id, platform)
+    if not os.path.exists(test_path):
+      problem_id = os.path.splitext(os.path.basename(filename))[0].lower()
+      test_path = get_test_path(contest, problem_id, platform)
+ 
     while not os.path.exists(test_path):
       problem_id = input(make_sky_blue("enter the problem id:") + " ")
       test_path = get_test_path(contest, problem_id, platform)
