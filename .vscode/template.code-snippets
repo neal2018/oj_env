@@ -170,6 +170,7 @@
       "struct Z {",
       "  int x;",
       "  Z(int _x = 0) : x(norm(_x)) {}",
+      "  Z(long long _x) : x(norm((_x % MOD + MOD) % MOD)) {}",
       "  static int norm(int x) {",
       "    if (x < 0) x += MOD;",
       "    if (x >= MOD) x -= MOD;",
