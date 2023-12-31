@@ -95,7 +95,10 @@
         "syncstream": "cpp",
         "expected": "cpp",
         "spanstream": "cpp",
-        "stacktrace": "cpp"
+        "stacktrace": "cpp",
+        "format": "cpp",
+        "climits": "cpp",
+        "stdfloat": "cpp"
     },
     "C_Cpp.clang_format_fallbackStyle": "{ BasedOnStyle: Google, IndentWidth: 2, AccessModifierOffset: -2, ColumnLimit: 100}",
     "editor.tabSize": 2,
@@ -159,5 +162,11 @@
     "workbench.colorTheme": "City Lights",
     "editor.bracketPairColorization.enabled": true,
     "glassit.alpha": 240,
-    "C_Cpp.default.browse.limitSymbolsToIncludedHeaders": false
+    "C_Cpp.default.browse.limitSymbolsToIncludedHeaders": false,
+    "C_Cpp.formatting": "clangFormat",
+    "workspaceKeybindings.clangFormat.enabled": true,
+    "[python]": {
+        "editor.defaultFormatter": "ms-python.autopep8"
+    },
+    "python.formatting.provider": "none"
 }
