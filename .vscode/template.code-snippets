@@ -160,7 +160,7 @@
     ],
     "body": [
       "constexpr int MOD = ${1|998244353,1e9 + 7,9223372036737335297|};",
-      "int power(int, ll) = delete;",
+      "int power(int, i64) = delete;",
       "template <typename T>",
       "T power(T a, i64 b, int _MOD = MOD, T res = 1) {",
       "  for (; b; b /= 2, (a *= a) %= _MOD)",
