@@ -415,7 +415,7 @@
       "  }",
       "  Z binom(int n, int r) {",
       "    if (n < 0 || r < 0 || n < r) return 0;",
-      "    if (f.size() <= n) std::fill(int(f.size()), n + 1);",
+      "    if (f.size() <= n) fill(int(f.size()), n + 1);",
       "    return f[n] * rf[n - r] * rf[r];",
       "  }",
       "};",
