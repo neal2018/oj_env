@@ -87,7 +87,7 @@ int main() {
       }
     }
     std::sort(events.begin(), events.end());
-    int sz = int(events.size());
+    [[maybe_unused]] int sz = int(events.size());
     for (auto &[_, type] : events) {
       cnt -= type;
       res = std::max(res, cnt);
