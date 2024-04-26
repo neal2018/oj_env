@@ -122,6 +122,19 @@
     ],
     "description": "for_view_i"
   },
+  "for_view_loop": {
+    "scope": "cpp",
+    "prefix": [
+      "loop",
+      "forloop",
+    ],
+    "body": [
+      "for ([[maybe_unused]] auto ${1:_} : std::views::iota(0, ${2:n})) {",
+      "  ${0}",
+      "}"
+    ],
+    "description": "for_view_loop"
+  },
   "for_view_ij": {
     "scope": "cpp",
     "prefix": [
