@@ -565,6 +565,39 @@
       "  }",
       "};",
     ],
-    "description": "compress"
+    "description": "heavy light"
+  },
+  "tarjan": {
+    "scope": "cpp",
+    "prefix": [
+      "tarjan",
+    ],
+    "body": [
+      "i64 cnt = 0, now = 0;",
+      "std::vector<i64> dfn(n, -1), low(n), belong(n, -1), stk;",
+      "std::function<void(i64, i64)> tarjan = [&](i64 node, i64 fa) {",
+      "  dfn[node] = low[node] = now++, stk.push_back(node);",
+      "  for (auto& ne : g[node]) {",
+      "    if (ne == fa) continue;  // remove if directed",
+      "    if (dfn[ne] == -1) {",
+      "      tarjan(ne, node);",
+      "      low[node] = std::min(low[node], low[ne]);",
+      "    } else if (belong[ne] == -1) {",
+      "      low[node] = std::min(low[node], dfn[ne]);",
+      "    }",
+      "  }",
+      "  if (dfn[node] == low[node]) {",
+      "    while (true) {",
+      "      auto v = stk.back();",
+      "      belong[v] = cnt;",
+      "      stk.pop_back();",
+      "      if (v == node) break;",
+      "    }",
+      "    ++cnt;",
+      "  }",
+      "};",
+      "tarjan(0, -1);"
+    ],
+    "description": "tarjan"
   },
 }
