@@ -600,4 +600,14 @@
     ],
     "description": "tarjan"
   },
+  "std::": {
+    "scope": "cpp",
+    "prefix": [
+      "s", "st"
+    ],
+    "body": [
+      "std::"
+    ],
+    "description": "std::"
+  },
 }

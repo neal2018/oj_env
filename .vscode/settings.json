@@ -161,12 +161,13 @@
     },
     "workbench.colorTheme": "City Lights",
     "editor.bracketPairColorization.enabled": true,
-    "glassit.alpha": 240,
+    "glassit.alpha": 245,
     "C_Cpp.default.browse.limitSymbolsToIncludedHeaders": false,
     "C_Cpp.formatting": "clangFormat",
     "workspaceKeybindings.clangFormat.enabled": true,
     "[python]": {
         "editor.defaultFormatter": "ms-python.autopep8"
     },
+    "autopep8.args": ["--indent-size=2"],
     "python.formatting.provider": "none"
 }
